@@ -22,11 +22,7 @@
 
 #include <GLFW/glfw3.h>
 
-using std::string;
-using std::vector;
-using std::cout;
-using std::cerr;
-using std::endl;
+using namespace std;
 
 class Program {
     GLuint vertex_shader;
