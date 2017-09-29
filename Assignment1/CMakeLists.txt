@@ -10,9 +10,7 @@ find_package(OpenGL REQUIRED)
 #include_directories(${OPENGL_INCLUDE_DIR})
 
 set(SOURCE_FILES
-        src/boilerplate.cpp
-#        deps/glfw/include/GL/glcorearb.h
-        )
+        src/main.cpp src/main.h src/boilerplate.h)
 
 
 #Gets glfw
