@@ -198,9 +198,11 @@ void render(Program &program, VertexArray &va) {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    // Using lines first to get the generator to work
+
     glUseProgram(program.id);
     glBindVertexArray(va.id);
-    glDrawArrays(GL_TRIANGLES, 0, va.count);
+    glDrawArrays(GL_LINES, 0, va.count);
 
     glBindVertexArray(0);
     glUseProgram(0);
@@ -224,7 +226,7 @@ int main(int argc, char *argv[]) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(512, 512, "CPSC 453 OpenGL Boilerplate", 0, 0);
+    window = glfwCreateWindow(1024, 1024, "CPSC 453 OpenGL Boilerplate", 0, 0);
     if (!window) {
         cout << "Program failed to create GLFW window, TERMINATING" << endl;
         glfwTerminate();
@@ -242,14 +244,26 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-    Program p("data/vertex.glsl", "data/fragment.glsl");
-    VertexArray va(3);
-    va.addBuffer("v", 0, vector<float> { 0.5, 0.2, 0.2, 0.6, 0.8, 0.6 });
+    Program mainProgram("data/vertex.glsl", "data/fragment.glsl");
+
+    vector<float> vertexMatrix= { -0.9, -0.9,
+                                  -0.9, 0.9,
+
+                                  -0.9, 0.9,
+                                  0.9, 0.9,
+
+                                  0.9, 0.9,
+                                  0.9, -0.9};
+
+    
+
+    VertexArray verts(6);
+    verts.addBuffer("v", 0, vertexMatrix);
 
     // run an event-triggered main loop
     while (!glfwWindowShouldClose(window)) {
         // render
-        render(p, va);
+        render(mainProgram, verts);
 
         glfwSwapBuffers(window);
 
