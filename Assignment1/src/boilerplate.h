@@ -30,6 +30,8 @@
 
 using namespace std;
 
+class Program;
+class VertexArray;
 
 class Program {
     GLuint vertex_shader;

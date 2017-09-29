@@ -6,6 +6,7 @@
 #define ASSIGNMENT1_MAIN_H
 
 #include "boilerplate.h"
+#include "transformations.h"
 
 int main(int argc, char *argv[]);
 void render(Program &program, VertexArray &va);

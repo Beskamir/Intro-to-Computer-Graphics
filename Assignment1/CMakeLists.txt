@@ -9,9 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(OpenGL REQUIRED)
 #include_directories(${OPENGL_INCLUDE_DIR})
 
-set(SOURCE_FILES
-        src/main.cpp src/main.h src/boilerplate.h)
-
+set(SOURCE_FILES src/main.cpp src/main.h src/boilerplate.h src/transformations.cpp src/transformations.h)
 
 #Gets glfw
 option(GLFW_BUILD_DOCS OFF)
