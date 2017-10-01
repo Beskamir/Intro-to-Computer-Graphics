@@ -56,6 +56,8 @@ void loopRender(GLFWwindow *window){
 
     Program mainProgram("data/vertex.glsl", "data/fragment.glsl");
 
+
+
     vector<float> vertexMatrix= { -0.9, -0.9,
                                   -0.9, 0.9,
 

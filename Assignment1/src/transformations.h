@@ -12,23 +12,24 @@
 
 using namespace std;
 
-const vector<float> basePoints={  -0.9, -0.9,
-                                  -0.9, 0.9,
-                                  0.9, 0.9,
-                                  0.9, -0.9};
+const vector<vector<float>> basePoints={ {-0.9, -0.9},
+                                 {-0.9, 0.9},
+                                 {0.9, 0.9},
+                                 {0.9, -0.9}};
 
-vector<float> genCurveData(int counter);
-vector<float> shrink(vector<float>);
-vector<float> move(vector<float>,float x, float y);
-vector<float> spin(vector<float>);
-vector<float> copy(vector<float>verts);
-vector<float> mirror(vector<float>verts);
+vector<vector<float>> genCurveData(int counter);
+vector<vector<float>> shrink(vector<vector<float>>);
+vector<vector<float>> move(vector<vector<float>>,float x, float y);
+vector<vector<float>> spin(vector<vector<float>>);
+vector<vector<float>> copy(vector<vector<float>>verts);
+vector<vector<float>> mirror(vector<vector<float>>verts);
 
-vector<float> getCurve(vector<float>verts);
-vector<float> getTris(vector<float>verts);
+vector<vector<float>> getCurve(vector<vector<float>>verts);
+vector<vector<float>> getTris(vector<vector<float>>verts);
 
-vector<float> points2curve(vector<float>verts);
-vector<float> points2tris(vector<float>verts);
+vector<vector<float>> points2curve(vector<vector<float>>verts);
+vector<vector<float>> points2tris(vector<vector<float>>verts);
 
+vector<vector<float>> concatenate(vector<vector<float>>curve1,vector<vector<float>>curve2,vector<vector<float>>curve3,vector<vector<float>>curve4);
 
 #endif //ASSIGNMENT1_TRANSFORMATIONS_H
