@@ -17,6 +17,11 @@ option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
 add_subdirectory(deps/glfw)
 
+
+#Get glm
+add_subdirectory(deps/glm)
+
+
 #GLEW libraries
 set(GLEW_DIR "deps/glew")
 include_directories(${GLEW_DIR}/include)
@@ -27,7 +32,7 @@ link_directories(${GLEW_DIR}/lib)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 #Link the libraries
-target_link_libraries(${PROJECT_NAME} glfw glew32s ${OPENGL_LIBRARY})
+target_link_libraries(${PROJECT_NAME} glfw glew32s glm ${OPENGL_LIBRARY})
 
 #SET(CMAKE_CXX_FLAGS "-std=c++1y -lglfw -lGL -lOpenGL -lGLEW -pthread -lfreetype")
 

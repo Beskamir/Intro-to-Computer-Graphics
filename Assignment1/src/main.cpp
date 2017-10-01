@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 
 void render(Program &program, VertexArray &va) {
     // clear screen to a dark grey colour
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Using lines first to get the generator to work
