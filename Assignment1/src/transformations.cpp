@@ -2,14 +2,14 @@
 // Created by Sebastian on 29/09/2017.
 //
 
+#include <iostream>
 #include "transformations.h"
 
 vector<vector<float>> Matrix::genCurveDataRec(int counter){
     if (counter>1){
         vector<vector<float>> curve1 = genCurveDataRec(counter--);
 
-        //All the maths to put points in correct
-        //spots and having them in order
+        //All the maths to put points in correct spots and having them in order
         curve1 = shrink(curve1);
         vector<vector<float>> curve2 = copy(curve1);
         vector<vector<float>> curve3 = copy(curve1);
@@ -72,6 +72,22 @@ vector<vector<float>> Matrix::mirror(vector<vector<float>>verts){
 
 
 vector<float> Matrix::getCurve(){
+    vector<float> pointData1D{};
+    for (int i = 0; i < pointData2D.size(); ++i) {
+        pointData1D.push_back(pointData2D[i][0]);
+        pointData1D.push_back(pointData2D[i][1]);
+        cout << pointData2D[i][0] << ","<< pointData2D[i][1]<<endl;
+        if (i>0 && i<(pointData2D.size()-1)){
+            pointData1D.push_back(pointData2D[i][0]);
+            pointData1D.push_back(pointData2D[i][1]);
+        }
+    }
+    //for (vector<float> tempMatrix: pointData2D){
+    //    for(float tempFloat : tempMatrix){
+    //        pointData1D.push_back(tempFloat);
+    //    }
+    //}
+    return pointData1D;
 
 }
 vector<float> Matrix::getTris(){

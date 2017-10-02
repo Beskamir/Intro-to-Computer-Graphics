@@ -67,7 +67,12 @@ void loopRender(GLFWwindow *window){
     //                                           {0.9,  0.9},
     //                                           {0.9,  0.9},
     //                                           {0.9,  -0.9}};
-    vector<float> vertexMatrix=data.getPoints();
+
+    vector<float> vertexMatrix=data.getCurve();
+    cout<<"\n"<<endl;
+    for (int i = 0; i <= vertexMatrix.size(); ++i) {
+        cout<<i<<","<<vertexMatrix[i]<<endl;
+    }
     //for (vector<float> tempMatrix : vertexMatrixDouble){
     //    for(float tempFloat : tempMatrix){
     //        vertexMatrix.push_back(tempFloat);
