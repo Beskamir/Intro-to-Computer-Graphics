@@ -4,9 +4,9 @@
 
 #include "transformations.h"
 
-vector<vector<float>> genCurveData(int counter){
+vector<vector<float>> Matrix::genCurveDataRec(int counter){
     if (counter>1){
-        vector<vector<float>> curve1 = genCurveData(counter--);
+        vector<vector<float>> curve1 = genCurveDataRec(counter--);
 
         //All the maths to put points in correct
         //spots and having them in order
@@ -34,15 +34,15 @@ vector<vector<float>> genCurveData(int counter){
 
 }
 
-vector<vector<float>> points2curve(vector<vector<float>>verts){
+vector<vector<float>> Matrix::points2curve(vector<vector<float>>verts){
 
 }
 
-vector<vector<float>> points2tris(vector<vector<float>>verts){
+vector<vector<float>> Matrix::points2tris(vector<vector<float>>verts){
 
 }
 
-vector<vector<float>> shrink(vector<vector<float>>verts){
+vector<vector<float>> Matrix::shrink(vector<vector<float>>verts){
 
     //go through all pairs and shrink them by 50%
     for (int i = 0; i <= verts.size(); ++i) {
@@ -55,30 +55,30 @@ vector<vector<float>> shrink(vector<vector<float>>verts){
     }
     return verts;
 }
-vector<vector<float>> move(vector<vector<float>>verts,float x,float y){
+vector<vector<float>> Matrix::move(vector<vector<float>>verts,float x,float y){
 
 }
-vector<vector<float>> spin(vector<vector<float>>verts){
-
-}
-
-vector<vector<float>> copy(vector<vector<float>>verts){
+vector<vector<float>> Matrix::spin(vector<vector<float>>verts){
 
 }
 
-vector<vector<float>> mirror(vector<vector<float>>verts){
+vector<vector<float>> Matrix::copy(vector<vector<float>>verts){
+
+}
+
+vector<vector<float>> Matrix::mirror(vector<vector<float>>verts){
 
 }
 
 
-vector<vector<float>> getCurve(vector<vector<float>>verts){
+vector<float> Matrix::getCurve(){
 
 }
-vector<vector<float>> getTris(vector<vector<float>>verts){
+vector<float> Matrix::getTris(){
 
 }
 
-vector<vector<float>> concatenate(vector<vector<float>>curve1,vector<vector<float>>curve2,vector<vector<float>>curve3,vector<vector<float>>curve4){
+vector<vector<float>> Matrix::concatenate(vector<vector<float>>curve1,vector<vector<float>>curve2,vector<vector<float>>curve3,vector<vector<float>>curve4){
     vector<vector<float>> curve{};
     curve.insert(
         curve.end(),
@@ -101,4 +101,23 @@ vector<vector<float>> concatenate(vector<vector<float>>curve1,vector<vector<floa
         curve4.end()
     );
     return curve;
+}
+
+//vector<float> Matrix::getPoints() {
+//    vector<float> pointData1D{};
+//    for(vector<float> point : pointData2D){
+//        for(float coordinate:point){
+//            pointData1D.push_back(coordinate);
+//        }
+//    }
+//    return pointData1D;
+//}
+
+void Matrix::genCurveData() {
+    if (detailMax<detailTarget){
+        pointData2D = genCurveDataRec(detailMax);
+    }
+    else{
+        pointData2D = genCurveDataRec(detailTarget);
+    }
 };

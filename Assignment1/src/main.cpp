@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     //glfwSetWindowFocusCallback(window, window_focus_callback);
     glfwSetKeyCallback(window, key_callback);
+    glfwSetWindowSizeCallback(window, window_size_callback);
 
 #ifdef _WIN32
     // Intialize GLEW
@@ -56,16 +57,30 @@ void loopRender(GLFWwindow *window){
 
     Program mainProgram("data/vertex.glsl", "data/fragment.glsl");
 
+    Matrix data(&window_width,&window_height,&lineSize);
 
+    data.genCurveData();
 
-    vector<float> vertexMatrix= { -0.9, -0.9,
-                                  -0.9, 0.9,
-
-                                  -0.9, 0.9,
-                                  0.9, 0.9,
-
-                                  0.9, 0.9,
-                                  0.9, -0.9};
+    //vector<vector<float>> vertexMatrixDouble= {{-0.9, -0.9},
+    //                                           {-0.9, 0.9},
+    //                                           {-0.9, 0.9},
+    //                                           {0.9,  0.9},
+    //                                           {0.9,  0.9},
+    //                                           {0.9,  -0.9}};
+    vector<float> vertexMatrix=data.getPoints();
+    //for (vector<float> tempMatrix : vertexMatrixDouble){
+    //    for(float tempFloat : tempMatrix){
+    //        vertexMatrix.push_back(tempFloat);
+    //    }
+    //}
+        //{ -0.9, -0.9,
+        //  -0.9, 0.9,
+        //
+        //  -0.9, 0.9,
+        //  0.9, 0.9,
+        //
+        //  0.9, 0.9,
+        //  0.9, -0.9};
 
     //vector<float> vertexMatrix = {1.0,0.0,-1.0,0,0,1.0};
 
@@ -116,9 +131,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         case GLFW_KEY_O:
             drawingMode=GL_TRIANGLE_STRIP;
             break;
-        case GLFW_KEY_P:
-            drawingMode=GL_POINTS;
-            break;
         case GLFW_KEY_L:
             drawingMode=GL_LINES;
             break;
@@ -126,6 +138,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             break;
     }
 }
+void window_size_callback(GLFWwindow* window, int width, int height) {
+    window_width = width;
+    window_height = height;
+}
+
 //void window_focus_callback(GLFWwindow* window, int focused)
 //{
 //    if (focused)
