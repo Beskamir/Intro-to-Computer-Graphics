@@ -30,7 +30,6 @@ int main(int argc, char *argv[]) {
 
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    //glfwSetWindowFocusCallback(window, window_focus_callback);
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
@@ -56,42 +55,7 @@ int main(int argc, char *argv[]) {
 void loopRender(GLFWwindow *window){
 
     Program mainProgram("data/vertex.glsl", "data/fragment.glsl");
-
-    Matrix data(&window_width,&window_height,&lineSize);
-
-    data.genCurveData();
-
-    //vector<vector<float>> vertexMatrixDouble= {{-0.9, -0.9},
-    //                                           {-0.9, 0.9},
-    //                                           {-0.9, 0.9},
-    //                                           {0.9,  0.9},
-    //                                           {0.9,  0.9},
-    //                                           {0.9,  -0.9}};
-
-    vector<float> vertexMatrix=data.getCurve();
-    cout<<"\n"<<endl;
-    for (int i = 0; i <= vertexMatrix.size(); ++i) {
-        cout<<i<<","<<vertexMatrix[i]<<endl;
-    }
-    //for (vector<float> tempMatrix : vertexMatrixDouble){
-    //    for(float tempFloat : tempMatrix){
-    //        vertexMatrix.push_back(tempFloat);
-    //    }
-    //}
-        //{ -0.9, -0.9,
-        //  -0.9, 0.9,
-        //
-        //  -0.9, 0.9,
-        //  0.9, 0.9,
-        //
-        //  0.9, 0.9,
-        //  0.9, -0.9};
-
-    //vector<float> vertexMatrix = {1.0,0.0,-1.0,0,0,1.0};
-
-
-    VertexArray verts(6);
-    verts.addBuffer("v", 0, vertexMatrix);
+    Matrix data(&window_width,&window_height,&lineSize,&targetDetail);
 
     //glUseProgram(mainProgram.id);
     //GLint vertexColorLocation = glGetUniformLocation(mainProgram.id,"vertexColor");
@@ -100,12 +64,18 @@ void loopRender(GLFWwindow *window){
 
     // run an event-triggered main loop
     while (!glfwWindowShouldClose(window)) {
+        data.genCurveData();
+        vector<float> vertexMatrix=data.getCurve();
+
+        VertexArray verts((int)pow(2,(targetDetail*2+1))-2);
+        verts.addBuffer("v", 0, vertexMatrix);
+
         // render
         render(mainProgram, verts);
 
         glfwSwapBuffers(window);
 
-        glfwWaitEvents();
+        glfwPollEvents();
     }
 }
 
@@ -123,39 +93,24 @@ void render(Program &program, VertexArray &va) {
     glUseProgram(0);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    //if (key >= GLFW_KEY_0 && key <= GLFW_KEY_9){
-    //    printf("%d ",key);
-    //}
-    switch(key){
-        case GLFW_KEY_O:
-            drawingMode=GL_TRIANGLE_STRIP;
-            break;
-        case GLFW_KEY_L:
-            drawingMode=GL_LINES;
-            break;
-        default:
-            break;
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if(key==GLFW_KEY_O&&action==GLFW_PRESS){
+        drawingMode=GL_TRIANGLE_STRIP;
+    }
+    if(key==GLFW_KEY_L&&action==GLFW_PRESS){
+        drawingMode=GL_LINES;
+    }
+    if((key==GLFW_KEY_I&&action==GLFW_PRESS)&&(targetDetail<maxDetail)){
+        targetDetail++;
+    }
+    if((key==GLFW_KEY_K&&action==GLFW_PRESS)&&(targetDetail>1)){
+        targetDetail--;
     }
 }
 void window_size_callback(GLFWwindow* window, int width, int height) {
     window_width = width;
     window_height = height;
 }
-
-//void window_focus_callback(GLFWwindow* window, int focused)
-//{
-//    if (focused)
-//    {
-//        // The window gained input focus
-//    }
-//    else
-//    {
-//        // The window lost input focus
-//    }
-//}

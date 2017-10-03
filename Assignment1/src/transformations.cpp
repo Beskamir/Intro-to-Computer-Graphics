@@ -2,23 +2,25 @@
 // Created by Sebastian on 29/09/2017.
 //
 
-#include <iostream>
+//#include <iostream>
 #include "transformations.h"
 
 vector<vector<float>> Matrix::genCurveDataRec(int counter){
+    //cout<<counter<<endl;
     if (counter>1){
-        vector<vector<float>> curve1 = genCurveDataRec(counter--);
+        vector<vector<float>> curve1 = genCurveDataRec(--counter);
 
         //All the maths to put points in correct spots and having them in order
         curve1 = shrink(curve1);
-        vector<vector<float>> curve2 = copy(curve1);
-        vector<vector<float>> curve3 = copy(curve1);
-        curve3 = spin(curve3);
-        vector<vector<float>> curve4 = copy(curve3);
-        curve4 = mirror(curve4);
-        curve1 = move(curve1,0.5,0.5);
+        vector<vector<float>> curve2 = curve1;
+        vector<vector<float>> curve3 = curve1;
+        curve1 = spin(curve1);
+        vector<vector<float>> curve4 = curve1;
+        curve1 = mirror(curve1,false,true);
+        curve4 = mirror(curve4,true,false);
+        curve3 = move(curve3,0.5,0.5);
         curve2 = move(curve2,-0.5,0.5);
-        curve3 = move(curve3,-0.5,-0.5);
+        curve1 = move(curve1,-0.5,-0.5);
         curve4 = move(curve4,0.5,-0.5);
 
         //concatenate the vectors
@@ -34,9 +36,9 @@ vector<vector<float>> Matrix::genCurveDataRec(int counter){
 
 }
 
-vector<vector<float>> Matrix::points2curve(vector<vector<float>>verts){
-
-}
+//vector<vector<float>> Matrix::points2curve(vector<vector<float>>verts){
+//
+//}
 
 vector<vector<float>> Matrix::points2tris(vector<vector<float>>verts){
 
@@ -44,12 +46,13 @@ vector<vector<float>> Matrix::points2tris(vector<vector<float>>verts){
 
 vector<vector<float>> Matrix::shrink(vector<vector<float>>verts){
 
+    float scaleValue=0.5;
     //go through all pairs and shrink them by 50%
-    for (int i = 0; i <= verts.size(); ++i) {
+    for (int i = 0; i < verts.size(); ++i) {
         glm::vec4 vec(verts[i][0], verts[i][1], 0.0f, 1.0f);
-        glm::mat4 scaleMatrix;
-        scaleMatrix = glm::scale(scaleMatrix, glm::vec3(0.5, 0.5, 1.0));
-        vec = scaleMatrix * vec;
+        glm::mat4 transform;
+        transform = glm::scale(transform, glm::vec3(scaleValue, scaleValue, 1.0));
+        vec = transform * vec;
         verts[i][0]=vec.x;
         verts[i][1]=vec.y;
     }
@@ -57,17 +60,43 @@ vector<vector<float>> Matrix::shrink(vector<vector<float>>verts){
 }
 vector<vector<float>> Matrix::move(vector<vector<float>>verts,float x,float y){
 
+    //move objects to specified x,y origin
+    for (int i = 0; i < verts.size(); ++i) {
+        glm::vec4 vec(verts[i][0], verts[i][1], 0.0f, 1.0f);
+        glm::mat4 transform;
+        transform = glm::translate(transform, glm::vec3(x, y, 0));
+        vec = transform * vec;
+        verts[i][0]=vec.x;
+        verts[i][1]=vec.y;
+    }
+    return verts;
 }
 vector<vector<float>> Matrix::spin(vector<vector<float>>verts){
 
+    // should rotate the object by 90degrees
+    for (int i = 0; i < verts.size(); ++i) {
+        glm::vec4 vec(verts[i][0], verts[i][1], 0.0f, 1.0f);
+        glm::mat4 transform;
+        transform = glm::rotate(transform, glm::radians(-90.0f), glm::vec3(0.0, 0.0, 1.0));
+        vec = transform * vec;
+        verts[i][0]=vec.x;
+        verts[i][1]=vec.y;
+    }
+    return verts;
 }
 
-vector<vector<float>> Matrix::copy(vector<vector<float>>verts){
-
-}
-
-vector<vector<float>> Matrix::mirror(vector<vector<float>>verts){
-
+vector<vector<float>> Matrix::mirror(vector<vector<float>>verts,bool x,bool y){
+    if(x){
+        for (int i = 0; i < verts.size(); ++i) {
+            verts[i][0]=-verts[i][0];
+        }
+    }
+    if(y){
+        for (int i = 0; i < verts.size(); ++i) {
+            verts[i][1]=-verts[i][1];
+        }
+    }
+    return verts;
 }
 
 
@@ -76,17 +105,12 @@ vector<float> Matrix::getCurve(){
     for (int i = 0; i < pointData2D.size(); ++i) {
         pointData1D.push_back(pointData2D[i][0]);
         pointData1D.push_back(pointData2D[i][1]);
-        cout << pointData2D[i][0] << ","<< pointData2D[i][1]<<endl;
+        //cout << pointData2D[i][0] << ","<< pointData2D[i][1]<<endl;
         if (i>0 && i<(pointData2D.size()-1)){
             pointData1D.push_back(pointData2D[i][0]);
             pointData1D.push_back(pointData2D[i][1]);
         }
     }
-    //for (vector<float> tempMatrix: pointData2D){
-    //    for(float tempFloat : tempMatrix){
-    //        pointData1D.push_back(tempFloat);
-    //    }
-    //}
     return pointData1D;
 
 }
@@ -129,11 +153,6 @@ vector<vector<float>> Matrix::concatenate(vector<vector<float>>curve1,vector<vec
 //    return pointData1D;
 //}
 
-void Matrix::genCurveData() {
-    if (detailMax<detailTarget){
-        pointData2D = genCurveDataRec(detailMax);
-    }
-    else{
-        pointData2D = genCurveDataRec(detailTarget);
-    }
-};
+//void Matrix::genCurveData() {
+//    pointData2D = genCurveDataRec(targetDetail);
+//};

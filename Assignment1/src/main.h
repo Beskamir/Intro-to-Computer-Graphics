@@ -5,12 +5,16 @@
 #ifndef ASSIGNMENT1_MAIN_H
 #define ASSIGNMENT1_MAIN_H
 
+#include <cmath>
+
 #include "boilerplate.h"
 #include "transformations.h"
 
 int window_width = 1024;
 int window_height = 1024;
 int lineSize = 4;
+int targetDetail = 1;
+int maxDetail = 5;/*Change this to something defined by window size*/
 GLenum drawingMode = GL_TRIANGLE_STRIP;
 
 int main(int argc, char *argv[]);
