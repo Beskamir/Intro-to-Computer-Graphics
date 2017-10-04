@@ -55,11 +55,7 @@ int main(int argc, char *argv[]) {
 void loopRender(GLFWwindow *window){
 
     Program mainProgram("data/vertex.glsl", "data/fragment.glsl");
-    //Matrix vertData(&window_width,&window_height,&lineSize,&targetDetail);
 
-    //*vertData = Matrix();
-
-    //vertData->genCurveData();
     //glUseProgram(mainProgram.id);
     //GLint vertexColorLocation = glGetUniformLocation(mainProgram.id,"vertexColor");
     //glUniform3f(vertexColorLocation,1.0f,0.5f,1.0f);
@@ -75,15 +71,13 @@ void loopRender(GLFWwindow *window){
         }
         else{
             vertexMatrix = vertData.getCurve();
+            vertData.getTris(lineSize);
         }
 
         VertexArray verts((int)vertexMatrix.size()/2);
 
-        //if(drawingMode==GL_LINES){
-        //}
-        //VertexArray verts((int)pow(2,(targetDetail*2+1))-2);
-        verts.addBuffer("v", 0, vertexMatrix);
 
+        verts.addBuffer("v", 0, vertexMatrix);
 
         // render
         render(mainProgram, verts);
@@ -97,7 +91,7 @@ void loopRender(GLFWwindow *window){
 
 void render(Program &program, VertexArray &va) {
     // clear screen to a dark grey colour
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(program.id);

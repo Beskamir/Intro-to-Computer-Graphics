@@ -36,13 +36,7 @@ vector<vector<float>> Matrix::genCurveDataRec(int counter){
 
 }
 
-//vector<vector<float>> Matrix::points2curve(vector<vector<float>>verts){
-//
-//}
 
-vector<vector<float>> Matrix::points2tris(vector<vector<float>>verts){
-
-}
 
 vector<vector<float>> Matrix::shrink(vector<vector<float>>verts){
 
@@ -114,8 +108,63 @@ vector<float> Matrix::getCurve(){
     return pointData1D;
 
 }
-vector<float> Matrix::getTris(){
 
+//Get triangles
+vector<float> Matrix::getTris(float lineSize){
+    vector<float> pointData1D{};
+    points2tris(lineSize);
+
+    return pointData1D;
+}
+
+vector<vector<float>> Matrix::points2tris(float lineSize){
+    vector<vector<float>> trisPointData{};
+    for (int i = 0; i < pointData2D.size(); ++i) {
+        if(!(i>0&&i<(pointData2D.size()-1))){
+            //Following if statements only work thanks to lazy evaluation. Essentially if i==0 or i!=0 it doesn't try the other conditional
+            if((i==0)&&(pointData2D[i][0])<(pointData2D[i+1][0])){
+                trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]+lineSize});
+                trisPointData.push_back({pointData2D[i][0], pointData2D[i][1] + lineSize});
+            }
+            else if((i!=0)&&(pointData2D[i-1][0])<(pointData2D[i][0])){
+                trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]+lineSize});
+                trisPointData.push_back({pointData2D[i][0], pointData2D[i][1] + lineSize});
+            }
+            else{
+                trisPointData.push_back({pointData2D[i][0]+lineSize,pointData2D[i][1]});
+                trisPointData.push_back({pointData2D[i][0]+lineSize,pointData2D[i][1]});
+            }
+        }
+        else{
+            if(((pointData2D[i-1][0])==(pointData2D[i][0]))
+               &&(abs(pointData2D[i-1][1])>abs(pointData2D[i][1]))
+               &&(abs(pointData2D[i][0])>abs(pointData2D[i+1][0]))
+               &&((pointData2D[i][1])==(pointData2D[i+1][1]))){
+                //generate points using slope -1
+            }
+            if((abs(pointData2D[i-1][0])>abs(pointData2D[i][0]))
+               &&((pointData2D[i-1][1])==(pointData2D[i][1]))
+               &&((pointData2D[i][0])==(pointData2D[i+1][0]))
+               &&(abs(pointData2D[i][1])<abs(pointData2D[i+1][1]))){
+                //generate points using slope -1
+            }
+            if((abs(pointData2D[i-1][0])>abs(pointData2D[i][0]))
+               &&((pointData2D[i-1][1])==(pointData2D[i][1]))
+               &&((pointData2D[i][0])>(pointData2D[i+1][0]))
+               &&(abs(pointData2D[i][1])==abs(pointData2D[i+1][1]))){
+                //Infinite slope
+            }
+            if((abs(pointData2D[i-1][0])<abs(pointData2D[i][0]))
+               &&((pointData2D[i-1][1])==(pointData2D[i][1]))
+               &&((pointData2D[i][0])==(pointData2D[i+1][0]))
+               &&(abs(pointData2D[i][1])<abs(pointData2D[i+1][1]))){
+                //slope = 1
+            }
+
+            pointData2D[i][0];
+        }
+    }
+    return trisPointData;
 }
 
 vector<vector<float>> Matrix::concatenate(vector<vector<float>>curve1,vector<vector<float>>curve2,vector<vector<float>>curve3,vector<vector<float>>curve4){
@@ -142,17 +191,3 @@ vector<vector<float>> Matrix::concatenate(vector<vector<float>>curve1,vector<vec
     );
     return curve;
 }
-
-//vector<float> Matrix::getPoints() {
-//    vector<float> pointData1D{};
-//    for(vector<float> point : pointData2D){
-//        for(float coordinate:point){
-//            pointData1D.push_back(coordinate);
-//        }
-//    }
-//    return pointData1D;
-//}
-
-//void Matrix::genCurveData() {
-//    pointData2D = genCurveDataRec(targetDetail);
-//};

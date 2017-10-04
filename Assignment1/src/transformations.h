@@ -10,40 +10,20 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
-//#include "boilerplate.h"
-
 using namespace std;
 
 
 class Matrix {
 
 public:
-    //int detailMax;
-    //int *targetDetail;
-    //int *windowWidth;
-    //int *windowHeight;
-    //int *lineWidth;
-    Matrix()= default;
 
-    //Matrix(/*int *width, int *height,int *lineSize,int *detail*/){
-    //    //lineWidth = lineSize;
-    //    //windowWidth = width;
-    //    //windowHeight = height;
-    //    //targetDetail = detail;
-    //    //Detail max doesn't really make much sense here tbh
-    //    //if (width<height){
-    //    //    detailMax=(int)floor(log(*windowWidth / *lineWidth)/log(2));
-    //    //}
-    //    //else{
-    //    //    detailMax=(int)floor(log(*windowHeight / *lineWidth)/log(2));
-    //    //}
-    //}
+    Matrix()= default;
 
     void genCurveData(int targetDetail){
         pointData2D = genCurveDataRec(targetDetail);
     };
     vector<float> getCurve();
-    vector<float> getTris();
+    vector<float> getTris(float lineSize);
 
 private:
     const vector<vector<float>> basePoints = {{-0.5, -0.5},
@@ -60,7 +40,7 @@ private:
     vector<vector<float>> spin(vector<vector<float>>);
     vector<vector<float>> mirror(vector<vector<float>> verts,bool x,bool y);
 
-    vector<vector<float>> points2tris(vector<vector<float>> verts);
+    vector<vector<float>> points2tris(float lineSize);
 
     vector<vector<float>> concatenate(vector<vector<float>> curve1, vector<vector<float>> curve2, vector<vector<float>> curve3, vector<vector<float>> curve4);
 
