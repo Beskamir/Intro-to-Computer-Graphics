@@ -15,7 +15,9 @@ int window_height = 1024;
 int lineSize = 4;
 int targetDetail = 1;
 int maxDetail = 5;/*Change this to something defined by window size*/
-GLenum drawingMode = GL_TRIANGLE_STRIP;
+GLenum drawingMode = GL_TRIANGLES;
+bool drawTriangles=true;
+Matrix vertData;
 
 int main(int argc, char *argv[]);
 void loopRender(GLFWwindow *window);

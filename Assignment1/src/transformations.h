@@ -18,28 +18,29 @@ using namespace std;
 class Matrix {
 
 public:
-    int detailMax;
-    int *targetDetail;
-    int *windowWidth;
-    int *windowHeight;
-    int *lineWidth;
+    //int detailMax;
+    //int *targetDetail;
+    //int *windowWidth;
+    //int *windowHeight;
+    //int *lineWidth;
+    Matrix()= default;
 
-    Matrix(int *width, int *height,int *lineSize,int *detail){
-        lineWidth = lineSize;
-        windowWidth = width;
-        windowHeight = height;
-        targetDetail = detail;
-        //Detail max doesn't really make much sense here tbh
-        //if (width<height){
-        //    detailMax=(int)floor(log(*windowWidth / *lineWidth)/log(2));
-        //}
-        //else{
-        //    detailMax=(int)floor(log(*windowHeight / *lineWidth)/log(2));
-        //}
-    }
+    //Matrix(/*int *width, int *height,int *lineSize,int *detail*/){
+    //    //lineWidth = lineSize;
+    //    //windowWidth = width;
+    //    //windowHeight = height;
+    //    //targetDetail = detail;
+    //    //Detail max doesn't really make much sense here tbh
+    //    //if (width<height){
+    //    //    detailMax=(int)floor(log(*windowWidth / *lineWidth)/log(2));
+    //    //}
+    //    //else{
+    //    //    detailMax=(int)floor(log(*windowHeight / *lineWidth)/log(2));
+    //    //}
+    //}
 
-    void genCurveData(){
-        pointData2D = genCurveDataRec(*targetDetail);
+    void genCurveData(int targetDetail){
+        pointData2D = genCurveDataRec(targetDetail);
     };
     vector<float> getCurve();
     vector<float> getTris();

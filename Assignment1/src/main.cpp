@@ -55,20 +55,35 @@ int main(int argc, char *argv[]) {
 void loopRender(GLFWwindow *window){
 
     Program mainProgram("data/vertex.glsl", "data/fragment.glsl");
-    Matrix data(&window_width,&window_height,&lineSize,&targetDetail);
+    //Matrix vertData(&window_width,&window_height,&lineSize,&targetDetail);
 
+    //*vertData = Matrix();
+
+    //vertData->genCurveData();
     //glUseProgram(mainProgram.id);
     //GLint vertexColorLocation = glGetUniformLocation(mainProgram.id,"vertexColor");
     //glUniform3f(vertexColorLocation,1.0f,0.5f,1.0f);
 
-
+    vertData.genCurveData(targetDetail);
+    vector<float> vertexMatrix;
     // run an event-triggered main loop
     while (!glfwWindowShouldClose(window)) {
-        data.genCurveData();
-        vector<float> vertexMatrix=data.getCurve();
 
-        VertexArray verts((int)pow(2,(targetDetail*2+1))-2);
+        if(drawTriangles){
+            //vertexMatrix = vertData.getTris();
+            vertexMatrix={0.5, 0.2, 0.2, 0.6, 0.8, 0.6, 0,0,-0,-1,-0.5,-0.5};
+        }
+        else{
+            vertexMatrix = vertData.getCurve();
+        }
+
+        VertexArray verts((int)vertexMatrix.size()/2);
+
+        //if(drawingMode==GL_LINES){
+        //}
+        //VertexArray verts((int)pow(2,(targetDetail*2+1))-2);
         verts.addBuffer("v", 0, vertexMatrix);
+
 
         // render
         render(mainProgram, verts);
@@ -98,16 +113,20 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if(key==GLFW_KEY_O&&action==GLFW_PRESS){
-        drawingMode=GL_TRIANGLE_STRIP;
+        drawingMode=GL_TRIANGLES;
+        drawTriangles=true;
     }
     if(key==GLFW_KEY_L&&action==GLFW_PRESS){
         drawingMode=GL_LINES;
+        drawTriangles=false;
     }
     if((key==GLFW_KEY_I&&action==GLFW_PRESS)&&(targetDetail<maxDetail)){
         targetDetail++;
+        vertData.genCurveData(targetDetail);
     }
     if((key==GLFW_KEY_K&&action==GLFW_PRESS)&&(targetDetail>1)){
         targetDetail--;
+        vertData.genCurveData(targetDetail);
     }
 }
 void window_size_callback(GLFWwindow* window, int width, int height) {
