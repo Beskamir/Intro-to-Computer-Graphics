@@ -91,14 +91,13 @@ void loopRender(GLFWwindow *window){
     vertexColorMatrix = vertData.getTris(lineSize);
     vertexMatrix = getVertsOnly(vertexColorMatrix);
     colorMatrix = getColorsOnly(vertexColorMatrix);
-    vertData.genCurveData(targetDetail);
 
     // run an event-triggered main loop
     while (!glfwWindowShouldClose(window)) {
         if(recalculate){
             vertData.genCurveData(targetDetail);
             recalculate = false;
-            cout << "Detail changed to: "<< targetDetail<<endl;
+            cout << "Hilbert curve with detail "<< targetDetail<<" generated."<<endl;
         }
 
         if(drawTriangles){

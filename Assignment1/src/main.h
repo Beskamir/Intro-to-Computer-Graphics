@@ -19,7 +19,7 @@ int targetDetail = 1;
 int maxDetail = 10;
 GLenum drawingMode = GL_TRIANGLES;
 bool drawTriangles=true;
-bool recalculate = false;
+bool recalculate = true;
 
 int main(int argc, char *argv[]);
 void loopRender(GLFWwindow *window);
