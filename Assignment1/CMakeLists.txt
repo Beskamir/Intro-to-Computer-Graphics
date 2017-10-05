@@ -19,6 +19,7 @@ add_subdirectory(deps/glfw)
 
 
 #Get glm
+option(GLM_TEST_ENABLE ON)
 add_subdirectory(deps/glm)
 
 #Include GLEW libraries only if on windows
