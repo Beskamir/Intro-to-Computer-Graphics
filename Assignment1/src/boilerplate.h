@@ -6,6 +6,7 @@
 // ==========================================================================
 //
 // Separated into separate files by Sebastian for his sanity.
+// #ifdef's to include GLEW on only windows are thanks to Scott Saunders and Blake Mealey.
 //
 
 #ifndef ASSIGNMENT1_BOILERPLATE_H

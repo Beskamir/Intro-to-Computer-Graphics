@@ -1,9 +1,26 @@
 //
-// Created by Sebastian on 29/09/2017.
+// Implememtation of all the mathy stuff
 //
 
-//#include <iostream>
+#include <iostream>
 #include "transformations.h"
+
+void Matrix::genCurveData(int targetDetail){
+    pointData2D = genCurveDataRec(targetDetail);
+    float greenColorValue;
+    //Color curve
+    for (int i = 0; i < pointData2D.size(); ++i) {
+        pointData2D[i].push_back(sinf((float)1-((pointData2D.size()-(float)(i+0.5))/(float)(pointData2D.size()/1.05))));
+        greenColorValue=(i/(float)(pointData2D.size()));
+        if(greenColorValue<0.5){
+            pointData2D[i].push_back(greenColorValue*(float)1.5);
+        }
+        else{
+            pointData2D[i].push_back(((float)0.9-greenColorValue*(float)1.05)*(float)1.75);
+        }
+        pointData2D[i].push_back(sinf((float)1-(i/(float)(pointData2D.size()/1.5))));
+    }
+};
 
 vector<vector<float>> Matrix::genCurveDataRec(int counter){
     //cout<<counter<<endl;
@@ -36,8 +53,6 @@ vector<vector<float>> Matrix::genCurveDataRec(int counter){
 
 }
 
-
-
 vector<vector<float>> Matrix::shrink(vector<vector<float>>verts){
 
     float scaleValue=0.5;
@@ -65,6 +80,7 @@ vector<vector<float>> Matrix::move(vector<vector<float>>verts,float x,float y){
     }
     return verts;
 }
+
 vector<vector<float>> Matrix::spin(vector<vector<float>>verts){
 
     // should rotate the object by 90degrees
@@ -94,74 +110,111 @@ vector<vector<float>> Matrix::mirror(vector<vector<float>>verts,bool x,bool y){
 }
 
 
-vector<float> Matrix::getCurve(){
-    vector<float> pointData1D{};
+vector<vector<float>> Matrix::getCurve(){
+    vector<vector<float>> curveData{};
     for (int i = 0; i < pointData2D.size(); ++i) {
-        pointData1D.push_back(pointData2D[i][0]);
-        pointData1D.push_back(pointData2D[i][1]);
+        curveData.push_back({pointData2D[i][0],pointData2D[i][1],pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
         //cout << pointData2D[i][0] << ","<< pointData2D[i][1]<<endl;
-        if (i>0 && i<(pointData2D.size()-1)){
-            pointData1D.push_back(pointData2D[i][0]);
-            pointData1D.push_back(pointData2D[i][1]);
+        if (i>0 && i < (pointData2D.size()-1)){
+            curveData.push_back({pointData2D[i][0],pointData2D[i][1],pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
         }
     }
-    return pointData1D;
+    return curveData;
 
 }
 
 //Get triangles
-vector<float> Matrix::getTris(float lineSize){
-    vector<float> pointData1D{};
-    points2tris(lineSize);
+vector<vector<float>> Matrix::getTris(float lineSize){
+    vector<vector<float>> trisPointDataRaw=points2tris(lineSize);
+    vector<vector<float>> trisPointData{};
 
-    return pointData1D;
+    for (int j = 0; j < trisPointDataRaw.size(); ++j) {
+        trisPointData.push_back(trisPointDataRaw[j]);
+
+        if(j>2){
+            trisPointData.push_back(trisPointDataRaw[j-1]);
+            trisPointData.push_back(trisPointDataRaw[j-2]);
+        }
+        //"clever" (aka horrific) workaround to draw multiple triangles ontop of each other
+        // so you don't have to worry about the order in which the vertices might end up in
+        if(j>4&&j%2!=0){
+            trisPointData.push_back(trisPointDataRaw[j]);
+            trisPointData.push_back(trisPointDataRaw[j-1]);
+            trisPointData.push_back(trisPointDataRaw[j-3]);
+        }
+    }
+    return trisPointData;
+
+    //return pointData1D;
 }
 
 vector<vector<float>> Matrix::points2tris(float lineSize){
     vector<vector<float>> trisPointData{};
+    float slope;
     for (int i = 0; i < pointData2D.size(); ++i) {
-        if(!(i>0&&i<(pointData2D.size()-1))){
-            //Following if statements only work thanks to lazy evaluation. Essentially if i==0 or i!=0 it doesn't try the other conditional
-            if((i==0)&&(pointData2D[i][0])<(pointData2D[i+1][0])){
-                trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]+lineSize});
-                trisPointData.push_back({pointData2D[i][0], pointData2D[i][1] + lineSize});
+        if(i>0&&i<(pointData2D.size()-1)){
+            if((pointData2D[i+1][1]-pointData2D[i-1][1])==0){
+                //0 slope
+                trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]+lineSize,
+                                         pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+                trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]-lineSize,
+                                         pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
             }
-            else if((i!=0)&&(pointData2D[i-1][0])<(pointData2D[i][0])){
-                trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]+lineSize});
-                trisPointData.push_back({pointData2D[i][0], pointData2D[i][1] + lineSize});
+            else if((pointData2D[i+1][0]-pointData2D[i-1][0])==0){
+                //Infinite slope
+                trisPointData.push_back({pointData2D[i][0]-lineSize,
+                                         pointData2D[i][1],pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+                trisPointData.push_back({pointData2D[i][0]+lineSize,
+                                         pointData2D[i][1],pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
             }
             else{
-                trisPointData.push_back({pointData2D[i][0]+lineSize,pointData2D[i][1]});
-                trisPointData.push_back({pointData2D[i][0]+lineSize,pointData2D[i][1]});
+                //compute slope of the points around the point of interest and flip it
+                slope= -((pointData2D[i+1][1]-pointData2D[i-1][1])/(pointData2D[i+1][0]-pointData2D[i-1][0]));
+                if(slope<0){
+                    //Negative slope
+                    trisPointData.push_back({pointData2D[i][0]-lineSize,pointData2D[i][1]+lineSize,
+                                             pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+                    trisPointData.push_back({pointData2D[i][0]+lineSize,pointData2D[i][1]-lineSize,
+                                             pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+                }
+                else{
+                    //Positive slope
+                    trisPointData.push_back({pointData2D[i][0]+lineSize,pointData2D[i][1]+lineSize,
+                                             pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+                    trisPointData.push_back({pointData2D[i][0]-lineSize,pointData2D[i][1]-lineSize,
+                                             pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+                }
             }
         }
+        //Following if statements only work thanks to short-circuiting evaluation.
+        // Essentially if i==0 or i!=0 it doesn't try the other conditional
+        else if((i==0)&&(pointData2D[i][0])!=(pointData2D[i+1][0])){
+            //slop==0
+            trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]+lineSize,
+                                     pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+            trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]-lineSize,
+                                     pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+        }
+        else if((i==(pointData2D.size()-1))&&(pointData2D[i-1][0])!=(pointData2D[i][0])){
+            //Infinite slope
+            trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]-lineSize,
+                                     pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+            trisPointData.push_back({pointData2D[i][0],pointData2D[i][1]+lineSize,
+                                     pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+        }
+        else if(i==0){
+            //infinite slope
+            trisPointData.push_back({pointData2D[i][0]-lineSize,pointData2D[i][1],
+                                     pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+            trisPointData.push_back({pointData2D[i][0]+lineSize,pointData2D[i][1],
+                                     pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+        }
         else{
-            if(((pointData2D[i-1][0])==(pointData2D[i][0]))
-               &&(abs(pointData2D[i-1][1])>abs(pointData2D[i][1]))
-               &&(abs(pointData2D[i][0])>abs(pointData2D[i+1][0]))
-               &&((pointData2D[i][1])==(pointData2D[i+1][1]))){
-                //generate points using slope -1
-            }
-            if((abs(pointData2D[i-1][0])>abs(pointData2D[i][0]))
-               &&((pointData2D[i-1][1])==(pointData2D[i][1]))
-               &&((pointData2D[i][0])==(pointData2D[i+1][0]))
-               &&(abs(pointData2D[i][1])<abs(pointData2D[i+1][1]))){
-                //generate points using slope -1
-            }
-            if((abs(pointData2D[i-1][0])>abs(pointData2D[i][0]))
-               &&((pointData2D[i-1][1])==(pointData2D[i][1]))
-               &&((pointData2D[i][0])>(pointData2D[i+1][0]))
-               &&(abs(pointData2D[i][1])==abs(pointData2D[i+1][1]))){
-                //Infinite slope
-            }
-            if((abs(pointData2D[i-1][0])<abs(pointData2D[i][0]))
-               &&((pointData2D[i-1][1])==(pointData2D[i][1]))
-               &&((pointData2D[i][0])==(pointData2D[i+1][0]))
-               &&(abs(pointData2D[i][1])<abs(pointData2D[i+1][1]))){
-                //slope = 1
-            }
-
-            pointData2D[i][0];
+            //infinite slope
+            trisPointData.push_back({pointData2D[i][0]+lineSize,pointData2D[i][1],
+                                     pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
+            trisPointData.push_back({pointData2D[i][0]-lineSize,pointData2D[i][1],
+                                     pointData2D[i][2],pointData2D[i][3],pointData2D[i][4]});
         }
     }
     return trisPointData;

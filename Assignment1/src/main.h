@@ -1,5 +1,5 @@
 //
-// Created by Sebastian on 9/28/2017.
+// Main header file with all the definitions and needed includes
 //
 
 #ifndef ASSIGNMENT1_MAIN_H
@@ -12,9 +12,11 @@
 
 int window_width = 1024;
 int window_height = 1024;
-float lineSize = 0.005;
+float lineSize = 0.001;
 int targetDetail = 1;
-int maxDetail = 5;/*Change this to something defined by window size*/
+//capping it at 10 since anything more barely has an effect
+// even on a 2160p display and takes too long to compute
+int maxDetail = 10;
 GLenum drawingMode = GL_TRIANGLES;
 bool drawTriangles=true;
 Matrix vertData;
@@ -25,5 +27,7 @@ void render(Program &program, VertexArray &va);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void window_size_callback(GLFWwindow* window, int width, int height);
+vector<float> getVertsOnly(vector<vector<float>> vertData2D);
+vector<float> getColorsOnly(vector<vector<float>> matrixData);
 
 #endif //ASSIGNMENT1_MAIN_H

@@ -1,5 +1,5 @@
 //
-// Created by Sebastian on 29/09/2017.
+// Definitions for all the mathy stuff I did to the points
 //
 
 #ifndef ASSIGNMENT1_TRANSFORMATIONS_H
@@ -19,11 +19,9 @@ public:
 
     Matrix()= default;
 
-    void genCurveData(int targetDetail){
-        pointData2D = genCurveDataRec(targetDetail);
-    };
-    vector<float> getCurve();
-    vector<float> getTris(float lineSize);
+    void genCurveData(int targetDetail);
+    vector<vector<float>> getCurve();
+    vector<vector<float>> getTris(float lineSize);
 
 private:
     const vector<vector<float>> basePoints = {{-0.5, -0.5},

@@ -1,5 +1,11 @@
 //
-// Created by Sebastian on 9/28/2017.
+// Main and render functions based on boilerplate
+// Primary resources used:
+// https://learnopengl.com
+// http://www.glfw.org/docs/latest/input_guide.html
+// http://www.glfw.org/docs/latest/window_guide.html
+//
+// As mentioned in the boilerplate the #ifdef _WIN32 bit was provided by Scott/Blake
 //
 
 #include "main.h"
@@ -29,9 +35,9 @@ int main(int argc, char *argv[]) {
     }
 
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 #ifdef _WIN32
     // Intialize GLEW
@@ -52,32 +58,57 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+vector<float> getVertsOnly(vector<vector<float>> matrixData){
+    vector<float> vertData{};
+    for (int i = 0; i < matrixData.size(); ++i) {
+        vertData.push_back(matrixData[i][0]);
+        vertData.push_back(matrixData[i][1]);
+    }
+    return vertData;
+}
+vector<float> getColorsOnly(vector<vector<float>> matrixData){
+    vector<float> colorData{};
+    for (int i = 0; i < matrixData.size(); ++i) {
+        colorData.push_back(matrixData[i][2]);
+        colorData.push_back(matrixData[i][3]);
+        colorData.push_back(matrixData[i][4]);
+    }
+    return colorData;
+}
+
 void loopRender(GLFWwindow *window){
 
     Program mainProgram("data/vertex.glsl", "data/fragment.glsl");
 
-    //glUseProgram(mainProgram.id);
-    //GLint vertexColorLocation = glGetUniformLocation(mainProgram.id,"vertexColor");
-    //glUniform3f(vertexColorLocation,1.0f,0.5f,1.0f);
-
     vertData.genCurveData(targetDetail);
+
+    vector<vector<float>> vertexColorMatrix;
     vector<float> vertexMatrix;
+    vector<float> colorMatrix;
+
+    vertexColorMatrix = vertData.getTris(lineSize);
+    vertexMatrix = getVertsOnly(vertexColorMatrix);
+    colorMatrix = getColorsOnly(vertexColorMatrix);
+
+
     // run an event-triggered main loop
     while (!glfwWindowShouldClose(window)) {
 
         if(drawTriangles){
-            //vertexMatrix = vertData.getTris();
-            vertexMatrix={0.5, 0.2, 0.2, 0.6, 0.8, 0.6, 0,0,-0,-1,-0.5,-0.5};
+            vertexColorMatrix = vertData.getTris(lineSize);
+            vertexMatrix = getVertsOnly(vertexColorMatrix);
+            colorMatrix = getColorsOnly(vertexColorMatrix);
         }
         else{
-            vertexMatrix = vertData.getCurve();
-            vertData.getTris(lineSize);
+            vertexColorMatrix = vertData.getCurve();
+            vertexMatrix = getVertsOnly(vertexColorMatrix);
+            colorMatrix = getColorsOnly(vertexColorMatrix);
         }
 
         VertexArray verts((int)vertexMatrix.size()/2);
 
-
         verts.addBuffer("v", 0, vertexMatrix);
+        verts.addBuffer("c", 1, colorMatrix);
 
         // render
         render(mainProgram, verts);
@@ -109,18 +140,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if(key==GLFW_KEY_O&&action==GLFW_PRESS){
         drawingMode=GL_TRIANGLES;
         drawTriangles=true;
+        cout << "Drawing using triangles" << endl;
     }
     if(key==GLFW_KEY_L&&action==GLFW_PRESS){
         drawingMode=GL_LINES;
         drawTriangles=false;
+        cout << "Drawing using lines" << endl;
     }
     if((key==GLFW_KEY_I&&action==GLFW_PRESS)&&(targetDetail<maxDetail)){
         targetDetail++;
         vertData.genCurveData(targetDetail);
+        cout << "Increasing detail to: " << targetDetail << endl;
     }
     if((key==GLFW_KEY_K&&action==GLFW_PRESS)&&(targetDetail>1)){
         targetDetail--;
         vertData.genCurveData(targetDetail);
+        cout << "Decreasing detail to: " << targetDetail << endl;
     }
 }
 void window_size_callback(GLFWwindow* window, int width, int height) {

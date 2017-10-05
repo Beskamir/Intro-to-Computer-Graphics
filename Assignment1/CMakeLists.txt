@@ -7,8 +7,8 @@ set(CMAKE_CXX_STANDARD 11)
 
 #Indicate that OpenCL is needed
 find_package(OpenGL REQUIRED)
-#include_directories(${OPENGL_INCLUDE_DIR})
 
+#The source files for the project
 set(SOURCE_FILES src/main.cpp src/main.h src/boilerplate.h src/transformations.cpp src/transformations.h)
 
 #Gets glfw
@@ -21,18 +21,26 @@ add_subdirectory(deps/glfw)
 #Get glm
 add_subdirectory(deps/glm)
 
+#Include GLEW libraries only if on windows
+IF (WIN32)
+    set(GLEW_DIR "deps/glew")
+    include_directories(${GLEW_DIR}/include)
+    add_definitions(-DGLEW_STATIC)
+    link_directories(${GLEW_DIR}/lib)
+ENDIF()
 
-#GLEW libraries
-set(GLEW_DIR "deps/glew")
-include_directories(${GLEW_DIR}/include)
-add_definitions(-DGLEW_STATIC)
-link_directories(${GLEW_DIR}/lib)
 
 #Create the executable using the sourcefiles
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 #Link the libraries
-target_link_libraries(${PROJECT_NAME} glfw glew32s glm ${OPENGL_LIBRARY})
+IF (WIN32)
+    # Include glew32s if on windows
+    target_link_libraries(${PROJECT_NAME} glfw glew32s glm ${OPENGL_LIBRARY})
+ELSE()
+    # don't include glew32s if not on windows
+    target_link_libraries(${PROJECT_NAME} glfw glm ${OPENGL_LIBRARY})
+ENDIF()
 
 #SET(CMAKE_CXX_FLAGS "-std=c++1y -lglfw -lGL -lOpenGL -lGLEW -pthread -lfreetype")
 
