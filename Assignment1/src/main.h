@@ -12,14 +12,14 @@
 
 int window_width = 1024;
 int window_height = 1024;
-float lineSize = 0.001;
+float lineSize = 0.0025;
 int targetDetail = 1;
 //capping it at 10 since anything more barely has an effect
 // even on a 2160p display and takes too long to compute
 int maxDetail = 10;
 GLenum drawingMode = GL_TRIANGLES;
 bool drawTriangles=true;
-Matrix vertData;
+bool recalculate = false;
 
 int main(int argc, char *argv[]);
 void loopRender(GLFWwindow *window);

@@ -80,6 +80,8 @@ void loopRender(GLFWwindow *window){
 
     Program mainProgram("data/vertex.glsl", "data/fragment.glsl");
 
+    Matrix vertData;
+
     vertData.genCurveData(targetDetail);
 
     vector<vector<float>> vertexColorMatrix;
@@ -89,16 +91,22 @@ void loopRender(GLFWwindow *window){
     vertexColorMatrix = vertData.getTris(lineSize);
     vertexMatrix = getVertsOnly(vertexColorMatrix);
     colorMatrix = getColorsOnly(vertexColorMatrix);
-
+    vertData.genCurveData(targetDetail);
 
     // run an event-triggered main loop
     while (!glfwWindowShouldClose(window)) {
+        if(recalculate){
+            vertData.genCurveData(targetDetail);
+            recalculate = false;
+            cout << "Detail changed to: "<< targetDetail<<endl;
+        }
 
         if(drawTriangles){
             vertexColorMatrix = vertData.getTris(lineSize);
             vertexMatrix = getVertsOnly(vertexColorMatrix);
             colorMatrix = getColorsOnly(vertexColorMatrix);
         }
+
         else{
             vertexColorMatrix = vertData.getCurve();
             vertexMatrix = getVertsOnly(vertexColorMatrix);
@@ -137,24 +145,24 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if(key==GLFW_KEY_O&&action==GLFW_PRESS){
+    if(key==GLFW_KEY_O&&action==GLFW_PRESS&&!drawTriangles){
         drawingMode=GL_TRIANGLES;
         drawTriangles=true;
         cout << "Drawing using triangles" << endl;
     }
-    if(key==GLFW_KEY_L&&action==GLFW_PRESS){
+    if(key==GLFW_KEY_L&&action==GLFW_PRESS&&drawTriangles){
         drawingMode=GL_LINES;
         drawTriangles=false;
         cout << "Drawing using lines" << endl;
     }
     if((key==GLFW_KEY_I&&action==GLFW_PRESS)&&(targetDetail<maxDetail)){
         targetDetail++;
-        vertData.genCurveData(targetDetail);
+        recalculate = true;
         cout << "Increasing detail to: " << targetDetail << endl;
     }
     if((key==GLFW_KEY_K&&action==GLFW_PRESS)&&(targetDetail>1)){
         targetDetail--;
-        vertData.genCurveData(targetDetail);
+        recalculate = true;
         cout << "Decreasing detail to: " << targetDetail << endl;
     }
 }
