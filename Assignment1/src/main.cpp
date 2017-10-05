@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 
     glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, key_callback);
-    glfwSetWindowSizeCallback(window, window_size_callback);
+    //glfwSetWindowSizeCallback(window, window_size_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 #ifdef _WIN32
@@ -97,7 +97,7 @@ void loopRender(GLFWwindow *window){
         if(recalculate){
             vertData.genCurveData(targetDetail);
             recalculate = false;
-            cout << "Hilbert curve with detail "<< targetDetail<<" generated."<<endl;
+            cout << "Generating Hilbert curve with detail "<< targetDetail<<endl;
         }
 
         if(drawTriangles){
@@ -164,8 +164,4 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         recalculate = true;
         cout << "Decreasing detail to: " << targetDetail << endl;
     }
-}
-void window_size_callback(GLFWwindow* window, int width, int height) {
-    window_width = width;
-    window_height = height;
 }

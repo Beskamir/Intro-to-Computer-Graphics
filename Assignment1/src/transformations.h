@@ -23,6 +23,8 @@ public:
     vector<vector<float>> getCurve();
     vector<vector<float>> getTris(float lineSize);
 
+    ~Matrix()= default;
+
 private:
     const vector<vector<float>> basePoints = {{-0.5, -0.5},
                                               {-0.5, 0.5},

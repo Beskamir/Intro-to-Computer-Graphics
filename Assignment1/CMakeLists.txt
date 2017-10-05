@@ -42,7 +42,8 @@ ELSE()
     target_link_libraries(${PROJECT_NAME} glfw glm ${OPENGL_LIBRARY})
 ENDIF()
 
-#SET(CMAKE_CXX_FLAGS "-std=c++1y -lglfw -lGL -lOpenGL -lGLEW -pthread -lfreetype")
+#SET(CMAKE_CXX_FLAGS "-std=c++1y -wall -lglfw -lGL -lOpenGL -lGLEW -pthread -lfreetype")
+#SET(CMAKE_CXX_FLAGS "-wall")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}")

@@ -26,7 +26,6 @@ void loopRender(GLFWwindow *window);
 void render(Program &program, VertexArray &va);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void window_size_callback(GLFWwindow* window, int width, int height);
 vector<float> getVertsOnly(vector<vector<float>> vertData2D);
 vector<float> getColorsOnly(vector<vector<float>> matrixData);
 
