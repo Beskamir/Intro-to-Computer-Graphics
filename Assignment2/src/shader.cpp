@@ -1,5 +1,5 @@
 //
-// Created by Sebastian on 10/22/2017.
+// Shader class heavily based on: https://learnopengl.com/code_viewer.php?type=header&code=shader
 //
 
 #include "shader.h"
@@ -71,5 +71,4 @@ Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath) {
     // Delete the shaders as they're linked into our program now and no longer necessery
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-
 }

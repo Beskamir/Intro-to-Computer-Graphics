@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(OpenGL REQUIRED)
 
 #The source files for the project
-set(SOURCE_FILES src/main.cpp src/main.h src/shader.cpp src/shader.h)
+set(SOURCE_FILES src/main.cpp src/main.h src/shader.cpp src/shader.h src/setup.h src/vertexArray.cpp src/vertexArray.h)
 
 #Gets glfw
 option(GLFW_BUILD_DOCS OFF)
