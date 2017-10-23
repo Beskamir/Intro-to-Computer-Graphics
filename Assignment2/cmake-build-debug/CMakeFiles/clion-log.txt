@@ -1,0 +1,7 @@
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" D:\Education\University\Current\cpsc453\Assignments\Assignment2\cpsc453_a2\Assignment2
+-- Could NOT find Vulkan (missing:  VULKAN_INCLUDE_DIR) 
+-- Using Win32 for window creation
+-- GLM is a header only library, no need to build it. Set the option GLM_TEST_ENABLE with ON to build and run the test bench
+-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug

@@ -1,0 +1,116 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTC_dce52/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTC_dce52.dir\build.make CMakeFiles/cmTC_dce52.dir/build
+mingw32-make.exe[1]: Entering directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_dce52.dir/CheckSymbolExists.c.obj
+C:\MinGW\bin\gcc.exe     -o CMakeFiles\cmTC_dce52.dir\CheckSymbolExists.c.obj   -c D:\Education\University\Current\cpsc453\Assignments\Assignment2\cpsc453_a2\Assignment2\cmake-build-debug\CMakeFiles\CMakeTmp\CheckSymbolExists.c
+Linking C executable cmTC_dce52.exe
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_dce52.dir\link.txt --verbose=1
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -E remove -f CMakeFiles\cmTC_dce52.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\cmTC_dce52.dir/objects.a @CMakeFiles\cmTC_dce52.dir\objects1.rsp
+C:\MinGW\bin\gcc.exe       -Wl,--whole-archive CMakeFiles\cmTC_dce52.dir/objects.a -Wl,--no-whole-archive  -o cmTC_dce52.exe -Wl,--out-implib,libcmTC_dce52.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_dce52.dir\linklibs.rsp
+CMakeFiles\cmTC_dce52.dir/objects.a(CheckSymbolExists.c.obj):CheckSymbolExists.c:(.text+0x12): undefined reference to `pthread_create'
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTC_dce52.dir\build.make:98: recipe for target 'cmTC_dce52.exe' failed
+mingw32-make.exe[1]: *** [cmTC_dce52.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:125: recipe for target 'cmTC_dce52/fast' failed
+mingw32-make.exe: *** [cmTC_dce52/fast] Error 2
+
+File D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTC_33631/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTC_33631.dir\build.make CMakeFiles/cmTC_33631.dir/build
+mingw32-make.exe[1]: Entering directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_33631.dir/CheckFunctionExists.c.obj
+C:\MinGW\bin\gcc.exe    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles\cmTC_33631.dir\CheckFunctionExists.c.obj   -c "C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\share\cmake-3.7\Modules\CheckFunctionExists.c"
+Linking C executable cmTC_33631.exe
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_33631.dir\link.txt --verbose=1
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -E remove -f CMakeFiles\cmTC_33631.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\cmTC_33631.dir/objects.a @CMakeFiles\cmTC_33631.dir\objects1.rsp
+C:\MinGW\bin\gcc.exe   -DCHECK_FUNCTION_EXISTS=pthread_create    -Wl,--whole-archive CMakeFiles\cmTC_33631.dir/objects.a -Wl,--no-whole-archive  -o cmTC_33631.exe -Wl,--out-implib,libcmTC_33631.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_33631.dir\linklibs.rsp
+c:/mingw/bin/../lib/gcc/mingw32/5.3.0/../../../../mingw32/bin/ld.exe: cannot find -lpthreads
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTC_33631.dir\build.make:98: recipe for target 'cmTC_33631.exe' failed
+mingw32-make.exe[1]: *** [cmTC_33631.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:125: recipe for target 'cmTC_33631/fast' failed
+mingw32-make.exe: *** [cmTC_33631/fast] Error 2
+
+
+Determining if the include file dinput.h exists failed with the following output:
+Change Dir: D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTC_37a35/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTC_37a35.dir\build.make CMakeFiles/cmTC_37a35.dir/build
+mingw32-make.exe[1]: Entering directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_37a35.dir/CheckIncludeFile.c.obj
+C:\MinGW\bin\gcc.exe     -o CMakeFiles\cmTC_37a35.dir\CheckIncludeFile.c.obj   -c D:\Education\University\Current\cpsc453\Assignments\Assignment2\cpsc453_a2\Assignment2\cmake-build-debug\CMakeFiles\CMakeTmp\CheckIncludeFile.c
+D:\Education\University\Current\cpsc453\Assignments\Assignment2\cpsc453_a2\Assignment2\cmake-build-debug\CMakeFiles\CMakeTmp\CheckIncludeFile.c:1:20: fatal error: dinput.h: No such file or directory
+compilation terminated.
+CMakeFiles\cmTC_37a35.dir\build.make:64: recipe for target 'CMakeFiles/cmTC_37a35.dir/CheckIncludeFile.c.obj' failed
+mingw32-make.exe[1]: *** [CMakeFiles/cmTC_37a35.dir/CheckIncludeFile.c.obj] Error 1
+mingw32-make.exe[1]: Leaving directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:125: recipe for target 'cmTC_37a35/fast' failed
+mingw32-make.exe: *** [cmTC_37a35/fast] Error 2
+
+
+Determining if the include file xinput.h exists failed with the following output:
+Change Dir: D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTC_de88d/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTC_de88d.dir\build.make CMakeFiles/cmTC_de88d.dir/build
+mingw32-make.exe[1]: Entering directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_de88d.dir/CheckIncludeFile.c.obj
+C:\MinGW\bin\gcc.exe     -o CMakeFiles\cmTC_de88d.dir\CheckIncludeFile.c.obj   -c D:\Education\University\Current\cpsc453\Assignments\Assignment2\cpsc453_a2\Assignment2\cmake-build-debug\CMakeFiles\CMakeTmp\CheckIncludeFile.c
+D:\Education\University\Current\cpsc453\Assignments\Assignment2\cpsc453_a2\Assignment2\cmake-build-debug\CMakeFiles\CMakeTmp\CheckIncludeFile.c:1:20: fatal error: xinput.h: No such file or directory
+compilation terminated.
+CMakeFiles\cmTC_de88d.dir\build.make:64: recipe for target 'CMakeFiles/cmTC_de88d.dir/CheckIncludeFile.c.obj' failed
+mingw32-make.exe[1]: *** [CMakeFiles/cmTC_de88d.dir/CheckIncludeFile.c.obj] Error 1
+mingw32-make.exe[1]: Leaving directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:125: recipe for target 'cmTC_de88d/fast' failed
+mingw32-make.exe: *** [cmTC_de88d/fast] Error 2
+
+
+Performing C SOURCE FILE Test _GLFW_HAS_64ASLR failed with the following output:
+Change Dir: D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTC_28d5f/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTC_28d5f.dir\build.make CMakeFiles/cmTC_28d5f.dir/build
+mingw32-make.exe[1]: Entering directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_28d5f.dir/src.c.obj
+C:\MinGW\bin\gcc.exe    -D_GLFW_HAS_64ASLR -Wl,--high-entropy-va   -o CMakeFiles\cmTC_28d5f.dir\src.c.obj   -c D:\Education\University\Current\cpsc453\Assignments\Assignment2\cpsc453_a2\Assignment2\cmake-build-debug\CMakeFiles\CMakeTmp\src.c
+Linking C executable cmTC_28d5f.exe
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_28d5f.dir\link.txt --verbose=1
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -E remove -f CMakeFiles\cmTC_28d5f.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\cmTC_28d5f.dir/objects.a @CMakeFiles\cmTC_28d5f.dir\objects1.rsp
+C:\MinGW\bin\gcc.exe   -D_GLFW_HAS_64ASLR -Wl,--high-entropy-va    -Wl,--whole-archive CMakeFiles\cmTC_28d5f.dir/objects.a -Wl,--no-whole-archive  -o cmTC_28d5f.exe -Wl,--out-implib,libcmTC_28d5f.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_28d5f.dir\linklibs.rsp
+c:/mingw/bin/../lib/gcc/mingw32/5.3.0/../../../../mingw32/bin/ld.exe: unrecognized option '--high-entropy-va'
+c:/mingw/bin/../lib/gcc/mingw32/5.3.0/../../../../mingw32/bin/ld.exe: use the --help option for usage information
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTC_28d5f.dir\build.make:98: recipe for target 'cmTC_28d5f.exe' failed
+mingw32-make.exe[1]: *** [cmTC_28d5f.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'D:/Education/University/Current/cpsc453/Assignments/Assignment2/cpsc453_a2/Assignment2/cmake-build-debug/CMakeFiles/CMakeTmp'
+Makefile:125: recipe for target 'cmTC_28d5f/fast' failed
+mingw32-make.exe: *** [cmTC_28d5f/fast] Error 2
+
+Source file was:
+int main(void) { return 0; }
