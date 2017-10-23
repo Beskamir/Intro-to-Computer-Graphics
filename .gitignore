@@ -4,11 +4,5 @@ Assignment1/cmake-build-debug/*
 ## Directory-based project format:
 Assignment1/.idea/*
 
-##Ignore the bin folder.
-Assignment1/bin/*
-
 ##Ignore the exe.
-Assignment1/Assignment1.exe
-
-##Ignore generated obj files.
-Assignment1/obj/*
+Assignment1/output/Assignment1.exe
