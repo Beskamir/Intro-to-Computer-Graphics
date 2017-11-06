@@ -160,7 +160,7 @@ typedef GLFWglproc (EGLAPIENTRY * PFN_eglGetProcAddress)(const char*);
 #define _GLFW_EGL_LIBRARY_CONTEXT_STATE    _GLFWlibraryEGL egl
 
 
-// EGL-specific per-context data
+// EGL-specific per-context shaderData
 //
 typedef struct _GLFWcontextEGL
 {
@@ -172,7 +172,7 @@ typedef struct _GLFWcontextEGL
 
 } _GLFWcontextEGL;
 
-// EGL-specific global data
+// EGL-specific global shaderData
 //
 typedef struct _GLFWlibraryEGL
 {

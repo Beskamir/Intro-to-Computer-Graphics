@@ -121,7 +121,7 @@ namespace detail
 		template <typename U>
 		GLM_FUNC_QUALIFIER void _apply_op(vecType<T, P> const& that, U op)
 		{
-			// Make a copy of the data in this == &that.
+			// Make a copy of the shaderData in this == &that.
 			// The copier should optimize out the copy in cases where the function is
 			// properly inlined and the copy is not necessary.
 			T t[N];

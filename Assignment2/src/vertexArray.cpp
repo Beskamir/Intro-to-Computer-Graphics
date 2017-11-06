@@ -4,15 +4,15 @@
 
 #include "vertexArray.h"
 
-VertexArray::VertexArray(int c) {
+vertexArray::vertexArray(int c) {
     glGenVertexArrays(1, &id);
     count = c;
 }
 
-VertexArray::VertexArray(const VertexArray &v) {
+vertexArray::vertexArray(const vertexArray &v) {
     glGenVertexArrays(1, &id);
 
-    // Copy data from the old object
+    // Copy shaderData from the old object
     this->indices = std::map<string, int>(v.indices);
     count = v.count;
 
@@ -71,7 +71,7 @@ VertexArray::VertexArray(const VertexArray &v) {
     glDeleteBuffers(v.buffers.size(), &temp_buffers[0]);
 }
 
-void VertexArray::addBuffer(string name, int index, vector<float> buffer){
+void vertexArray::addBuffer(string name, int index, vector<float> buffer){
     GLuint buffer_id;
     glBindVertexArray(id);
 
@@ -90,13 +90,13 @@ void VertexArray::addBuffer(string name, int index, vector<float> buffer){
     glBindVertexArray(0);
 }
 
-void VertexArray::updateBuffer(string name, vector<float> buffer)  {
+void vertexArray::updateBuffer(string name, vector<float> buffer)  {
     glBindBuffer(GL_ARRAY_BUFFER, buffers[name]);
     glBufferData(GL_ARRAY_BUFFER, buffer.size() * sizeof(float), buffer.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-VertexArray::~VertexArray() {
+vertexArray::~vertexArray() {
     glBindVertexArray(0);
     glDeleteVertexArrays(1, &id);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

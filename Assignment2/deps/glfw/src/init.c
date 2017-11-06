@@ -33,7 +33,7 @@
 #include <stdarg.h>
 
 
-// The global variables below comprise all global data in GLFW.
+// The global variables below comprise all global shaderData in GLFW.
 // Any other global variable is a bug.
 
 // Global state shared between compilation units of GLFW

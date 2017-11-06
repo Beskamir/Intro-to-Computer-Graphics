@@ -51,7 +51,7 @@
 #define _GLFW_XDND_VERSION 5
 
 
-// Wait for data to arrive using select
+// Wait for shaderData to arrive using select
 // This avoids blocking other threads via the per-display Xlib lock that also
 // covers GLX functions
 //
@@ -761,7 +761,7 @@ static Atom writeTargetToProperty(const XSelectionRequestEvent* request)
         return request->property;
     }
 
-    // Conversion to a data target was requested
+    // Conversion to a shaderData target was requested
 
     for (i = 0;  i < formatCount;  i++)
     {
@@ -1420,7 +1420,7 @@ static void processEvent(XEvent *event)
 
                 if (_glfw.x11.xdnd.format)
                 {
-                    // Reply that we are ready to copy the dragged data
+                    // Reply that we are ready to copy the dragged shaderData
                     reply.xclient.data.l[1] = 1; // Accept with no rectangle
                     if (_glfw.x11.xdnd.version >= 2)
                         reply.xclient.data.l[4] = _glfw.x11.XdndActionCopy;
@@ -1438,7 +1438,7 @@ static void processEvent(XEvent *event)
         {
             if (event->xselection.property == _glfw.x11.XdndSelection)
             {
-                // The converted data from the drag operation has arrived
+                // The converted shaderData from the drag operation has arrived
                 char* data;
                 const unsigned long result =
                     _glfwGetWindowPropertyX11(event->xselection.requestor,

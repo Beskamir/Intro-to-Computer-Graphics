@@ -120,7 +120,7 @@ typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR)(Vk
 #define _GLFW_PLATFORM_CURSOR_STATE         _GLFWcursorX11  x11
 
 
-// X11-specific per-window data
+// X11-specific per-window shaderData
 //
 typedef struct _GLFWwindowX11
 {
@@ -146,7 +146,7 @@ typedef struct _GLFWwindowX11
 
 } _GLFWwindowX11;
 
-// X11-specific global data
+// X11-specific global shaderData
 //
 typedef struct _GLFWlibraryX11
 {
@@ -294,7 +294,7 @@ typedef struct _GLFWlibraryX11
 
 } _GLFWlibraryX11;
 
-// X11-specific per-monitor data
+// X11-specific per-monitor shaderData
 //
 typedef struct _GLFWmonitorX11
 {
@@ -308,7 +308,7 @@ typedef struct _GLFWmonitorX11
 
 } _GLFWmonitorX11;
 
-// X11-specific per-cursor data
+// X11-specific per-cursor shaderData
 //
 typedef struct _GLFWcursorX11
 {

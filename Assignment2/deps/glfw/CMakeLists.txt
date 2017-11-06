@@ -120,7 +120,7 @@ if (MINGW)
     # Enable link-time exploit mitigation features enabled by default on MSVC
     include(CheckCCompilerFlag)
 
-    # Compatibility with data execution prevention (DEP)
+    # Compatibility with shaderData execution prevention (DEP)
     set(CMAKE_REQUIRED_FLAGS "-Wl,--nxcompat")
     check_c_compiler_flag("" _GLFW_HAS_DEP)
     if (_GLFW_HAS_DEP)

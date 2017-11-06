@@ -1959,7 +1959,7 @@ static void demo_init_vk(struct demo *demo) {
 
     vkGetPhysicalDeviceProperties(demo->gpu, &demo->gpu_props);
 
-    // Query with NULL data to get count
+    // Query with NULL shaderData to get count
     vkGetPhysicalDeviceQueueFamilyProperties(demo->gpu, &demo->queue_count,
                                              NULL);
 

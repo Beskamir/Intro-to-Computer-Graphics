@@ -29,7 +29,7 @@ namespace gli
 		for(texture2D::level_type Level = BaseLevel; Level < Levels - 1; ++Level)
 		{
 			std::size_t BaseWidth = Result[Level + 0].dimensions().x;
-			texture2D::value_type * DataSrc = Result[Level + 0].data();
+			texture2D::value_type * DataSrc = Result[Level + 0].shaderData();
 
 			texture2D::dimensions_type LevelDimensions = Result[Level + 0].dimensions() >> texture2D::dimensions_type(1);
 			LevelDimensions = glm::max(LevelDimensions, texture2D::dimensions_type(1));
@@ -55,7 +55,7 @@ namespace gli
 				glm::u32 Data10 = reinterpret_cast<texture2D::value_type*>(DataSrc)[Index10];
 
 				texture2D::value_type Result = (Data00 + Data01 + Data11 + Data10) >> 2;
-				texture2D::value_type * Data = reinterpret_cast<texture2D::value_type*>(DataDst.data());
+				texture2D::value_type * Data = reinterpret_cast<texture2D::value_type*>(DataDst.shaderData());
 
 				*(Data + ((i + j * LevelDimensions.x) * Components + c)) = Result;
 			}

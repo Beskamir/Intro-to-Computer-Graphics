@@ -33,7 +33,7 @@
 #define _GLFW_PLATFORM_LIBRARY_JOYSTICK_STATE _GLFWlibraryLinux  linjs
 
 
-// Linux-specific joystick data
+// Linux-specific joystick shaderData
 //
 typedef struct _GLFWjoystickLinux
 {
@@ -41,7 +41,7 @@ typedef struct _GLFWjoystickLinux
     char*           path;
 } _GLFWjoystickLinux;
 
-// Linux-specific joystick API data
+// Linux-specific joystick API shaderData
 //
 typedef struct _GLFWlibraryLinux
 {

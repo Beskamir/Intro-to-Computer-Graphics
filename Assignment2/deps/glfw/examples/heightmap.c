@@ -345,7 +345,7 @@ static void make_mesh(GLuint program)
     glGenVertexArrays(1, &mesh);
     glGenBuffers(4, mesh_vbo);
     glBindVertexArray(mesh);
-    /* Prepare the data for drawing through a buffer inidices */
+    /* Prepare the shaderData for drawing through a buffer inidices */
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_vbo[3]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* MAP_NUM_LINES * 2, map_line_indices, GL_STATIC_DRAW);
 
@@ -369,7 +369,7 @@ static void make_mesh(GLuint program)
     glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
-/* Update VBO vertices from source data
+/* Update VBO vertices from source shaderData
  */
 static void update_mesh(void)
 {
@@ -462,7 +462,7 @@ int main(int argc, char** argv)
     modelview_matrix[14]  = -20.0f;
     glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, modelview_matrix);
 
-    /* Create mesh data */
+    /* Create mesh shaderData */
     init_map();
     make_mesh(shader_program);
 

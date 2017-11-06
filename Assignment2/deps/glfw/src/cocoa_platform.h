@@ -80,7 +80,7 @@ typedef UInt8 (*PFN_LMGetKbdType)(void);
 #define LMGetKbdType _glfw.ns.tis.GetKbdType
 
 
-// Cocoa-specific per-window data
+// Cocoa-specific per-window shaderData
 //
 typedef struct _GLFWwindowNS
 {
@@ -98,7 +98,7 @@ typedef struct _GLFWwindowNS
 
 } _GLFWwindowNS;
 
-// Cocoa-specific global data
+// Cocoa-specific global shaderData
 //
 typedef struct _GLFWlibraryNS
 {
@@ -131,7 +131,7 @@ typedef struct _GLFWlibraryNS
 
 } _GLFWlibraryNS;
 
-// Cocoa-specific per-monitor data
+// Cocoa-specific per-monitor shaderData
 //
 typedef struct _GLFWmonitorNS
 {
@@ -141,7 +141,7 @@ typedef struct _GLFWmonitorNS
 
 } _GLFWmonitorNS;
 
-// Cocoa-specific per-cursor data
+// Cocoa-specific per-cursor shaderData
 //
 typedef struct _GLFWcursorNS
 {
@@ -149,7 +149,7 @@ typedef struct _GLFWcursorNS
 
 } _GLFWcursorNS;
 
-// Cocoa-specific global timer data
+// Cocoa-specific global timer shaderData
 //
 typedef struct _GLFWtimerNS
 {

@@ -39,7 +39,7 @@ typedef struct _GLFWjoyobjectWin32
     int                     type;
 } _GLFWjoyobjectWin32;
 
-// Win32-specific per-joystick data
+// Win32-specific per-joystick shaderData
 //
 typedef struct _GLFWjoystickWin32
 {

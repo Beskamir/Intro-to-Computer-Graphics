@@ -31,7 +31,7 @@
 #define _GLFW_PLATFORM_LIBRARY_CONTEXT_STATE    _GLFWlibraryNSGL nsgl
 
 
-// NSGL-specific per-context data
+// NSGL-specific per-context shaderData
 //
 typedef struct _GLFWcontextNSGL
 {
@@ -40,7 +40,7 @@ typedef struct _GLFWcontextNSGL
 
 } _GLFWcontextNSGL;
 
-// NSGL-specific global data
+// NSGL-specific global shaderData
 //
 typedef struct _GLFWlibraryNSGL
 {

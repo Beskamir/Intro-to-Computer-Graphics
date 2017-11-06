@@ -61,7 +61,7 @@ typedef GLFWglproc (GLAPIENTRY * PFN_OSMesaGetProcAddress)(const char*);
 #define _GLFW_OSMESA_LIBRARY_CONTEXT_STATE      _GLFWlibraryOSMesa osmesa
 
 
-// OSMesa-specific per-context data
+// OSMesa-specific per-context shaderData
 //
 typedef struct _GLFWcontextOSMesa
 {
@@ -72,7 +72,7 @@ typedef struct _GLFWcontextOSMesa
 
 } _GLFWcontextOSMesa;
 
-// OSMesa-specific global data
+// OSMesa-specific global shaderData
 //
 typedef struct _GLFWlibraryOSMesa
 {

@@ -92,7 +92,7 @@ struct {
     int       d_frame;   // Particle draw frame number
     cnd_t     p_done;    // Condition: particle physics done
     cnd_t     d_done;    // Condition: particle draw done
-    mtx_t     particles_lock; // Particles data sharing mutex
+    mtx_t     particles_lock; // Particles shaderData sharing mutex
 } thread_sync;
 
 
@@ -387,7 +387,7 @@ static void particle_engine(double t, float dt)
 
 #define BATCH_PARTICLES 70  // Number of particles to draw in each batch
                             // (70 corresponds to 7.5 KB = will not blow
-                            // the L1 data cache on most CPUs)
+                            // the L1 shaderData cache on most CPUs)
 #define PARTICLE_VERTS  4   // Number of vertices per particle
 
 static void draw_particles(GLFWwindow* window, double t, float dt)
@@ -552,7 +552,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
         pptr++;
     }
 
-    // We are done with the particle data
+    // We are done with the particle shaderData
     mtx_unlock(&thread_sync.particles_lock);
     cnd_signal(&thread_sync.d_done);
 

@@ -196,7 +196,7 @@ static void createKeyTables(void)
     }
 }
 
-// Retrieve Unicode data for the current keyboard layout
+// Retrieve Unicode shaderData for the current keyboard layout
 //
 static GLFWbool updateUnicodeDataNS(void)
 {
@@ -220,7 +220,7 @@ static GLFWbool updateUnicodeDataNS(void)
     if (!_glfw.ns.unicodeData)
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "Cocoa: Failed to retrieve keyboard layout Unicode data");
+                        "Cocoa: Failed to retrieve keyboard layout Unicode shaderData");
         return GLFW_FALSE;
     }
 

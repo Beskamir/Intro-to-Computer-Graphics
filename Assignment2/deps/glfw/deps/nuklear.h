@@ -1156,7 +1156,7 @@ NK_API const char*              nk_utf_at(const char *buffer, int length, int in
 /*  Font handling in this library was designed to be quite customizable and lets
     you decide what you want to use and what you want to provide. There are three
     different ways to use the font atlas. The first two will use your font
-    handling scheme and only requires essential data to run nuklear. The next
+    handling scheme and only requires essential shaderData to run nuklear. The next
     slightly more advanced features is font handling with vertex buffer output.
     Finally the most complex API wise is using nuklears font baking API.
 
@@ -1633,7 +1633,7 @@ NK_API int nk_str_len_char(struct nk_str*);
  * The final way is using a dynamically growing nk_text_edit struct, which
  * has both a default version if you don't care where memory comes from and an
  * allocator version if you do. While the text editor is quite powerful for its
- * complexity I would not recommend editing gigabytes of data with it.
+ * complexity I would not recommend editing gigabytes of shaderData with it.
  * It is rather designed for uses cases which make sense for a GUI library not for
  * an full blown text editor.
  */
@@ -8660,10 +8660,10 @@ nk_tt_GetGlyphShape(const struct nk_tt_fontinfo *info, struct nk_allocator *allo
         next_move = 0;
         flagcount=0;
 
-        /* in first pass, we load uninterpreted data into the allocated array */
+        /* in first pass, we load uninterpreted shaderData into the allocated array */
         /* above, shifted to the end of the array so we won't overwrite it when */
-        /* we create our final data starting from the front */
-        off = m - n; /* starting offset for uninterpreted data, regardless of how m ends up being calculated */
+        /* we create our final shaderData starting from the front */
+        off = m - n; /* starting offset for uninterpreted shaderData, regardless of how m ends up being calculated */
 
         /* first load flags */
         for (i=0; i < n; ++i) {
@@ -10118,7 +10118,7 @@ nk_font_bake_pack(struct nk_font_baker *baker,
         int rect_n = 0;
         int char_n = 0;
 
-        /* pack custom user data first so it will be in the upper left corner*/
+        /* pack custom user shaderData first so it will be in the upper left corner*/
         if (custom) {
             struct nk_rp_rect custom_space;
             nk_zero(&custom_space, sizeof(custom_space));
@@ -10266,7 +10266,7 @@ nk_font_bake(struct nk_font_baker *baker, void *image_memory, int width, int hei
                 nk_tt_GetPackedQuad(range->chardata_for_range, (int)width,
                     (int)height, char_idx, &dummy_x, &dummy_y, &q, 0);
 
-                /* fill own glyph type with data */
+                /* fill own glyph type with shaderData */
                 glyph = &glyphs[dst_font->glyph_offset + (unsigned int)glyph_count];
                 glyph->codepoint = codepoint;
                 glyph->x0 = q.x0; glyph->y0 = q.y0;
@@ -16653,7 +16653,7 @@ nk_panel_end(struct nk_context *ctx)
     if (!nk_panel_is_sub(layout->type))
         nk_push_scissor(out, nk_null_rect);
 
-    /* cache configuration data */
+    /* cache configuration shaderData */
     scrollbar_size = style->window.scrollbar_size;
     panel_padding = nk_panel_get_padding(style, layout->type);
 
@@ -17882,7 +17882,7 @@ nk_panel_layout(const struct nk_context *ctx, struct nk_window *win,
     if (!ctx || !ctx->current || !ctx->current->layout)
         return;
 
-    /* prefetch some configuration data */
+    /* prefetch some configuration shaderData */
     layout = win->layout;
     style = &ctx->style;
     out = &win->buffer;
@@ -18587,7 +18587,7 @@ nk_tree_state_base(struct nk_context *ctx, enum nk_tree_type type,
     if (!ctx || !ctx->current || !ctx->current->layout)
         return 0;
 
-    /* cache some data */
+    /* cache some shaderData */
     win = ctx->current;
     layout = win->layout;
     out = &win->buffer;
@@ -20343,7 +20343,7 @@ nk_chart_push_line(struct nk_context *ctx, struct nk_window *win,
     ratio = (value - g->slots[slot].min) / range;
 
     if (g->slots[slot].index == 0) {
-        /* first data point does not have a connection */
+        /* first shaderData point does not have a connection */
         g->slots[slot].last.x = g->x;
         g->slots[slot].last.y = (g->y + g->h) - ratio * (float)g->h;
 
@@ -20364,7 +20364,7 @@ nk_chart_push_line(struct nk_context *ctx, struct nk_window *win,
         return ret;
     }
 
-    /* draw a line between the last data point and the new one */
+    /* draw a line between the last shaderData point and the new one */
     color = g->slots[slot].color;
     cur.x = g->x + (float)(step * (float)g->slots[slot].index);
     cur.y = (g->y + g->h) - (ratio * (float)g->h);
@@ -20374,7 +20374,7 @@ nk_chart_push_line(struct nk_context *ctx, struct nk_window *win,
     bounds.y = cur.y - 3;
     bounds.w = bounds.h = 6;
 
-    /* user selection of current data point */
+    /* user selection of current shaderData point */
     if (!(layout->flags & NK_WINDOW_ROM)) {
         if (nk_input_is_mouse_hovering_rect(i, bounds)) {
             ret = NK_CHART_HOVERING;
@@ -20385,7 +20385,7 @@ nk_chart_push_line(struct nk_context *ctx, struct nk_window *win,
     }
     nk_fill_rect(out, nk_rect(cur.x - 2, cur.y - 2, 4, 4), 0, color);
 
-    /* save current data point position */
+    /* save current shaderData point position */
     g->slots[slot].last.x = cur.x;
     g->slots[slot].last.y = cur.y;
     g->slots[slot].index  += 1;
@@ -20814,7 +20814,7 @@ nk_popup_begin(struct nk_context *ctx, enum nk_popup_type type,
     rect.x += win->layout->clip.x;
     rect.y += win->layout->clip.y;
 
-    /* setup popup data */
+    /* setup popup shaderData */
     popup->parent = win;
     popup->bounds = rect;
     popup->seq = ctx->seq;
@@ -21054,7 +21054,7 @@ nk_tooltip(struct nk_context *ctx, const char *text)
     if (!ctx || !ctx->current || !ctx->current->layout || !text)
         return;
 
-    /* fetch configuration data */
+    /* fetch configuration shaderData */
     style = &ctx->style;
     padding = style->window.padding;
 

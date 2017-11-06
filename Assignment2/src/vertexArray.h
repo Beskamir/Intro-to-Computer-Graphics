@@ -24,20 +24,20 @@
 
 using namespace std;
 
-class VertexArray {
+class vertexArray {
     std::map<string, GLuint> buffers;
     std::map<string, int> indices;
 public:
     GLuint id;
     unsigned int count;
 
-    VertexArray(int c);
-    VertexArray(const VertexArray &v);
+    vertexArray(int c);
+    vertexArray(const vertexArray &v);
 
     void addBuffer(string name, int index, vector<float> buffer);
     void updateBuffer(string name, vector<float> buffer);
 
-    ~VertexArray();
+    ~vertexArray();
 };
 
 

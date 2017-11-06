@@ -1,7 +1,7 @@
 #version 410
 
 in vec3 vertexColor;
-in vec2 TexCoord;
+in vec2 uvCoord;
 
 out vec4 FragmentColour;
 
@@ -9,7 +9,7 @@ out vec4 FragmentColour;
 uniform sampler2D texture1;
 
 void main() {
-    FragmentColour = vec4(vertexColor,1.0f);
+//    FragmentColour = vec4(vertexColor,1.0f);
   	// Linearly interpolate between both textures (second texture is only slightly combined)
-//    FragmentColour = texture(texture1, TexCoord);
+    FragmentColour = texture(texture1, uvCoord);
 }

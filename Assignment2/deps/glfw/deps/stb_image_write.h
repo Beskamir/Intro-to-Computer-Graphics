@@ -212,9 +212,9 @@ static void stbi__start_write_callbacks(stbi__write_context *s, stbi_write_func 
 
 #ifndef STBI_WRITE_NO_STDIO
 
-static void stbi__stdio_write(void *context, void *data, int size)
+static void stbi__stdio_write(void *context, void *shaderData, int size)
 {
-   fwrite(data,1,size,(FILE*) context);
+   fwrite(shaderData,1,size,(FILE*) context);
 }
 
 static int stbi__start_write_file(stbi__write_context *s, const char *filename)
@@ -319,7 +319,7 @@ static void stbiw__write_pixel(stbi__write_context *s, int rgb_dir, int comp, in
       s->func(s->context, &d[comp - 1], 1);
 }
 
-static void stbiw__write_pixels(stbi__write_context *s, int rgb_dir, int vdir, int x, int y, int comp, void *data, int write_alpha, int scanline_pad, int expand_mono)
+static void stbiw__write_pixels(stbi__write_context *s, int rgb_dir, int vdir, int x, int y, int comp, void *shaderData, int write_alpha, int scanline_pad, int expand_mono)
 {
    stbiw_uint32 zero = 0;
    int i,j, j_end;
@@ -334,14 +334,14 @@ static void stbiw__write_pixels(stbi__write_context *s, int rgb_dir, int vdir, i
 
    for (; j != j_end; j += vdir) {
       for (i=0; i < x; ++i) {
-         unsigned char *d = (unsigned char *) data + (j*x+i)*comp;
+         unsigned char *d = (unsigned char *) shaderData + (j*x+i)*comp;
          stbiw__write_pixel(s, rgb_dir, comp, write_alpha, expand_mono, d);
       }
       s->func(s->context, &zero, scanline_pad);
    }
 }
 
-static int stbiw__outfile(stbi__write_context *s, int rgb_dir, int vdir, int x, int y, int comp, int expand_mono, void *data, int alpha, int pad, const char *fmt, ...)
+static int stbiw__outfile(stbi__write_context *s, int rgb_dir, int vdir, int x, int y, int comp, int expand_mono, void *shaderData, int alpha, int pad, const char *fmt, ...)
 {
    if (y < 0 || x < 0) {
       return 0;
@@ -350,33 +350,33 @@ static int stbiw__outfile(stbi__write_context *s, int rgb_dir, int vdir, int x, 
       va_start(v, fmt);
       stbiw__writefv(s, fmt, v);
       va_end(v);
-      stbiw__write_pixels(s,rgb_dir,vdir,x,y,comp,data,alpha,pad, expand_mono);
+      stbiw__write_pixels(s,rgb_dir,vdir,x,y,comp,shaderData,alpha,pad, expand_mono);
       return 1;
    }
 }
 
-static int stbi_write_bmp_core(stbi__write_context *s, int x, int y, int comp, const void *data)
+static int stbi_write_bmp_core(stbi__write_context *s, int x, int y, int comp, const void *shaderData)
 {
    int pad = (-x*3) & 3;
-   return stbiw__outfile(s,-1,-1,x,y,comp,1,(void *) data,0,pad,
+   return stbiw__outfile(s,-1,-1,x,y,comp,1,(void *) shaderData,0,pad,
            "11 4 22 4" "4 44 22 444444",
            'B', 'M', 14+40+(x*3+pad)*y, 0,0, 14+40,  // file header
             40, x,y, 1,24, 0,0,0,0,0,0);             // bitmap header
 }
 
-STBIWDEF int stbi_write_bmp_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const void *data)
+STBIWDEF int stbi_write_bmp_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const void *shaderData)
 {
    stbi__write_context s;
    stbi__start_write_callbacks(&s, func, context);
-   return stbi_write_bmp_core(&s, x, y, comp, data);
+   return stbi_write_bmp_core(&s, x, y, comp, shaderData);
 }
 
 #ifndef STBI_WRITE_NO_STDIO
-STBIWDEF int stbi_write_bmp(char const *filename, int x, int y, int comp, const void *data)
+STBIWDEF int stbi_write_bmp(char const *filename, int x, int y, int comp, const void *shaderData)
 {
    stbi__write_context s;
    if (stbi__start_write_file(&s,filename)) {
-      int r = stbi_write_bmp_core(&s, x, y, comp, data);
+      int r = stbi_write_bmp_core(&s, x, y, comp, shaderData);
       stbi__end_write_file(&s);
       return r;
    } else
@@ -384,7 +384,7 @@ STBIWDEF int stbi_write_bmp(char const *filename, int x, int y, int comp, const 
 }
 #endif //!STBI_WRITE_NO_STDIO
 
-static int stbi_write_tga_core(stbi__write_context *s, int x, int y, int comp, void *data)
+static int stbi_write_tga_core(stbi__write_context *s, int x, int y, int comp, void *shaderData)
 {
    int has_alpha = (comp == 2 || comp == 4);
    int colorbytes = has_alpha ? comp-1 : comp;
@@ -394,7 +394,7 @@ static int stbi_write_tga_core(stbi__write_context *s, int x, int y, int comp, v
       return 0;
 
    if (!stbi_write_tga_with_rle) {
-      return stbiw__outfile(s, -1, -1, x, y, comp, 0, (void *) data, has_alpha, 0,
+      return stbiw__outfile(s, -1, -1, x, y, comp, 0, (void *) shaderData, has_alpha, 0,
          "111 221 2222 11", 0, 0, format, 0, 0, 0, 0, 0, x, y, (colorbytes + has_alpha) * 8, has_alpha * 8);
    } else {
       int i,j,k;
@@ -402,7 +402,7 @@ static int stbi_write_tga_core(stbi__write_context *s, int x, int y, int comp, v
       stbiw__writef(s, "111 221 2222 11", 0,0,format+8, 0,0,0, 0,0,x,y, (colorbytes + has_alpha) * 8, has_alpha * 8);
 
       for (j = y - 1; j >= 0; --j) {
-          unsigned char *row = (unsigned char *) data + j * x * comp;
+          unsigned char *row = (unsigned char *) shaderData + j * x * comp;
          int len;
 
          for (i = 0; i < x; i += len) {
@@ -452,19 +452,19 @@ static int stbi_write_tga_core(stbi__write_context *s, int x, int y, int comp, v
    return 1;
 }
 
-int stbi_write_tga_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const void *data)
+int stbi_write_tga_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const void *shaderData)
 {
    stbi__write_context s;
    stbi__start_write_callbacks(&s, func, context);
-   return stbi_write_tga_core(&s, x, y, comp, (void *) data);
+   return stbi_write_tga_core(&s, x, y, comp, (void *) shaderData);
 }
 
 #ifndef STBI_WRITE_NO_STDIO
-int stbi_write_tga(char const *filename, int x, int y, int comp, const void *data)
+int stbi_write_tga(char const *filename, int x, int y, int comp, const void *shaderData)
 {
    stbi__write_context s;
    if (stbi__start_write_file(&s,filename)) {
-      int r = stbi_write_tga_core(&s, x, y, comp, (void *) data);
+      int r = stbi_write_tga_core(&s, x, y, comp, (void *) shaderData);
       stbi__end_write_file(&s);
       return r;
    } else
@@ -504,12 +504,12 @@ void stbiw__write_run_data(stbi__write_context *s, int length, unsigned char dat
    s->func(s->context, &databyte, 1);
 }
 
-void stbiw__write_dump_data(stbi__write_context *s, int length, unsigned char *data)
+void stbiw__write_dump_data(stbi__write_context *s, int length, unsigned char *shaderData)
 {
    unsigned char lengthbyte = STBIW_UCHAR(length);
    STBIW_ASSERT(length <= 128); // inconsistent with spec but consistent with official code
    s->func(s->context, &lengthbyte, 1);
-   s->func(s->context, data, length);
+   s->func(s->context, shaderData, length);
 }
 
 void stbiw__write_hdr_scanline(stbi__write_context *s, int width, int ncomp, unsigned char *scratch, float *scanline)
@@ -601,9 +601,9 @@ void stbiw__write_hdr_scanline(stbi__write_context *s, int width, int ncomp, uns
    }
 }
 
-static int stbi_write_hdr_core(stbi__write_context *s, int x, int y, int comp, float *data)
+static int stbi_write_hdr_core(stbi__write_context *s, int x, int y, int comp, float *shaderData)
 {
-   if (y <= 0 || x <= 0 || data == NULL)
+   if (y <= 0 || x <= 0 || shaderData == NULL)
       return 0;
    else {
       // Each component is stored separately. Allocate scratch space for full output scanline.
@@ -617,24 +617,24 @@ static int stbi_write_hdr_core(stbi__write_context *s, int x, int y, int comp, f
       s->func(s->context, buffer, len);
 
       for(i=0; i < y; i++)
-         stbiw__write_hdr_scanline(s, x, comp, scratch, data + comp*i*x);
+         stbiw__write_hdr_scanline(s, x, comp, scratch, shaderData + comp*i*x);
       STBIW_FREE(scratch);
       return 1;
    }
 }
 
-int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const float *data)
+int stbi_write_hdr_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const float *shaderData)
 {
    stbi__write_context s;
    stbi__start_write_callbacks(&s, func, context);
-   return stbi_write_hdr_core(&s, x, y, comp, (float *) data);
+   return stbi_write_hdr_core(&s, x, y, comp, (float *) shaderData);
 }
 
-int stbi_write_hdr(char const *filename, int x, int y, int comp, const float *data)
+int stbi_write_hdr(char const *filename, int x, int y, int comp, const float *shaderData)
 {
    stbi__write_context s;
    if (stbi__start_write_file(&s,filename)) {
-      int r = stbi_write_hdr_core(&s, x, y, comp, (float *) data);
+      int r = stbi_write_hdr_core(&s, x, y, comp, (float *) shaderData);
       stbi__end_write_file(&s);
       return r;
    } else
@@ -674,14 +674,14 @@ static void *stbiw__sbgrowf(void **arr, int increment, int itemsize)
    return *arr;
 }
 
-static unsigned char *stbiw__zlib_flushf(unsigned char *data, unsigned int *bitbuffer, int *bitcount)
+static unsigned char *stbiw__zlib_flushf(unsigned char *shaderData, unsigned int *bitbuffer, int *bitcount)
 {
    while (*bitcount >= 8) {
-      stbiw__sbpush(data, STBIW_UCHAR(*bitbuffer));
+      stbiw__sbpush(shaderData, STBIW_UCHAR(*bitbuffer));
       *bitbuffer >>= 8;
       *bitcount -= 8;
    }
-   return data;
+   return shaderData;
 }
 
 static int stbiw__zlib_bitrev(int code, int codebits)
@@ -702,9 +702,9 @@ static unsigned int stbiw__zlib_countm(unsigned char *a, unsigned char *b, int l
    return i;
 }
 
-static unsigned int stbiw__zhash(unsigned char *data)
+static unsigned int stbiw__zhash(unsigned char *shaderData)
 {
-   stbiw_uint32 hash = data[0] + (data[1] << 8) + (data[2] << 16);
+   stbiw_uint32 hash = shaderData[0] + (shaderData[1] << 8) + (shaderData[2] << 16);
    hash ^= hash << 3;
    hash += hash >> 5;
    hash ^= hash << 4;
@@ -728,7 +728,7 @@ static unsigned int stbiw__zhash(unsigned char *data)
 
 #define stbiw__ZHASH   16384
 
-unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_len, int quality)
+unsigned char * stbi_zlib_compress(unsigned char *shaderData, int data_len, int *out_len, int quality)
 {
    static unsigned short lengthc[] = { 3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258, 259 };
    static unsigned char  lengtheb[]= { 0,0,0,0,0,0,0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4,  4,  5,  5,  5,  5,  0 };
@@ -750,14 +750,14 @@ unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_l
 
    i=0;
    while (i < data_len-3) {
-      // hash next 3 bytes of data to be compressed
-      int h = stbiw__zhash(data+i)&(stbiw__ZHASH-1), best=3;
+      // hash next 3 bytes of shaderData to be compressed
+      int h = stbiw__zhash(shaderData+i)&(stbiw__ZHASH-1), best=3;
       unsigned char *bestloc = 0;
       unsigned char **hlist = hash_table[h];
       int n = stbiw__sbcount(hlist);
       for (j=0; j < n; ++j) {
-         if (hlist[j]-data > i-32768) { // if entry lies within window
-            int d = stbiw__zlib_countm(hlist[j], data+i, data_len-i);
+         if (hlist[j]-shaderData > i-32768) { // if entry lies within window
+            int d = stbiw__zlib_countm(hlist[j], shaderData+i, data_len-i);
             if (d >= best) best=d,bestloc=hlist[j];
          }
       }
@@ -766,16 +766,16 @@ unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_l
          STBIW_MEMMOVE(hash_table[h], hash_table[h]+quality, sizeof(hash_table[h][0])*quality);
          stbiw__sbn(hash_table[h]) = quality;
       }
-      stbiw__sbpush(hash_table[h],data+i);
+      stbiw__sbpush(hash_table[h],shaderData+i);
 
       if (bestloc) {
          // "lazy matching" - check match at *next* byte, and if it's better, do cur byte as literal
-         h = stbiw__zhash(data+i+1)&(stbiw__ZHASH-1);
+         h = stbiw__zhash(shaderData+i+1)&(stbiw__ZHASH-1);
          hlist = hash_table[h];
          n = stbiw__sbcount(hlist);
          for (j=0; j < n; ++j) {
-            if (hlist[j]-data > i-32767) {
-               int e = stbiw__zlib_countm(hlist[j], data+i+1, data_len-i-1);
+            if (hlist[j]-shaderData > i-32767) {
+               int e = stbiw__zlib_countm(hlist[j], shaderData+i+1, data_len-i-1);
                if (e > best) { // if next match is better, bail on current match
                   bestloc = NULL;
                   break;
@@ -785,7 +785,7 @@ unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_l
       }
 
       if (bestloc) {
-         int d = (int) (data+i - bestloc); // distance back
+         int d = (int) (shaderData+i - bestloc); // distance back
          STBIW_ASSERT(d <= 32767 && best <= 258);
          for (j=0; best > lengthc[j+1]-1; ++j);
          stbiw__zlib_huff(j+257);
@@ -795,13 +795,13 @@ unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_l
          if (disteb[j]) stbiw__zlib_add(d - distc[j], disteb[j]);
          i += best;
       } else {
-         stbiw__zlib_huffb(data[i]);
+         stbiw__zlib_huffb(shaderData[i]);
          ++i;
       }
    }
    // write out final bytes
    for (;i < data_len; ++i)
-      stbiw__zlib_huffb(data[i]);
+      stbiw__zlib_huffb(shaderData[i]);
    stbiw__zlib_huff(256); // end of block
    // pad with 0 bits to byte boundary
    while (bitcount)
@@ -817,7 +817,7 @@ unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_l
       int blocklen = (int) (data_len % 5552);
       j=0;
       while (j < data_len) {
-         for (i=0; i < blocklen; ++i) s1 += data[j+i], s2 += s1;
+         for (i=0; i < blocklen; ++i) s1 += shaderData[j+i], s2 += s1;
          s1 %= 65521, s2 %= 65521;
          j += blocklen;
          blocklen = 5552;
@@ -879,13 +879,13 @@ static unsigned int stbiw__crc32(unsigned char *buffer, int len)
 }
 
 #define stbiw__wpng4(o,a,b,c,d) ((o)[0]=STBIW_UCHAR(a),(o)[1]=STBIW_UCHAR(b),(o)[2]=STBIW_UCHAR(c),(o)[3]=STBIW_UCHAR(d),(o)+=4)
-#define stbiw__wp32(data,v) stbiw__wpng4(data, (v)>>24,(v)>>16,(v)>>8,(v));
-#define stbiw__wptag(data,s) stbiw__wpng4(data, s[0],s[1],s[2],s[3])
+#define stbiw__wp32(shaderData,v) stbiw__wpng4(shaderData, (v)>>24,(v)>>16,(v)>>8,(v));
+#define stbiw__wptag(shaderData,s) stbiw__wpng4(shaderData, s[0],s[1],s[2],s[3])
 
-static void stbiw__wpcrc(unsigned char **data, int len)
+static void stbiw__wpcrc(unsigned char **shaderData, int len)
 {
-   unsigned int crc = stbiw__crc32(*data - len - 4, len+4);
-   stbiw__wp32(*data, crc);
+   unsigned int crc = stbiw__crc32(*shaderData - len - 4, len+4);
+   stbiw__wp32(*shaderData, crc);
 }
 
 static unsigned char stbiw__paeth(int a, int b, int c)
@@ -945,7 +945,7 @@ unsigned char *stbi_write_png_to_mem(unsigned char *pixels, int stride_bytes, in
             if (est < bestval) { bestval = est; best = k; }
          }
       }
-      // when we get here, best contains the filter type, and line_buffer contains the data
+      // when we get here, best contains the filter type, and line_buffer contains the shaderData
       filt[j*(x*n+1)] = (unsigned char) best;
       STBIW_MEMMOVE(filt+j*(x*n+1)+1, line_buffer, x*n);
    }
@@ -989,11 +989,11 @@ unsigned char *stbi_write_png_to_mem(unsigned char *pixels, int stride_bytes, in
 }
 
 #ifndef STBI_WRITE_NO_STDIO
-STBIWDEF int stbi_write_png(char const *filename, int x, int y, int comp, const void *data, int stride_bytes)
+STBIWDEF int stbi_write_png(char const *filename, int x, int y, int comp, const void *shaderData, int stride_bytes)
 {
    FILE *f;
    int len;
-   unsigned char *png = stbi_write_png_to_mem((unsigned char *) data, stride_bytes, x, y, comp, &len);
+   unsigned char *png = stbi_write_png_to_mem((unsigned char *) shaderData, stride_bytes, x, y, comp, &len);
    if (png == NULL) return 0;
    f = fopen(filename, "wb");
    if (!f) { STBIW_FREE(png); return 0; }
@@ -1004,10 +1004,10 @@ STBIWDEF int stbi_write_png(char const *filename, int x, int y, int comp, const 
 }
 #endif
 
-STBIWDEF int stbi_write_png_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const void *data, int stride_bytes)
+STBIWDEF int stbi_write_png_to_func(stbi_write_func *func, void *context, int x, int y, int comp, const void *shaderData, int stride_bytes)
 {
    int len;
-   unsigned char *png = stbi_write_png_to_mem((unsigned char *) data, stride_bytes, x, y, comp, &len);
+   unsigned char *png = stbi_write_png_to_mem((unsigned char *) shaderData, stride_bytes, x, y, comp, &len);
    if (png == NULL) return 0;
    func(context, png, len);
    STBIW_FREE(png);

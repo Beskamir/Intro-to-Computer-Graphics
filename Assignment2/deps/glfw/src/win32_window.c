@@ -709,7 +709,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
                                 sizeof(RAWINPUTHEADER)) == (UINT) -1)
             {
                 _glfwInputError(GLFW_PLATFORM_ERROR,
-                                "Win32: Failed to retrieve raw input data");
+                                "Win32: Failed to retrieve raw input shaderData");
                 break;
             }
 

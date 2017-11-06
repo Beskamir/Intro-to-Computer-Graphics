@@ -113,7 +113,7 @@ typedef GLXContext (*PFNGLXCREATECONTEXTATTRIBSARBPROC)(Display*,GLXFBConfig,GLX
 #define _GLFW_PLATFORM_LIBRARY_CONTEXT_STATE    _GLFWlibraryGLX glx
 
 
-// GLX-specific per-context data
+// GLX-specific per-context shaderData
 //
 typedef struct _GLFWcontextGLX
 {
@@ -122,7 +122,7 @@ typedef struct _GLFWcontextGLX
 
 } _GLFWcontextGLX;
 
-// GLX-specific global data
+// GLX-specific global shaderData
 //
 typedef struct _GLFWlibraryGLX
 {

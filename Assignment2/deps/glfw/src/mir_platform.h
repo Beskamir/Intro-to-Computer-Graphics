@@ -77,7 +77,7 @@ typedef struct EventQueue
     TAILQ_HEAD(, EventNode) head;
 } EventQueue;
 
-// Mir-specific per-window data
+// Mir-specific per-window shaderData
 //
 typedef struct _GLFWwindowMir
 {
@@ -89,7 +89,7 @@ typedef struct _GLFWwindowMir
 
 } _GLFWwindowMir;
 
-// Mir-specific per-monitor data
+// Mir-specific per-monitor shaderData
 //
 typedef struct _GLFWmonitorMir
 {
@@ -100,7 +100,7 @@ typedef struct _GLFWmonitorMir
 
 } _GLFWmonitorMir;
 
-// Mir-specific global data
+// Mir-specific global shaderData
 //
 typedef struct _GLFWlibraryMir
 {
@@ -119,7 +119,7 @@ typedef struct _GLFWlibraryMir
 
 } _GLFWlibraryMir;
 
-// Mir-specific per-cursor data
+// Mir-specific per-cursor shaderData
 // TODO: Only system cursors are implemented in Mir atm. Need to wait for support.
 //
 typedef struct _GLFWcursorMir

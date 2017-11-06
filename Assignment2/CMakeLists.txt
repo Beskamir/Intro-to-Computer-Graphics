@@ -21,6 +21,9 @@ add_subdirectory(deps/glfw)
 option(GLM_TEST_ENABLE ON)
 add_subdirectory(deps/glm)
 
+#Get stb
+include_directories(deps/stb)
+
 #Include GLEW libraries only if on windows
 IF (WIN32)
     set(GLEW_DIR "deps/glew")

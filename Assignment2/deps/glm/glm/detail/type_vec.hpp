@@ -55,7 +55,7 @@ namespace detail
 #	else
 		typedef union __declspec(align(16)) glm_128
 		{
-			unsigned __int8 data[16];
+			unsigned __int8 shaderData[16];
 		} glm_128;
 
 		template <>

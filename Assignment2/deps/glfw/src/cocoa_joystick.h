@@ -36,7 +36,7 @@
 #define _GLFW_PLATFORM_LIBRARY_JOYSTICK_STATE
 
 
-// Cocoa-specific per-joystick data
+// Cocoa-specific per-joystick shaderData
 //
 typedef struct _GLFWjoystickNS
 {

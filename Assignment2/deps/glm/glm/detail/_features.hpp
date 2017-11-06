@@ -19,7 +19,7 @@
 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1610.html
 
 // GLM_CXX11_NONSTATIC_MEMBER_INIT
-// Non-static data member initializers - GCC 4.7
+// Non-static shaderData member initializers - GCC 4.7
 // http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2008/n2756.htm
 
 // #define GLM_CXX11_VARIADIC_TEMPLATE

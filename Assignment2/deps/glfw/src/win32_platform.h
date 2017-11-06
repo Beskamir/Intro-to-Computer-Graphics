@@ -226,7 +226,7 @@ typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR)(
 #define _GLFW_PLATFORM_TLS_STATE            _GLFWtlsWin32     win32
 
 
-// Win32-specific per-window data
+// Win32-specific per-window shaderData
 //
 typedef struct _GLFWwindowWin32
 {
@@ -243,7 +243,7 @@ typedef struct _GLFWwindowWin32
 
 } _GLFWwindowWin32;
 
-// Win32-specific global data
+// Win32-specific global shaderData
 //
 typedef struct _GLFWlibraryWin32
 {
@@ -297,7 +297,7 @@ typedef struct _GLFWlibraryWin32
 
 } _GLFWlibraryWin32;
 
-// Win32-specific per-monitor data
+// Win32-specific per-monitor shaderData
 //
 typedef struct _GLFWmonitorWin32
 {
@@ -311,7 +311,7 @@ typedef struct _GLFWmonitorWin32
 
 } _GLFWmonitorWin32;
 
-// Win32-specific per-cursor data
+// Win32-specific per-cursor shaderData
 //
 typedef struct _GLFWcursorWin32
 {
@@ -319,7 +319,7 @@ typedef struct _GLFWcursorWin32
 
 } _GLFWcursorWin32;
 
-// Win32-specific global timer data
+// Win32-specific global timer shaderData
 //
 typedef struct _GLFWtimerWin32
 {
@@ -328,7 +328,7 @@ typedef struct _GLFWtimerWin32
 
 } _GLFWtimerWin32;
 
-// Win32-specific thread local storage data
+// Win32-specific thread local storage shaderData
 //
 typedef struct _GLFWtlsWin32
 {

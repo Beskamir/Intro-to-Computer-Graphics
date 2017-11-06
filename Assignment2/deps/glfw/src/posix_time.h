@@ -33,7 +33,7 @@
 #include <stdint.h>
 
 
-// POSIX-specific global timer data
+// POSIX-specific global timer shaderData
 //
 typedef struct _GLFWtimerPOSIX
 {

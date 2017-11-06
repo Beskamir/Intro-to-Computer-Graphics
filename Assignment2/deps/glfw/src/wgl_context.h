@@ -105,7 +105,7 @@ typedef BOOL (WINAPI * PFN_wglShareLists)(HGLRC,HGLRC);
 #define _GLFW_PLATFORM_LIBRARY_CONTEXT_STATE    _GLFWlibraryWGL wgl
 
 
-// WGL-specific per-context data
+// WGL-specific per-context shaderData
 //
 typedef struct _GLFWcontextWGL
 {
@@ -115,7 +115,7 @@ typedef struct _GLFWcontextWGL
 
 } _GLFWcontextWGL;
 
-// WGL-specific global data
+// WGL-specific global shaderData
 //
 typedef struct _GLFWlibraryWGL
 {

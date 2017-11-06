@@ -55,7 +55,7 @@
  #define _glfw_dlsym(handle, name) dlsym(handle, name)
 #endif
 
-// Null-specific per-window data
+// Null-specific per-window shaderData
 //
 typedef struct _GLFWwindowNull
 {

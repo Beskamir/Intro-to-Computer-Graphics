@@ -33,7 +33,7 @@
 #define _GLFW_PLATFORM_TLS_STATE _GLFWtlsPOSIX posix
 
 
-// POSIX-specific thread local storage data
+// POSIX-specific thread local storage shaderData
 //
 typedef struct _GLFWtlsPOSIX
 {

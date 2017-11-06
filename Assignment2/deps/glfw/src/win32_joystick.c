@@ -62,7 +62,7 @@ DEFINE_GUID(GUID_Slider,0xa36d02e4,0xc9f3,0x11cf,0xbf,0xc7,0x44,0x45,0x53,0x54,0
 DEFINE_GUID(GUID_Button,0xa36d02f0,0xc9f3,0x11cf,0xbf,0xc7,0x44,0x45,0x53,0x54,0x00,0x00);
 DEFINE_GUID(GUID_POV,0xa36d02f2,0xc9f3,0x11cf,0xbf,0xc7,0x44,0x45,0x53,0x54,0x00,0x00);
 
-// Object data array for our clone of c_dfDIJoystick
+// Object shaderData array for our clone of c_dfDIJoystick
 // Generated with https://github.com/elmindreda/c_dfDIJoystick2
 //
 static DIOBJECTDATAFORMAT _glfwObjectDataFormats[] =
@@ -355,7 +355,7 @@ static BOOL CALLBACK deviceCallback(const DIDEVICEINSTANCE* di, void* user)
     if (FAILED(IDirectInputDevice8_SetDataFormat(device, &_glfwDataFormat)))
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "Win32: Failed to set device data format");
+                        "Win32: Failed to set device shaderData format");
 
         IDirectInputDevice8_Release(device);
         return DIENUM_CONTINUE;
