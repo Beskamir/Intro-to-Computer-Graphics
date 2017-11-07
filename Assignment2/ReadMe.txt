@@ -11,6 +11,26 @@ To run:
 
 Keyboard inputs of note:
 
+    Image scaling speed modifiers:
+        1 = set scaling speed to 0.005 (min scaling speed)
+        2 = decrease scaling speed by 0.005
+        3 = set scaling speed to 0.025 (default scaling speed)
+        4 = increase scaling speed by 0.005
+        5 = set scaling speed to 0.1 (max scaling speed)
+
+    Image panning:
+        Click right mouse button and move mouse
+
+    Image scaling:
+        scroll wheel
+
+    Image effects:
+        q = 2bit quantized
+        w = standard image
+        e = grey scale image
+
+    Point drawing:
+        Right click
 
 Known issues:
 
@@ -26,6 +46,14 @@ Citations and credit:
 	http://www.glfw.org/docs/latest/input_guide.html
 	http://www.glfw.org/docs/latest/window_guide.html
 
+    Resources for figuring out texture loading:
+    https://stackoverflow.com/questions/23150123/loading-png-with-stb-image-for-opengl-texture-gives-wrong-colors
+    https://www.reddit.com/r/opengl/comments/57d21g/displaying_an_image_with_stb/
+    https://learnopengl.com
+
+    Resources for figuring out how to convert an image to grey scale:
+    https://www.gamedev.net/forums/topic/456541-glreadpixels---how-to-convert-an-image-to-grayscale/?PageSpeed=noscript
+
 	Resources for getting shit to work on Windows:
 	https://gist.github.com/romanlarionov/2a22e77be3f2b574a2bd
 	https://www.opengl.org/discussion_boards/showthread.php/198730-How-do-I-build-GLEW-for-mingw-w64-using-cmake-on-Windows?s=2621b22461d8dfb26cbeb7e2a558bee1&p=1283379&viewfull=1#post1283379
@@ -33,3 +61,6 @@ Citations and credit:
 	http://glew.sourceforge.net/
 	The #ifdef's to include GLEW only on windows are thanks to Scott Saunders and Blake Mealey.
 
+    Images from:
+    CaliforniaCondor.jpg - My friend Rukiya Hassan painted it as I was working on graphics
+    Other images, idk I had them on my desktop for ages.

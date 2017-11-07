@@ -1,15 +1,31 @@
 #version 410
 
 in vec3 vertexColor;
+//in vec4 testColors;
 in vec2 uvCoord;
 
 out vec4 FragmentColour;
 
 // Texture samplers
 uniform sampler2D texture1;
+uniform int imageStyle;
 
 void main() {
-//    FragmentColour = vec4(vertexColor,1.0f);
-  	// Linearly interpolate between both textures (second texture is only slightly combined)
-    FragmentColour = texture(texture1, uvCoord);
+    //sample image texture and store color data in colarData vector
+    vec4 imageData = texture(texture1, uvCoord);
+
+    // Convert to grayscale using NTSC conversion weights
+    if(imageStyle==1){
+        // Convert to grayscale using NTSC conversion weights
+        vec3 greyScaleWieghting={0.299,0.587,0.114};
+        float luminance = dot(imageData.rgb,vec3(0.299,0.587,0.114));
+        imageData = vec4(luminance,luminance,luminance,imageData.a);
+    }
+    //Quantize the image
+    else if(imageStyle==2){
+        vec3 colorData = imageData.rgb;
+        colorData = vec3(floor(colorData*3)/3);
+        imageData=vec4(colorData,1.0);
+    }
+    FragmentColour = imageData;
 }

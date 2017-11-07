@@ -20,7 +20,7 @@ bool initGLEW() {
 
 // Create a GLFWwindow object that we can use for GLFW's functions
 bool setupWindow() {
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "CPSC 453 Assignment 2", nullptr, nullptr);
+    window = glfwCreateWindow(window_width, window_height, "CPSC 453 Assignment 2", nullptr, nullptr);
 
     //Check that window was properly setup
     if (!window) {
@@ -38,12 +38,14 @@ void setWindowHints() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
 }
 
 // Set the required callback functions
 void setWindowCallbacks() {
     glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetCursorPosCallback(window, cursor_position_callback);
 }
 #endif //ASSIGNMENT2_SETUP_H

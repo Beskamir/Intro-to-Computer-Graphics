@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 
 void mainRender(){
     // Define the viewport dimensions
-    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    glViewport(0, 0, window_width, window_height);
 
     // Build and compile the shader programs
     Shader mShaders("shaderData/vertex.glsl", "shaderData/fragment.glsl");
@@ -44,15 +44,19 @@ void mainRender(){
     glBindTexture(GL_TEXTURE_2D, mTexture);
 
     //Texture parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_WRAP_BORDER);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_WRAP_BORDER);
 
     int imageWidth, imageHeight, imageLayers;
-    string filename="imageData/texture.jpg";
+    //string filename="imageData/texture.jpg";
     //string filename="imageData/widerImage.jpg";
     //string filename="imageData/tallerImage.jpg";
+    //string filename="imageData/Nihilus.jpg";
+    //string filename="imageData/GeraltAndCiri.jpg";
+    //string filename="imageData/CaliforniaCondor.jpg";
+    string filename="imageData/Tower.png";
     unsigned char* image = stbi_load(filename.c_str(), &imageWidth, &imageHeight, &imageLayers, STBI_rgb);
 
     if(image == nullptr){
@@ -86,17 +90,6 @@ void mainRender(){
     verts.addBuffer("c", 1, imagePlane.colors);
     verts.addBuffer("t", 2, imagePlane.texture);
 
-    //Create transformations
-    glm::mat4 transformFunction;
-    transformFunction = glm::scale(transformFunction, glm::vec3(5.0f, 5.0f, 1.0f));
-    //transform = glm::rotate(transform, (GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-
-    // Get matrix's uniform location and set matrix
-    GLint transformationLocation = glGetUniformLocation(mShaders.Program, "transformation");
-    glUniformMatrix4fv(transformationLocation, 1, GL_FALSE, glm::value_ptr(transformFunction));
-
-    //glUniformMatrix4fv()
-
     // Game loop
     while (!glfwWindowShouldClose(window))
     {
@@ -104,6 +97,8 @@ void mainRender(){
         glfwPollEvents();
 
         renderToScreen(mShaders, verts);
+        //cout << translate.x<<":"<<translate.y<<endl;
+        //cout << mouseDown<<endl;
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -120,6 +115,10 @@ void renderToScreen(Shader mShaders, vertexArray &verts) {
 
     // Draw the triangle
     mShaders.Use();
+
+    setupTransformations(mShaders);
+    setImageStyle(mShaders);
+
     glBindVertexArray(verts.id);
     glDrawArrays(GL_TRIANGLES, 0, verts.count);
     glBindVertexArray(0);
@@ -132,17 +131,107 @@ void renderToScreen(Shader mShaders, vertexArray &verts) {
     glUseProgram(0);
 }
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-    if (key == GLFW_KEY_W && action == GLFW_PRESS){
-
-    }
-
+void setImageStyle(Shader mShaders) {
+    GLint imageStyleLocation = glGetUniformLocation(mShaders.Program, "imageStyle");
+    //glUniformMatrix4fv(imageStyleLocation, 1, GL_FALSE, glm::value_ptr());
+    glUniform1i(imageStyleLocation,imageStyle);
 }
+
+void setupTransformations(Shader mShaders) {
+    //Create transformations
+    glm::mat4 transformFunction;
+    transformFunction = glm::scale(transformFunction, glm::vec3(scaleFactor, scaleFactor, 1.0f));
+    transformFunction = glm::translate(transformFunction, glm::vec3(translate.x, translate.y, 0.0f));
+    // Get matrix's uniform location and set matrix
+    GLint transformationLocation = glGetUniformLocation(mShaders.Program, "transformation");
+    glUniformMatrix4fv(transformationLocation, 1, GL_FALSE, glm::value_ptr(transformFunction));
+}
+
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
+    if (action == GLFW_PRESS){
+        if (key == GLFW_KEY_ESCAPE){
+            glfwSetWindowShouldClose(window, GL_TRUE);
+        }
+        if(key==GLFW_KEY_1){
+            scalingSpeed=0.005f;
+            cout << "Scaling factor set to: " << scalingSpeed<<endl;
+        }
+        if(key==GLFW_KEY_2 && scalingSpeed>0.005f){
+            scalingSpeed -= 0.005f;
+            cout << "Scaling factor set to: " << scalingSpeed<<endl;
+        }
+        if(key==GLFW_KEY_3){
+            scalingSpeed=0.025f;
+            cout << "Scaling factor set to: " << scalingSpeed<<endl;
+        }
+        if(key==GLFW_KEY_4 && scalingSpeed<0.1f){
+            scalingSpeed += 0.005f;
+            cout << "Scaling factor set to: " << scalingSpeed<<endl;
+        }
+        if(key==GLFW_KEY_5){
+            scalingSpeed=0.1f;
+            cout << "Scaling factor set to: " << scalingSpeed<<endl;
+        }
+        if(key==GLFW_KEY_W){
+            imageStyle=0;
+        }
+        if(key==GLFW_KEY_E){
+            imageStyle=1;
+        }
+        if(key==GLFW_KEY_Q){
+            imageStyle=2;
+        }
+    }
+}
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+    //cout << xoffset << ":"<< yoffset<<endl;
+    if(yoffset>0){
+        scaleFactor+=scalingSpeed;
+    }
+    if(yoffset<0){
+        scaleFactor-=scalingSpeed;
+    }
+}
+
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
+        mouseDown=true;
+        Position currentMouse;
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        currentMouse.x=(float)xpos;
+        currentMouse.y=(float)ypos;
+        lastMousePos=currentMouse;
+        //cout << "mouse down" <<endl;
+    }
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE){
+        mouseDown=false;
+        //cout << "mouse up" <<endl;
+    }
+}
+
+
+void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
+    if(mouseDown){
+        Position currentMouse;
+        currentMouse.x=(float)xpos;
+        currentMouse.y=(float)ypos;
+
+        Position pastMousePos = lastMousePos;
+
+        translate.x+=2/scaleFactor*(-pastMousePos.x+currentMouse.x)/window_width;
+        translate.y+=2/scaleFactor*(pastMousePos.y-currentMouse.y)/window_height;
+
+        //Update mouse last positioning
+        lastMousePos=currentMouse;
+    }
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+    window_width=width;
+    window_height=height;
 }
 
 ///Get mesh for the image

@@ -39,23 +39,42 @@
 
 using namespace std;
 
+int window_width = 1024, window_height = 1024; // Window dimensions
+GLFWwindow *window; // Create "global" glfw window
+
 struct Mesh{
     vector<float> vertices;
     vector<float> colors;
     vector<float> texture;
 };
 
-const GLuint WINDOW_WIDTH = 1024, WINDOW_HEIGHT = 1024; // Window dimensions
-GLFWwindow *window; // Create "global" glfw window
+struct Position{
+    float x = 0;
+    float y = 0;
+};
+
+float scaleFactor = 1.0f;
+float scalingSpeed = 0.025f;
+Position lastMousePos;
+Position translate;
+
+GLuint imageStyle=0;
+bool mouseDown = false;
 
 int main(int argc, char *argv[]);
 void mainRender();
 void renderToScreen(Shader mainShaders, vertexArray &verts);
+
+void setImageStyle(Shader shader);
+void setupTransformations(Shader shader);
+Mesh genImagePlane(int imageWidth,int imageHeight);
+
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-
-Mesh genImagePlane(int imageWidth,int imageHeight);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void cursor_position_callback(GLFWwindow *window, double xpos, double ypos);
 
 
 #endif //ASSIGNMENT2_MAIN_H
