@@ -5,6 +5,11 @@
 #include "main.h"
 #include "setup.h"
 
+
+void drawImage(vertexArray &verts);
+
+void drawPoints();
+
 int main(int argc, char *argv[]) {
     // initialize the GLFW windowing system
     if (!glfwInit()) {
@@ -50,13 +55,13 @@ void mainRender(){
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_WRAP_BORDER);
 
     int imageWidth, imageHeight, imageLayers;
-    //string filename="imageData/texture.jpg";
+    string filename="imageData/texture.jpg";
     //string filename="imageData/widerImage.jpg";
     //string filename="imageData/tallerImage.jpg";
     //string filename="imageData/Nihilus.jpg";
     //string filename="imageData/GeraltAndCiri.jpg";
     //string filename="imageData/CaliforniaCondor.jpg";
-    string filename="imageData/Tower.png";
+    //string filename="imageData/Tower.png";
     unsigned char* image = stbi_load(filename.c_str(), &imageWidth, &imageHeight, &imageLayers, STBI_rgb);
 
     if(image == nullptr){
@@ -85,7 +90,7 @@ void mainRender(){
     Mesh imagePlane=genImagePlane(imageWidth,imageHeight);
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
-    vertexArray verts((int)imagePlane.vertices.size()/3);
+    vertexArray verts(imagePlane.vertices.size()/3);
     verts.addBuffer("v", 0, imagePlane.vertices);
     verts.addBuffer("c", 1, imagePlane.colors);
     verts.addBuffer("t", 2, imagePlane.texture);
@@ -118,17 +123,47 @@ void renderToScreen(Shader mShaders, vertexArray &verts) {
 
     setupTransformations(mShaders);
     setImageStyle(mShaders);
+    setControlPoints(mShaders,0);
 
-    glBindVertexArray(verts.id);
-    glDrawArrays(GL_TRIANGLES, 0, verts.count);
-    glBindVertexArray(0);
+    drawImage(verts);
+
+    setControlPoints(mShaders,1);
+    drawPoints();
+
 
     //glUseProgram(program.id);
     //glBindVertexArray(va.id);
     //glDrawArrays(drawingMode, 0, va.count);
 
+
     //glBindVertexArray(0);
     glUseProgram(0);
+}
+
+void drawPoints() {
+    if(!controlPoints.vertices.empty()){
+        vertexArray cPoints(controlPoints.vertices.size()/3);
+        cPoints.addBuffer("v", 0, controlPoints.vertices);
+        cPoints.addBuffer("c", 1, controlPoints.colors);
+        cPoints.addBuffer("t", 2, controlPoints.texture);
+        glBindVertexArray(cPoints.id);
+        glDrawArrays(GL_POINTS, 0, cPoints.count);
+        glEnable(GL_PROGRAM_POINT_SIZE);
+        glBindVertexArray(0);
+        //cout <<"should be drawing a point"<<endl;
+    }
+}
+
+void drawImage(vertexArray &verts) {
+    glBindVertexArray(verts.id);
+    glDrawArrays(GL_TRIANGLES, 0, verts.count);
+    glBindVertexArray(0);
+}
+
+void setControlPoints(Shader mShaders, int isControlPoint) {
+    GLint imageStyleLocation = glGetUniformLocation(mShaders.Program, "controlPoints");
+    //glUniformMatrix4fv(imageStyleLocation, 1, GL_FALSE, glm::value_ptr());
+    glUniform1i(imageStyleLocation,isControlPoint);
 }
 
 void setImageStyle(Shader mShaders) {
@@ -209,6 +244,34 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         mouseDown=false;
         //cout << "mouse up" <<endl;
     }
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+        addControlPoint();
+    }
+
+
+}
+
+void addControlPoint() {
+    Position mouseLocation=getMouseLocation();
+
+    vector<float> pointVerts={mouseLocation.x,mouseLocation.y,1};
+    vector<float> pointColor={0,0,0};
+
+    //controlPoints.vertices={};
+    for (int i = 0; i < pointVerts.size(); ++i) {
+        controlPoints.vertices.push_back(pointVerts[i]);
+        controlPoints.colors.push_back(pointColor[i]);
+        controlPoints.texture.push_back(0);
+    }
+}
+
+Position getMouseLocation() {
+    double xpos,ypos;
+    glfwGetCursorPos(window, &xpos,&ypos);
+    Position mouseLocation;
+    mouseLocation.x=(2.0f*((float)(xpos)/(window_width)))-1.0f;
+    mouseLocation.y=1.0f-(2.0f*((float)(ypos)/(window_height)));
+    return mouseLocation;
 }
 
 

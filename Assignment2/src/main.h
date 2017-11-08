@@ -58,6 +58,8 @@ float scalingSpeed = 0.025f;
 Position lastMousePos;
 Position translate;
 
+Mesh controlPoints;
+
 GLuint imageStyle=0;
 bool mouseDown = false;
 
@@ -65,9 +67,13 @@ int main(int argc, char *argv[]);
 void mainRender();
 void renderToScreen(Shader mainShaders, vertexArray &verts);
 
+void addControlPoint();
+
+void setControlPoints(Shader mShader, int isControlPoint);
 void setImageStyle(Shader shader);
 void setupTransformations(Shader shader);
 Mesh genImagePlane(int imageWidth,int imageHeight);
+Position getMouseLocation();
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
