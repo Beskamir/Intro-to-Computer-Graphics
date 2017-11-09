@@ -47,6 +47,11 @@ struct Mesh{
     vector<float> colors;
     vector<float> texture;
 };
+struct PreRenderingMesh{
+    vector<vector<float>> vertices;
+    vector<vector<float>> colors;
+    vector<vector<float>> texture;
+};
 
 struct Position{
     float x = 0;
@@ -59,17 +64,23 @@ Position lastMousePos;
 Position translate;
 
 Mesh controlPoints;
+vector<Mesh> splines;
 
 GLuint imageStyle=0;
 bool mouseDown = false;
 
 int main(int argc, char *argv[]);
+
+void loadImage(GLuint *mTexture, int *imageWidth, int *imageHeight);
+
 void mainRender();
 void renderToScreen(Shader mainShaders, vertexArray &verts);
+void drawImage(vertexArray &verts);
+void drawPoints();
 
 void addControlPoint();
-
 void setControlPoints(Shader mShader, int isControlPoint);
+
 void setImageStyle(Shader shader);
 void setupTransformations(Shader shader);
 Mesh genImagePlane(int imageWidth,int imageHeight);
@@ -81,6 +92,5 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos);
-
 
 #endif //ASSIGNMENT2_MAIN_H

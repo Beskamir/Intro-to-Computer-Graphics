@@ -71,9 +71,10 @@ vertexArray::vertexArray(const vertexArray &v) {
     glDeleteBuffers(v.buffers.size(), &temp_buffers[0]);
 }
 
-void vertexArray::addBuffer(string name, int index, vector<float> buffer){
+void vertexArray::addBuffer(string name, int index, vector<vector<float>> primativeBuffer){
     GLuint buffer_id;
     glBindVertexArray(id);
+    vector<float> buffer
 
     glGenBuffers(1, &buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);

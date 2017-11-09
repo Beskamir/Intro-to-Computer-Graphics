@@ -13,5 +13,5 @@ void main() {
     gl_Position = transformation * vec4(position, 1.0);
     vertexColor=customColor; //Pass on vertex colors even though they aren't used
     uvCoord = vec2(textureCoord.x,1.0-textureCoord.y);
-    gl_PointSize = 10.0;
+    gl_PointSize = 20.0f;
 }
