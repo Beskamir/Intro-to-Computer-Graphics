@@ -7,6 +7,7 @@
 
 //#include "main.h"
 
+
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
     if (action == GLFW_PRESS){
         if (key == GLFW_KEY_ESCAPE){
@@ -41,8 +42,16 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         if(key==GLFW_KEY_Q){
             imageStyle=2;
         }
+        int lastCtrlPoints=controlPoints.size()-1;
+        if(key==GLFW_KEY_L&&controlPoints[lastCtrlPoints].vertices.size()>3){
+            convertControlPoints2Spline();
+        }
+        if(key==GLFW_KEY_O&&controlPoints[lastCtrlPoints].vertices.size()>3){
+            convertControlPoints2Loop();
+        }
     }
 }
+
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     //cout << xoffset << ":"<< yoffset<<endl;

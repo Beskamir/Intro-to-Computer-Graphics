@@ -5,6 +5,8 @@
 #include "main.h"
 #include "setup.h"
 
+void drawCurves();
+
 int main(int argc, char *argv[]) {
     // initialize the GLFW windowing system
     if (!glfwInit()) {
@@ -37,7 +39,9 @@ void mainRender(){
     glViewport(0, 0, window_width, window_height);
 
     // Build and compile the shader programs
-    Shader mShaders("shaderData/vertex.glsl", "shaderData/fragment.glsl");
+    Shader mShaders("shaderData/vertex.glsl", "shaderData/fragment.glsl", "shaderData/tessControl.glsl", "shaderData/tessEvaluation.glsl");
+
+
 
     GLuint mTexture=0;
     int imageWidth=0, imageHeight=0;
@@ -46,7 +50,7 @@ void mainRender(){
     Mesh imagePlane=genImagePlane(imageWidth,imageHeight);
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
-    vertexArray verts(imagePlane.vertices.size()/3);
+    vertexArray verts(imagePlane.vertices.size()*imagePlane.vertices[0].size()/3);
     verts.addBuffer("v", 0, imagePlane.vertices);
     verts.addBuffer("c", 1, imagePlane.colors);
     verts.addBuffer("t", 2, imagePlane.texture);
@@ -73,32 +77,52 @@ void renderToScreen(Shader mShaders, vertexArray &verts) {
 
     // Draw the triangle
     mShaders.Use();
-
+    //Setup the transformations that will be used to move the image, curves, points, etc.
     setupTransformations(mShaders);
+
+    //Set image style and whether using a texture or vertex colors
     setImageStyle(mShaders);
-    setControlPoints(mShaders,0);
+    setTextureUsage(mShaders,1);
+    drawImage(verts); //Draw the image
 
-    drawImage(verts);
-
-    setControlPoints(mShaders,1);
+    setTextureUsage(mShaders,0);
     drawPoints();
+
+    setTextureUsage(mShaders,2);
+    drawCurves();
 
     glUseProgram(0);
 }
 
+void drawCurves() {
+    if(!splines.empty()){
+        for (int i = 0; i < splines.size(); ++i) {
+            vertexArray sLines(splines[i].vertices.size()*splines[i].vertices[0].size()/3);
+            sLines.addBuffer("v", 0, splines[i].vertices);
+            sLines.addBuffer("c", 1, splines[i].colors);
+            sLines.addBuffer("t", 2, splines[i].texture);
+            glBindVertexArray(sLines.id);
+            glDrawArrays(GL_LINES, 0, sLines.count);
+            //glEnable(GL_PROGRAM_POINT_SIZE);
+            glBindVertexArray(0);
+        }
+    }
+}
 
 
 void drawPoints() {
-    if(!controlPoints.vertices.empty()){
-        vertexArray cPoints(controlPoints.vertices.size()/3);
-        cPoints.addBuffer("v", 0, controlPoints.vertices);
-        cPoints.addBuffer("c", 1, controlPoints.colors);
-        cPoints.addBuffer("t", 2, controlPoints.texture);
-        glBindVertexArray(cPoints.id);
-        glDrawArrays(GL_POINTS, 0, cPoints.count);
-        glEnable(GL_PROGRAM_POINT_SIZE);
-        glBindVertexArray(0);
-        //cout <<"should be drawing a point"<<endl;
+    for (int i = 0; i < controlPoints.size(); ++i) {
+        if(!controlPoints[i].vertices.empty()){
+            vertexArray cPoints(controlPoints[i].vertices.size()*controlPoints[i].vertices[0].size()/3);
+            cPoints.addBuffer("v", 0, controlPoints[i].vertices);
+            cPoints.addBuffer("c", 1, controlPoints[i].colors);
+            cPoints.addBuffer("t", 2, controlPoints[i].texture);
+            glBindVertexArray(cPoints.id);
+            glDrawArrays(GL_POINTS, 0, cPoints.count);
+            glEnable(GL_PROGRAM_POINT_SIZE);
+            glBindVertexArray(0);
+            //cout <<"should be drawing a point"<<endl;
+        }
     }
 }
 
@@ -108,9 +132,10 @@ void drawImage(vertexArray &verts) {
     glBindVertexArray(0);
 }
 
-void setControlPoints(Shader mShaders, int isControlPoint) {
-    GLint imageStyleLocation = glGetUniformLocation(mShaders.Program, "controlPoints");
-    glUniform1i(imageStyleLocation,isControlPoint);
+
+void setTextureUsage(Shader mShaders, int textureUsage) {
+    GLint imageStyleLocation = glGetUniformLocation(mShaders.Program, "useTexture");
+    glUniform1i(imageStyleLocation,textureUsage);
 }
 
 void setImageStyle(Shader mShaders) {
@@ -138,13 +163,127 @@ void addControlPoint() {
     glm::vec4 fixedLocation={mouseLocation.x,mouseLocation.y,1,1};
     fixedLocation = correctiveTransform * fixedLocation;
 
-
+    //add control point to the control point data structure
     vector<float> pointVerts={fixedLocation.x,fixedLocation.y,fixedLocation.z};
-    vector<float> pointColor={0,0,0};
-    //controlPoints.vertices={};
-    for (int i = 0; i < pointColor.size(); ++i) {
-        controlPoints.vertices.push_back(pointVerts[i]);
-        controlPoints.colors.push_back(pointColor[i]);
-        controlPoints.texture.push_back(0);
+    //cPoint.vertices={};
+    //cPoint.vertices.push_back({fixedLocation.x,
+    //                           fixedLocation.y,
+    //                           fixedLocation.z});
+
+    int lastControlPoints = controlPoints.size()-1;
+    if(lastControlPoints<0){
+        Mesh cPoint;
+        cPoint.vertices={{fixedLocation.x,
+                          fixedLocation.y,
+                          fixedLocation.z}};
+        cPoint.colors={{0,0,0}};
+        cPoint.texture={{0,0,0}};
+        controlPoints.push_back(cPoint);
     }
+    else{
+        controlPoints[lastControlPoints].vertices.push_back({fixedLocation.x,
+                                                             fixedLocation.y,
+                                                             fixedLocation.z});
+        controlPoints[lastControlPoints].colors.push_back({0,0,0});
+        controlPoints[lastControlPoints].texture.push_back({0,0,0});
+    }
+}
+
+
+
+void convertControlPoints2Loop() {
+    Mesh newSpline;
+    newSpline.vertices={};
+    glm::mat4 allocations = {{-1,2,-1,0},
+                             {3,-5,0,2},
+                             {-3,4,1,0},
+                             {1,-1,0,0}
+    };
+    glm::vec2 curvePoints;
+
+    int lastCtrlPoints = controlPoints.size()-1;
+
+    float t=0;
+    int p0,p1,p2,p3;
+    for (float i = 0.0f; i < (float)controlPoints[lastCtrlPoints].vertices.size(); i+=0.25f) {
+        p1=(int)(i);
+        p2=(p1+1) % controlPoints[lastCtrlPoints].vertices.size();
+        p3=(p2+1) % controlPoints[lastCtrlPoints].vertices.size();
+        p0=p1 >= 1 ? p1 - 1: controlPoints[lastCtrlPoints].vertices.size()-1;
+        t=i-int(i);
+        glm::vec4 tValues = {t*t*t,t*t,t,1};
+
+        glm::mat4x2 controlValues = {
+                {controlPoints[lastCtrlPoints].vertices[p0][0],controlPoints[lastCtrlPoints].vertices[p0][1]},
+                {controlPoints[lastCtrlPoints].vertices[p1][0],controlPoints[lastCtrlPoints].vertices[p1][1]},
+                {controlPoints[lastCtrlPoints].vertices[p2][0],controlPoints[lastCtrlPoints].vertices[p2][1]},
+                {controlPoints[lastCtrlPoints].vertices[p3][0],controlPoints[lastCtrlPoints].vertices[p3][1]},
+        };
+        glm::mat2x4 tControlValues = glm::transpose(controlValues);
+
+        //tValues = glm::transpose(tValues);
+        curvePoints=0.5f*tValues*allocations*tControlValues;
+
+        //cout<<"For t: "<<t<<"\n  values: "
+        //    <<curvePoints.x<<":"
+        //    <<curvePoints.y<<endl;
+
+        newSpline.vertices.push_back({curvePoints.x,curvePoints.y,1});
+        newSpline.colors.push_back({0,0,0});
+        newSpline.texture.push_back({0,0,0});
+    }
+    Mesh cPoint;
+    cPoint.vertices={};
+    cPoint.colors={};
+    cPoint.texture={};
+    controlPoints.push_back(cPoint);
+    splines.push_back(newSpline);
+}
+
+void convertControlPoints2Spline() {
+    Mesh newSpline;
+    newSpline.vertices={};
+    glm::mat4 allocations = {{-1,2,-1,0},
+                             {3,-5,0,2},
+                             {-3,4,1,0},
+                             {1,-1,0,0}
+    };
+    glm::vec2 curvePoints;
+    int lastCtrlPoints = controlPoints.size()-1;
+
+    float t=0;
+    int p0,p1,p2,p3;
+    for (float i = 0.0f; i < (float)controlPoints[lastCtrlPoints].vertices.size()-3; i+=0.25f) {
+        p1 = (int)t + 1;
+        p2 = p1 + 1;
+        p3 = p2 + 1;
+        p0 = p1 - 1;
+        t=i-int(i);
+        glm::vec4 tValues = {t*t*t,t*t,t,1};
+
+        glm::mat4x2 controlValues = {
+                {controlPoints[lastCtrlPoints].vertices[p0][0],controlPoints[lastCtrlPoints].vertices[p0][1]},
+                {controlPoints[lastCtrlPoints].vertices[p1][0],controlPoints[lastCtrlPoints].vertices[p1][1]},
+                {controlPoints[lastCtrlPoints].vertices[p2][0],controlPoints[lastCtrlPoints].vertices[p2][1]},
+                {controlPoints[lastCtrlPoints].vertices[p3][0],controlPoints[lastCtrlPoints].vertices[p3][1]},
+        };
+        glm::mat2x4 tControlValues = glm::transpose(controlValues);
+
+        //tValues = glm::transpose(tValues);
+        curvePoints=0.5f*tValues*allocations*tControlValues;
+
+        //cout<<"For t: "<<t<<"\n  values: "
+        //    <<curvePoints.x<<":"
+        //    <<curvePoints.y<<endl;
+
+        newSpline.vertices.push_back({curvePoints.x,curvePoints.y,1});
+        newSpline.colors.push_back({0,0,0});
+        newSpline.texture.push_back({0,0,0});
+    }
+    Mesh cPoint;
+    cPoint.vertices={};
+    cPoint.colors={};
+    cPoint.texture={};
+    controlPoints.push_back(cPoint);
+    splines.push_back(newSpline);
 }

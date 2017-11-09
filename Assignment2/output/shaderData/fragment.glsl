@@ -8,8 +8,8 @@ out vec4 FragmentColour;
 
 // Texture samplers
 uniform sampler2D texture1;
-uniform int imageStyle;
-uniform int controlPoints;
+uniform int imageStyle=0;
+uniform int useTexture=1;
 
 void main() {
     //sample image texture and store color data in colarData vector
@@ -28,17 +28,24 @@ void main() {
         colorData = vec3(floor(colorData*3)/3);
         imageData=vec4(colorData,1.0);
     }
+    else{
 
-    //Check if drawing points and either use vertex colors or use the image colors
-    if(controlPoints==1){
-        FragmentColour=vec4(vertexColor,1.0f);
-        // Circular points thanks to: https://stackoverflow.com/questions/27098315/render-large-circular-points-in-modern-opengl
-        vec2 circCoord = 2.0 * gl_PointCoord - 1.0;
-        if (dot(circCoord, circCoord) > 1.0) {
-            discard;
-        }
+    }
+
+    //Check whether to use the texture or not.
+    // If points or line then use vertex colors if image then use the image colors
+
+    if(useTexture==1){
+        FragmentColour = imageData;
     }
     else{
-       FragmentColour = imageData;
+        FragmentColour=vec4(vertexColor,1.0f);
+        if(useTexture==0){
+            // Circular points thanks to: https://stackoverflow.com/questions/27098315/render-large-circular-points-in-modern-opengl
+            vec2 circCoord = 2.0 * gl_PointCoord - 1.0;
+            if (dot(circCoord, circCoord) > 1.0) {
+                discard;
+            }
+        }
     }
 }

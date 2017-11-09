@@ -34,8 +34,8 @@ public:
     vertexArray(int c);
     vertexArray(const vertexArray &v);
 
-    void addBuffer(string name, int index, vector<float> buffer);
-    void updateBuffer(string name, vector<float> buffer);
+    void addBuffer(string name, int index, vector<vector<float>> primativeBuffer);
+    void updateBuffer(string name, vector<vector<float>> primativeBuffer);
 
     ~vertexArray();
 };

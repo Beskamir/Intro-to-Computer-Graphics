@@ -54,6 +54,12 @@ Citations and credit:
     Resources for figuring out how to convert an image to grey scale:
     https://www.gamedev.net/forums/topic/456541-glreadpixels---how-to-convert-an-image-to-grayscale/?PageSpeed=noscript
 
+    Resources for figuring out how to draw curves:
+    http://steve.hollasch.net/cgindex/curves/catmull-rom.html 
+    https://www.youtube.com/watch?v=9_aJGUTePYo
+    http://www.wolframalpha.com/input/?i=y%3D0.5*%7B0%5E3,0%5E2,0,1%7D*%7B%7B-1,3,-3,1%7D,%7B2,-5,4,-1%7D,%7B-1,0,1,0%7D,%7B0,2,0,0%7D%7D*%7B%7B-1,-1%7D,%7B-1,1%7D,%7B1,1%7D,%7B1,-1%7D%7D
+    
+
 	Resources for getting shit to work on Windows:
 	https://gist.github.com/romanlarionov/2a22e77be3f2b574a2bd
 	https://www.opengl.org/discussion_boards/showthread.php/198730-How-do-I-build-GLEW-for-mingw-w64-using-cmake-on-Windows?s=2621b22461d8dfb26cbeb7e2a558bee1&p=1283379&viewfull=1#post1283379

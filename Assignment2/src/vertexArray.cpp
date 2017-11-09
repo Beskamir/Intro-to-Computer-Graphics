@@ -74,7 +74,13 @@ vertexArray::vertexArray(const vertexArray &v) {
 void vertexArray::addBuffer(string name, int index, vector<vector<float>> primativeBuffer){
     GLuint buffer_id;
     glBindVertexArray(id);
-    vector<float> buffer
+
+    vector<float> buffer;
+    for (int i = 0; i < primativeBuffer.size(); ++i) {
+        for (int j = 0; j < primativeBuffer[i].size(); ++j) {
+            buffer.push_back(primativeBuffer[i][j]);
+        }
+    }
 
     glGenBuffers(1, &buffer_id);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
@@ -91,7 +97,13 @@ void vertexArray::addBuffer(string name, int index, vector<vector<float>> primat
     glBindVertexArray(0);
 }
 
-void vertexArray::updateBuffer(string name, vector<float> buffer)  {
+void vertexArray::updateBuffer(string name, vector<vector<float>> primativeBuffer)  {
+    vector<float> buffer;
+    for (int i = 0; i < primativeBuffer.size(); ++i) {
+        for (int j = 0; j < primativeBuffer[i].size(); ++j) {
+            buffer.push_back(primativeBuffer[i][j]);
+        }
+    }
     glBindBuffer(GL_ARRAY_BUFFER, buffers[name]);
     glBufferData(GL_ARRAY_BUFFER, buffer.size() * sizeof(float), buffer.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

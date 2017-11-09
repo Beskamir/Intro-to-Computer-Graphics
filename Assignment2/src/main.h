@@ -43,11 +43,6 @@ int window_width = 1024, window_height = 1024; // Window dimensions
 GLFWwindow *window; // Create "global" glfw window
 
 struct Mesh{
-    vector<float> vertices;
-    vector<float> colors;
-    vector<float> texture;
-};
-struct PreRenderingMesh{
     vector<vector<float>> vertices;
     vector<vector<float>> colors;
     vector<vector<float>> texture;
@@ -63,7 +58,7 @@ float scalingSpeed = 0.025f;
 Position lastMousePos;
 Position translate;
 
-Mesh controlPoints;
+vector<Mesh> controlPoints;
 vector<Mesh> splines;
 
 GLuint imageStyle=0;
@@ -79,7 +74,9 @@ void drawImage(vertexArray &verts);
 void drawPoints();
 
 void addControlPoint();
-void setControlPoints(Shader mShader, int isControlPoint);
+void setTextureUsage(Shader mShaders, int textureUsage);
+void convertControlPoints2Spline();
+void convertControlPoints2Loop();
 
 void setImageStyle(Shader shader);
 void setupTransformations(Shader shader);
