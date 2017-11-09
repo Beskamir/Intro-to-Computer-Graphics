@@ -1,5 +1,5 @@
 //
-// Created by Sebastian on 11/8/2017.
+// Handles all the keyboard and mouse inputs
 //
 
 #ifndef ASSIGNMENT2_INPUTHANDLER_H
