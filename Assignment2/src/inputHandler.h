@@ -51,12 +51,11 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
             }
         }
 
-
         int lastCtrlPoints=controlPoints.size()-1;
-        if(key==GLFW_KEY_L&&controlPoints[lastCtrlPoints].vertices.size()>3){
+        if(key==GLFW_KEY_L&&controlPoints[lastCtrlPoints].size()>1){
             convertControlPoints2Spline();
         }
-        if(key==GLFW_KEY_O&&controlPoints[lastCtrlPoints].vertices.size()>3){
+        if(key==GLFW_KEY_O&&controlPoints[lastCtrlPoints].size()>1){
             convertControlPoints2Loop();
         }
     }

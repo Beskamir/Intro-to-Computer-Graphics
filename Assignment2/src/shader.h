@@ -29,7 +29,7 @@ class Shader
 public:
     GLuint Program;
     // Constructor generates the shader on the fly
-    Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* tessCtrlPath, const GLchar* tessEvalPath);
+    Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* tessCtrlPath, const GLchar* tessEvalPath,const GLchar* geometryPath);
     // Uses the current shader
     void Use(){
         glUseProgram(this->Program);

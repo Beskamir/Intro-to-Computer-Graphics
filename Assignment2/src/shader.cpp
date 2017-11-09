@@ -4,7 +4,7 @@
 
 #include "shader.h"
 
-Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath, const GLchar *tessCtrlPath, const GLchar *tessEvalPath) {
+Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath, const GLchar *tessCtrlPath, const GLchar *tessEvalPath,const GLchar* geometryPath) {
     // 1. Retrieve the vertex/fragment source code from filePath
     string vertexCode;
     string fragmentCode;

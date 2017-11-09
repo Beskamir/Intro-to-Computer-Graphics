@@ -42,9 +42,7 @@ void mainRender(){
     glViewport(0, 0, window_width, window_height);
 
     // Build and compile the shader programs
-    Shader mShaders("shaderData/vertex.glsl", "shaderData/fragment.glsl", "shaderData/tessControl.glsl", "shaderData/tessEvaluation.glsl");
-
-
+    Shader mShaders("shaderData/vertex.glsl", "shaderData/fragment.glsl", "shaderData/tessControl.glsl", "shaderData/tessEvaluation.glsl","shaderData/geometry.glsl");
 
     GLuint mTexture=0;
     int imageWidth=0, imageHeight=0;
@@ -108,7 +106,7 @@ void drawCurves() {
             sLines.addBuffer("t", 2, splines[i].texture);
             glBindVertexArray(sLines.id);
             //glLineWidth(50.0f);
-            glDrawArrays(GL_LINES, 0, sLines.count);
+            glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, sLines.count);
             //glEnable(GL_PROGRAM_POINT_SIZE);
             glBindVertexArray(0);
         }
@@ -116,19 +114,32 @@ void drawCurves() {
 }
 
 void drawPoints() {
+    Mesh tempControlPoints;
+    tempControlPoints.vertices={};
+    tempControlPoints.colors={};
+    tempControlPoints.texture={};
     for (int i = 0; i < controlPoints.size(); ++i) {
-        if(!controlPoints[i].vertices.empty()){
-            vertexArray cPoints(controlPoints[i].vertices.size()*controlPoints[i].vertices[0].size()/3);
-            cPoints.addBuffer("v", 0, controlPoints[i].vertices);
-            cPoints.addBuffer("c", 1, controlPoints[i].colors);
-            cPoints.addBuffer("t", 2, controlPoints[i].texture);
-            glBindVertexArray(cPoints.id);
-            glDrawArrays(GL_POINTS, 0, cPoints.count);
-            glEnable(GL_PROGRAM_POINT_SIZE);
-            glBindVertexArray(0);
-            //cout <<"should be drawing a point"<<endl;
+        for (int j = 0; j < controlPoints[i].size(); ++j) {
+            tempControlPoints.vertices.push_back(controlPoints[i][j].vertices);
+            tempControlPoints.colors.push_back(controlPoints[i][j].colors);
+            tempControlPoints.texture.push_back(controlPoints[i][j].texture);
+            //cout<<tempControlPoints.vertices[i][0]<<":"<<tempControlPoints.vertices[i][1]<<endl;
         }
     }
+    if(!tempControlPoints.vertices.empty()){
+        vertexArray cPoints(tempControlPoints.vertices.size()*tempControlPoints.vertices[0].size()/3);
+        cPoints.addBuffer("v", 0, tempControlPoints.vertices);
+        cPoints.addBuffer("c", 1, tempControlPoints.colors);
+        cPoints.addBuffer("t", 2, tempControlPoints.texture);
+        glBindVertexArray(cPoints.id);
+        glDrawArrays(GL_POINTS, 0, cPoints.count);
+        glEnable(GL_PROGRAM_POINT_SIZE);
+        glBindVertexArray(0);
+        //cout <<"should be drawing a point"<<endl;
+    }
+    //for (int i = 0; i < controlPoints.size(); ++i) {
+    //
+    //}
 }
 
 
@@ -170,24 +181,27 @@ void addControlPoint() {
     fixedLocation = correctiveTransform * fixedLocation;
 
     //add control point to the control point data structure
-    vector<float> pointVerts={fixedLocation.x,fixedLocation.y,fixedLocation.z};
+    //vector<float> pointVerts={fixedLocation.x,fixedLocation.y,fixedLocation.z};
+    ControlPoint cPoint;
 
     int lastControlPoints = controlPoints.size()-1;
     if(lastControlPoints<0){
-        Mesh cPoint;
-        cPoint.vertices={{fixedLocation.x,
-                          fixedLocation.y,
-                          fixedLocation.z}};
-        cPoint.colors={{0,0,0}};
-        cPoint.texture={{0,0,0}};
-        controlPoints.push_back(cPoint);
+        cPoint.vertices={fixedLocation.x,
+                         fixedLocation.y,
+                         fixedLocation.z};
+        cPoint.colors={0,0,0};
+        cPoint.texture={0,0,0};
+        vector<ControlPoint> cPoints;
+        cPoints.push_back(cPoint);
+        controlPoints.push_back(cPoints);
     }
     else{
-        controlPoints[lastControlPoints].vertices.push_back({fixedLocation.x,
-                                                             fixedLocation.y,
-                                                             fixedLocation.z});
-        controlPoints[lastControlPoints].colors.push_back({0,0,0});
-        controlPoints[lastControlPoints].texture.push_back({0,0,0});
+        cPoint.vertices={fixedLocation.x,
+                         fixedLocation.y,
+                         fixedLocation.z};
+        cPoint.colors={0,0,0};
+        cPoint.texture={0,0,0};
+        controlPoints[lastControlPoints].push_back(cPoint);
     }
 }
 
@@ -209,9 +223,9 @@ void controlPoints2Spline(float loopMax, bool drawLoop) {
     for (float i = 0.0f; i < loopMax; i+=0.005f) {
         if(drawLoop){
             p1=(int)(i);
-            p2=(p1+1) % controlPoints[lastCtrlPoints].vertices.size();
-            p3=(p2+1) % controlPoints[lastCtrlPoints].vertices.size();
-            p0=p1 >= 1 ? p1 - 1: controlPoints[lastCtrlPoints].vertices.size()-1;
+            p2=(p1+1) % controlPoints[lastCtrlPoints].size();
+            p3=(p2+1) % controlPoints[lastCtrlPoints].size();
+            p0=p1 >= 1 ? p1 - 1: controlPoints[lastCtrlPoints].size()-1;
         }else{
             p1 = (int)i + 1;
             p2 = p1 + 1;
@@ -232,62 +246,67 @@ void controlPoints2Spline(float loopMax, bool drawLoop) {
         newSpline.colors.push_back({curveColors.r,curveColors.g,curveColors.b});
         newSpline.texture.push_back({0,0,0});
     }
-    Mesh cPoint;
+    ControlPoint cPoint;
     cPoint.vertices={};
     cPoint.colors={};
     cPoint.texture={};
-    controlPoints.push_back(cPoint);
+    vector<ControlPoint> cPoints;
+    controlPoints.push_back(cPoints);
 
-    newSpline=getCurve(newSpline);
+    //newSpline=getCurve(newSpline);
 
     splines.push_back(newSpline);
 }
 
-Mesh getCurve(Mesh newSpline){
-    Mesh curveData;
-    curveData.vertices={};
-    curveData.colors={};
-    curveData.texture={};
-    for (int i = 0; i < newSpline.vertices.size(); ++i) {
-        curveData.vertices.push_back({newSpline.vertices[i]});
-        curveData.colors.push_back({newSpline.colors[i]});
-        curveData.texture.push_back({newSpline.texture[i]});
-        //cout << pointData2D[i][0] << ","<< pointData2D[i][1]<<endl;
-        if (i>0 && i < (newSpline.vertices.size()-1)){
-            curveData.vertices.push_back({newSpline.vertices[i]});
-            curveData.colors.push_back({newSpline.colors[i]});
-            curveData.texture.push_back({newSpline.texture[i]});
-        }
-    }
-    return curveData;
-}
+//Mesh getCurve(Mesh newSpline){
+//    Mesh curveData;
+//    curveData.vertices={};
+//    curveData.colors={};
+//    curveData.texture={};
+//    for (int i = 0; i < newSpline.vertices.size(); ++i) {
+//        curveData.vertices.push_back({newSpline.vertices[i]});
+//        curveData.colors.push_back({newSpline.colors[i]});
+//        curveData.texture.push_back({newSpline.texture[i]});
+//        //cout << pointData2D[i][0] << ","<< pointData2D[i][1]<<endl;
+//        if (i>0 && i < (newSpline.vertices.size()-1)){
+//            curveData.vertices.push_back({newSpline.vertices[i]});
+//            curveData.colors.push_back({newSpline.colors[i]});
+//            curveData.texture.push_back({newSpline.texture[i]});
+//        }
+//    }
+//    return curveData;
+//}
 
 
 
 glm::mat3x4 getCtrlColors(int p0, int p1, int p2, int p3, int lastCtrlPoints) {
     return {
-            {controlPoints[lastCtrlPoints].colors[p0][0],controlPoints[lastCtrlPoints].colors[p1][0],controlPoints[lastCtrlPoints].colors[p2][0],controlPoints[lastCtrlPoints].colors[p3][0]},
-            {controlPoints[lastCtrlPoints].colors[p0][1],controlPoints[lastCtrlPoints].colors[p1][1],controlPoints[lastCtrlPoints].colors[p2][1],controlPoints[lastCtrlPoints].colors[p3][1]},
-            {controlPoints[lastCtrlPoints].colors[p0][2],controlPoints[lastCtrlPoints].colors[p1][2],controlPoints[lastCtrlPoints].colors[p2][2],controlPoints[lastCtrlPoints].colors[p3][2]}
+            {controlPoints[lastCtrlPoints][p0].colors[0],controlPoints[lastCtrlPoints][p1].colors[0],controlPoints[lastCtrlPoints][p2].colors[0],controlPoints[lastCtrlPoints][p3].colors[0]},
+            {controlPoints[lastCtrlPoints][p0].colors[1],controlPoints[lastCtrlPoints][p1].colors[1],controlPoints[lastCtrlPoints][p2].colors[1],controlPoints[lastCtrlPoints][p3].colors[1]},
+            {controlPoints[lastCtrlPoints][p0].colors[2],controlPoints[lastCtrlPoints][p1].colors[2],controlPoints[lastCtrlPoints][p2].colors[2],controlPoints[lastCtrlPoints][p3].colors[2]},
     };
 }
 
 glm::mat2x4 getCtrlVerts(int p0, int p1, int p2, int p3, int lastCtrlPoints) {
     glm::mat4x2 controlValues = {
-            {controlPoints[lastCtrlPoints].vertices[p0][0],controlPoints[lastCtrlPoints].vertices[p0][1]},
-            {controlPoints[lastCtrlPoints].vertices[p1][0],controlPoints[lastCtrlPoints].vertices[p1][1]},
-            {controlPoints[lastCtrlPoints].vertices[p2][0],controlPoints[lastCtrlPoints].vertices[p2][1]},
-            {controlPoints[lastCtrlPoints].vertices[p3][0],controlPoints[lastCtrlPoints].vertices[p3][1]},
+            {controlPoints[lastCtrlPoints][p0].vertices[0],controlPoints[lastCtrlPoints][p0].vertices[1]},
+            {controlPoints[lastCtrlPoints][p1].vertices[0],controlPoints[lastCtrlPoints][p1].vertices[1]},
+            {controlPoints[lastCtrlPoints][p2].vertices[0],controlPoints[lastCtrlPoints][p2].vertices[1]},
+            {controlPoints[lastCtrlPoints][p3].vertices[0],controlPoints[lastCtrlPoints][p3].vertices[1]},
     };
     return glm::transpose(controlValues);
 }
 
 void convertControlPoints2Loop() {
-    float loopMax=(float)controlPoints[controlPoints.size()-1].vertices.size();
+    float loopMax=(float)controlPoints[controlPoints.size()-1].size();
     controlPoints2Spline(loopMax,true);
 }
 
 void convertControlPoints2Spline() {
-    float loopMax=(float)controlPoints[controlPoints.size()-1].vertices.size()-3.0f;
+    controlPoints[controlPoints.size()-1].insert(controlPoints[controlPoints.size()-1].begin(),controlPoints[controlPoints.size()-1][0]);
+    controlPoints[controlPoints.size()-1].insert(controlPoints[controlPoints.size()-1].end(),controlPoints[controlPoints.size()-1][controlPoints[controlPoints.size()-1].size()-1]);
+
+    //float loopMax=(float)controlPoints[controlPoints.size()-1].vertices.size()-3.0f;
+    float loopMax=(float)controlPoints[controlPoints.size()-1].size()-3.0f;
     controlPoints2Spline(loopMax,false);
 }

@@ -47,6 +47,11 @@ struct Mesh{
     vector<vector<float>> colors;
     vector<vector<float>> texture;
 };
+struct ControlPoint{
+    vector<float> vertices;
+    vector<float> colors;
+    vector<float> texture;
+};
 
 struct Position{
     float x = 0;
@@ -58,7 +63,7 @@ float scalingSpeed = 0.025f;
 Position lastMousePos;
 Position translate;
 
-vector<Mesh> controlPoints;
+vector<vector<ControlPoint>> controlPoints;
 vector<Mesh> splines;
 
 GLuint imageStyle=0;
