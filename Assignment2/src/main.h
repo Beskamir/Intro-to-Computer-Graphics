@@ -62,7 +62,8 @@ vector<Mesh> controlPoints;
 vector<Mesh> splines;
 
 GLuint imageStyle=0;
-bool mouseDown = false;
+bool mousePressed = false;
+bool showControlPoints = false;
 
 int main(int argc, char *argv[]);
 
@@ -77,6 +78,7 @@ void addControlPoint();
 void setTextureUsage(Shader mShaders, int textureUsage);
 void convertControlPoints2Spline();
 void convertControlPoints2Loop();
+void controlPoints2Spline(float loopMax, bool drawLoop);
 
 void setImageStyle(Shader shader);
 void setupTransformations(Shader shader);

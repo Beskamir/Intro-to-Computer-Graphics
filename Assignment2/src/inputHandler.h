@@ -42,6 +42,16 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         if(key==GLFW_KEY_Q){
             imageStyle=2;
         }
+        if(key==GLFW_KEY_S){
+            if(showControlPoints){
+                showControlPoints=false;
+            }
+            else{
+                showControlPoints=true;
+            }
+        }
+
+
         int lastCtrlPoints=controlPoints.size()-1;
         if(key==GLFW_KEY_L&&controlPoints[lastCtrlPoints].vertices.size()>3){
             convertControlPoints2Spline();
@@ -65,7 +75,7 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS){
-        mouseDown=true;
+        mousePressed=true;
         Position currentMouse;
         double xpos, ypos;
         glfwGetCursorPos(window, &xpos, &ypos);
@@ -75,10 +85,10 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         //cout << "mouse down" <<endl;
     }
     if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE){
-        mouseDown=false;
+        mousePressed=false;
         //cout << "mouse up" <<endl;
     }
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && showControlPoints){
         addControlPoint();
     }
 }
@@ -94,7 +104,7 @@ Position getMouseLocation() {
 
 
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
-    if(mouseDown){
+    if(mousePressed){
         Position currentMouse;
         currentMouse.x=(float)xpos;
         currentMouse.y=(float)ypos;

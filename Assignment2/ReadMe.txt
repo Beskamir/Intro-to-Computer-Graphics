@@ -70,3 +70,7 @@ Citations and credit:
     Images from:
     CaliforniaCondor.jpg - My friend Rukiya Hassan painted it as I was working on graphics
     Other images, idk I had them on my desktop for ages.
+
+
+Note to self: Useful for drawing lines
+    https://vicrucann.github.io/tutorials/osg-shader-3dlines/
