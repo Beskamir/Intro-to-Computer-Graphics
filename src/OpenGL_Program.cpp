@@ -6,6 +6,7 @@
 
 void OpenGL_Program::mainRender(){
     // Define the viewport dimensions
+    glViewport(0, 0, *window_width, *window_height);
 
     Model model = Model();
     model.addTexture();
@@ -20,8 +21,7 @@ void OpenGL_Program::mainRender(){
 
 
     // main render loop, keeps running until window is closed
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)){
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
 
@@ -89,9 +89,11 @@ void OpenGL_Program::setupTransformations(ShaderProgram shaderProgram) {
     glUniformMatrix4fv(transformationLocation, 1, GL_FALSE, glm::value_ptr(transformFunction));
 }
 
-OpenGL_Program::OpenGL_Program(GLFWwindow *window) {
 
+void OpenGL_Program::init_Program(GLFWwindow *window, int *window_width, int *window_height) {
     this->window=window;
+    this->window_width=window_width;
+    this->window_height=window_height;
 
     //ShaderProgram mShaders();
     // Build and compile the shader programs

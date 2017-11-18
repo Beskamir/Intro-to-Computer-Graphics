@@ -1,5 +1,5 @@
 //
-// Boilerplate heavily based on:
+// Boilerplate based on:
 // https://github.com/JoeyDeVries/LearnOpenGL
 // https://learnopengl.com/code_viewer.php?code=getting-started/shaders-using-object
 //
@@ -26,16 +26,25 @@
 
 
 // Include input handlers
-#include "InputHandler.h"
+#include "OpenGL_Program.h"
 
 
 using namespace std;
 
 int window_width = 1024, window_height = 1024; // Window dimensions
 GLFWwindow *window; // Create "global" glfw window
+OpenGL_Program openGL_program;
+
 
 int main(int argc, char *argv[]);
 bool setupOpenGL();
 void setupWindowCallbacks();
+
+//Handle inputs
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void cursor_position_callback(GLFWwindow *window, double xpos, double ypos);
 
 #endif //ASSIGNMENT2_MAIN_H

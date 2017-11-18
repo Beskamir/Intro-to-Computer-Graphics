@@ -38,7 +38,7 @@ private:
     ShaderProgram mShaders;
     ShaderProgram lineShader;
     GLFWwindow *window;
-
+    int *window_width, *window_height;
 
     void setupTransformations(ShaderProgram shaderProgram);
     void setTextureUsage(int textureUsage);
@@ -48,9 +48,9 @@ private:
 public:
 
     ~OpenGL_Program()= default;
-    OpenGL_Program(GLFWwindow *window);
+    OpenGL_Program()= default;
     void mainRender();
-
+    void init_Program(GLFWwindow *window, int *pInt, int *pInt1);
 };
 
 
