@@ -26,13 +26,13 @@
 
 using namespace std;
 
-class Texture {
+class ImageTexture {
 
 public:
 
 
-    Texture()= default;
-    ~Texture()= default;
+    ImageTexture()= default;
+    ~ImageTexture()= default;
 
     void addTexture(GLuint *mTexture, int *imageWidth, int *imageHeight);
 };

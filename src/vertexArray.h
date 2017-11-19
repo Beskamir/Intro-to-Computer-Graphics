@@ -32,7 +32,6 @@ public:
     unsigned int count;
 
     vertexArray(int c);
-    vertexArray(const vertexArray &v);
 
     void addBuffer(string name, int index, vector<vector<float>> primativeBuffer);
     void updateBuffer(string name, vector<vector<float>> primativeBuffer);

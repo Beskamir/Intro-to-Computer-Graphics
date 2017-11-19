@@ -7,18 +7,22 @@
 void OpenGL_Program::mainRender(){
     // Define the viewport dimensions
     glViewport(0, 0, *window_width, *window_height);
+    vector<Model> modelObjects;
 
-    Model model = Model();
-    model.addTexture();
-    model.genImagePlane();
+    //forloop to open all the models and textures
+    Model model = Model("data/models/sphereTest.obj");
+    //Model model = Model("data/models/pyramidTest.obj");
+    //Model model = Model("data/models/offical/chess_king/king.obj");
+    model.addTexture("data/imageData/Tower.png");
+    //model.genImagePlane();
 
+    modelObjects.push_back(model);
     //loadImage(&mTexture,&imageWidth,&imageHeight);
     // Set up vertex shaderData (and buffer(s)) and attribute pointers
     //Mesh imagePlane=genImagePlane(imageWidth,imageHeight);
 //    Mesh imagePlane=genImagePlane(1000,1000);
-    model.meshData.vertices;
-    vertexArray verts = model.use();
-
+//    model.meshData.vertices;
+//    vertexArray verts = model.use();
 
     // main render loop, keeps running until window is closed
     while (!glfwWindowShouldClose(window)){
@@ -26,7 +30,7 @@ void OpenGL_Program::mainRender(){
         glfwPollEvents();
 
         //Render to screen loop
-        renderToScreen(verts);
+        renderToScreen(modelObjects);
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
@@ -34,52 +38,38 @@ void OpenGL_Program::mainRender(){
 }
 
 
-void OpenGL_Program::renderToScreen(vertexArray &verts) {
+void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     // clear screen to a dark grey colour
-    glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
+    glClearColor(0.55f, 0.55f, 0.55f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Draw the triangle
     mShaders.bind();
-    //Setup the transformations that will be used to move the image, curves, points, etc.
-    setupTransformations(mShaders);
-
+    for (int i = 0; i < modelObjects.size(); ++i) {
+        setupTransformations(mShaders,i); //set transformations
+        modelObjects[i].drawModel();
+        //drawModel(modelObjects[i]); //draw the object
+        //setTextureUsage(1);
+    }
+    glUseProgram(0); //cleanup
     //Set image style and whether using a texture or vertex colors
     //setImageStyle();
-    setTextureUsage(1);
-    drawImage(verts); //Draw the image
-    glUseProgram(0);
-
-    //Draw Lines
-    lineShader.bind();
-    setupTransformations(lineShader);
-    setTextureUsage(2);
-    //drawCurves();
-    glUseProgram(0);
-
-    mShaders.bind();
-    //Draw Control Points
-    //if(showControlPoints){
-    //    setTextureUsage(0);
-    //    //drawPoints();
-    //}
-
-    glUseProgram(0);
+    //setTextureUsage(1);
 }
 
 
-void OpenGL_Program::drawImage(vertexArray &verts) {
-    glBindVertexArray(verts.id);
-    glDrawArrays(GL_TRIANGLES, 0, verts.count);
-    glBindVertexArray(0);
+void OpenGL_Program::drawModel(Model model) {
+    //glBindVertexArray(verts.id);
+    //glDrawElements(GL_TRIANGLES,verts.count,GL_UNSIGNED_INT,0);
+    ////glDrawArrays(GL_TRIANGLES, 0, verts.count);
+    //glBindVertexArray(0);
 }
 
-void OpenGL_Program::setTextureUsage(int textureUsage) {
-    GLint imageStyleLocation = glGetUniformLocation(mShaders.id, "useTexture");
-    glUniform1i(imageStyleLocation,textureUsage);
-}
+//void OpenGL_Program::setTextureUsage(int textureUsage) {
+//    GLint imageStyleLocation = glGetUniformLocation(mShaders.id, "useTexture");
+//    glUniform1i(imageStyleLocation,textureUsage);
+//}
 
-void OpenGL_Program::setupTransformations(ShaderProgram shaderProgram) {
+void OpenGL_Program::setupTransformations(ShaderProgram shaderProgram, int i) {
     //Create transformations
     glm::mat4 transformFunction;
     //transformFunction = glm::scale(transformFunction, glm::vec3(scaleFactor, scaleFactor, 1.0f));
@@ -102,18 +92,5 @@ void OpenGL_Program::init_Program(GLFWwindow *window, int *window_width, int *wi
     if (!mShaders.attachShader("data/shaderData/fragment.glsl", GL_FRAGMENT_SHADER))
         cout << "Error attaching fragment shader"<<endl;
     if (!mShaders.link())
-        cout<<"Error linking shader program"<<endl;
-    //mShaders.attachShader("shaderData/vertex.glsl", GL_VERTEX_SHADER);
-    //mShaders.attachShader("shaderData/fragment.glsl", GL_FRAGMENT_SHADER);
-    //mShaders.link();
-
-
-    if (!lineShader.attachShader("data/shaderData/lineVert.glsl", GL_VERTEX_SHADER))
-        cout << "Error attaching vertex shader"<<endl;
-    if (!lineShader.attachShader("data/shaderData/geometry.glsl",GL_GEOMETRY_SHADER))
-        cout << "Error attaching geometry shader"<<endl;
-    if (!lineShader.attachShader("data/shaderData/lineFrag.glsl", GL_FRAGMENT_SHADER))
-        cout << "Error attaching fragment shader"<<endl;
-    if (!lineShader.link())
         cout<<"Error linking shader program"<<endl;
 }

@@ -20,12 +20,22 @@
 #endif
 //Include glfw
 #include <GLFW/glfw3.h>
+
+//Include glm
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+//Include boost
+//#include <boost/tokenizer.hpp>
+//#include <boost/filesystem.hpp>
+
 #include "vertexArray.h"
+//#include "ImageTexture.h"
 
-#include "Texture.h"
-
-
+//using namespace boost;
 using namespace std;
+using namespace glm;
 
 class Model {
 private:
@@ -63,27 +73,48 @@ private:
     //struct uvCoord{
     //    float u,v;
     //};
-
+    struct Vertex {
+        vec3 Position;
+        vec3 Normal;
+        vec2 uvCoords;
+    };
+    struct Texture {
+        GLuint id;
+        string type;
+    };
     struct MeshData{
-        vector<vector<float>> vertices;
-        vector<vector<float>> colors;
-        vector<vector<float>> uvCoords;
+        vector<Vertex> vertices;
+        //vector<int> indices;
+        vector<Texture> textures;
     };
 
+    //struct MeshData{
+    //    vector<vector<float>> vertices;
+    //    vector<vector<float>> colors;
+    //    vector<vector<float>> uvCoords;
+    //};
+
 public:
+
     MeshData meshData;
 
-    GLuint mTexture=0;
-    int imageWidth=0, imageHeight=0;
+    //GLuint mTexture=0;
+    //int imageWidth=0, imageHeight=0;
 
     Model();
     Model(string filepath);
 
-    void addTexture();
+    //void addTexture();
 
-    void genImagePlane();
+    //void genImagePlane();
 
-    vertexArray use();
+    void drawModel();
+
+    void addTexture(string texturePath);
+
+    GLuint openTexture(string filename);
+
+    void openOBJ(string filepath);
 };
 
 

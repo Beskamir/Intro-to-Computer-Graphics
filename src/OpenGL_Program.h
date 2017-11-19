@@ -29,21 +29,21 @@
 using namespace std;
 
 #include "ShaderProgram.h"
-#include "vertexArray.h"
+//#include "vertexArray.h"
 #include "Model.h"
 
 class OpenGL_Program {
 
 private:
     ShaderProgram mShaders;
-    ShaderProgram lineShader;
+    //ShaderProgram lineShader;
     GLFWwindow *window;
     int *window_width, *window_height;
 
-    void setupTransformations(ShaderProgram shaderProgram);
-    void setTextureUsage(int textureUsage);
-    void renderToScreen(vertexArray &verts);
-    void drawImage(vertexArray &verts);
+    void renderToScreen(vector<Model> modelObjects);
+    //void setTextureUsage(int textureUsage);
+    void setupTransformations(ShaderProgram shaderProgram, int i);
+    void drawModel(Model model);
 
 public:
 

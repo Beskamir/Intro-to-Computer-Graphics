@@ -4,7 +4,7 @@
 
 #include "main.h"
 //#include "setup.h"
-#include "OpenGL_Program.h"
+//#include "OpenGL_Program.h"
 
 int main(int argc, char *argv[]) {
     if(!setupOpenGL()){

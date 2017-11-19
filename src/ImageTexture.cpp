@@ -2,12 +2,12 @@
 // Created by Sebastian on 11/13/2017.
 //
 
-#include "Texture.h"
+#include "ImageTexture.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 
-void Texture::addTexture(GLuint *mTexture, int *imageWidth, int *imageHeight) {
+void ImageTexture::addTexture(GLuint *mTexture, int *imageWidth, int *imageHeight) {
 //loadImage(&mTexture,&imageWidth,&imageHeight);
     int imageLayers;
     //Bind texture

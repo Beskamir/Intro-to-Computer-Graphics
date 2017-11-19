@@ -11,8 +11,8 @@ uniform mat4 transformation;
 uniform int drawLines = 0;
 
 void main() {
-    gl_Position = transformation * vec4(position, 1.0);
-    vertexColor=customColor; //Pass on vertex colors even though they aren't used
+    gl_Position = /*transformation * */vec4(position, 1.0);
+//    vertexColor=customColor; //Pass on vertex colors even though they aren't used
+    vertexColor=vec3(1.0f,1.0f,1.0f); //Pass on vertex colors even though they aren't used
     uvCoord = vec2(textureCoord.x,1.0-textureCoord.y);
-    gl_PointSize = 20.0f;
 }
