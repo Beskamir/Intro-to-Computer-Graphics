@@ -10,7 +10,6 @@ int main(int argc, char *argv[]) {
     if(!setupOpenGL()){
         return -1;
     }
-
     setupWindowCallbacks();
 
     //OpenGL_Program openGL_program(window);
@@ -74,18 +73,46 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         if (key == GLFW_KEY_ESCAPE){
             glfwSetWindowShouldClose(window, GL_TRUE);
         }
+        if(key==GLFW_KEY_F){
+            mouseLocLast = getMouseLocation();
+            fpsMode = !fpsMode;
+        }
+        if(key==GLFW_KEY_S){
+            mouseLocLast = getMouseLocation();
+            scaleMode = !scaleMode;
+        }
+        if(key==GLFW_KEY_R){
+            mouseLocLast = getMouseLocation();
+            rotateMode = !rotateMode;
+            useAxis={true,true,true};
+        }
+        if(rotateMode){
+            if(key==GLFW_KEY_X){
+                useAxis={true,false,false};
+            }
+            if(key==GLFW_KEY_Y){
+                useAxis={false,true,false};
+            }
+            if(key==GLFW_KEY_Y){
+                useAxis={false,false,true};
+            }
+        }
+    }
+    if(fpsMode){
+        openGL_program.moveCamera(key);
     }
 }
 
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     //cout << xoffset << ":"<< yoffset<<endl;
-    //if(yoffset>0){
-    //    scaleFactor+=scalingSpeed;
-    //}
-    //if(yoffset<0){
-    //    scaleFactor-=scalingSpeed;
-    //}
+    float scalingSpeed=0.005f;
+    if(yoffset>0){
+        openGL_program.changeCameraSpeed(scalingSpeed);
+    }
+    if(yoffset<0){
+        openGL_program.changeCameraSpeed(-scalingSpeed);
+    }
 }
 
 
@@ -109,17 +136,41 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 }
 
 
-//Position getMouseLocation() {
-//    double xpos,ypos;
-//    glfwGetCursorPos(window, &xpos,&ypos);
-//    Position mouseLocation;
-//    mouseLocation.x=(2.0f*((float)(xpos)/(window_width)))-1.0f;
-//    mouseLocation.y=1.0f-(2.0f*((float)(ypos)/(window_height)));
-//    return mouseLocation;
-//}
 
+ScreenPosition getMouseLocation() {
+    double xpos,ypos;
+    glfwGetCursorPos(window, &xpos,&ypos);
+    ScreenPosition mouseLocation;
+    mouseLocation.x=(2.0f*((float)(xpos)/(window_width)))-1.0f;
+    mouseLocation.y=1.0f-(2.0f*((float)(ypos)/(window_height)));
+    return mouseLocation;
+}
 
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
+    if(fpsMode){
+        mouseLocCurrent = getMouseLocation();
+        openGL_program.rotateView(mouseLocCurrent.x-mouseLocLast.x,
+                                  mouseLocCurrent.y-mouseLocLast.y);
+        //cout<<mouseLocCurrent.x<<":"<<mouseLocCurrent.y<<endl;
+        //cout<<mouseLocLast.x<<":"<<mouseLocLast.y<<endl;
+        mouseLocLast = mouseLocCurrent;
+    }
+    if(scaleMode){
+        mouseLocCurrent = getMouseLocation();
+        //openGL_program.scaleModel(mouseLocCurrent.x-mouseLocLast.x,
+        //                          mouseLocCurrent.y-mouseLocLast.y);
+        //cout<<mouseLocCurrent.x<<":"<<mouseLocCurrent.y<<endl;
+        //cout<<mouseLocLast.x<<":"<<mouseLocLast.y<<endl;
+        mouseLocLast = mouseLocCurrent;
+    }
+    if(rotateMode){
+        mouseLocCurrent = getMouseLocation();
+        //openGL_program.rotateModel(mouseLocCurrent.x-mouseLocLast.x,
+        //                          mouseLocCurrent.y-mouseLocLast.y);
+        //cout<<mouseLocCurrent.x<<":"<<mouseLocCurrent.y<<endl;
+        //cout<<mouseLocLast.x<<":"<<mouseLocLast.y<<endl;
+        mouseLocLast = mouseLocCurrent;
+    }
     //if(mousePressed){
     //    Position currentMouse;
     //    currentMouse.x=(float)xpos;

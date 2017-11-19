@@ -85,18 +85,26 @@ private:
     struct MeshData{
         vector<Vertex> vertices;
         //vector<int> indices;
+        mat4 modelTransformation;
         vector<Texture> textures;
     };
-
+    struct Bound{
+        float xCoord[2];
+        float yCoord[2];
+        float zCoord[2];
+    };
     //struct MeshData{
     //    vector<vector<float>> vertices;
     //    vector<vector<float>> colors;
     //    vector<vector<float>> uvCoords;
     //};
+    void openOBJ(string filepath);
 
 public:
 
     MeshData meshData;
+    Bound boundingBox;
+    vec3 origin;
 
     //GLuint mTexture=0;
     //int imageWidth=0, imageHeight=0;
@@ -104,17 +112,16 @@ public:
     Model();
     Model(string filepath);
 
-    //void addTexture();
-
-    //void genImagePlane();
-
-    void drawModel();
 
     void addTexture(string texturePath);
-
     GLuint openTexture(string filename);
+    void drawModel(GLint modelLoc);
 
-    void openOBJ(string filepath);
+    void updateBoundingBox(vec3 vertex);
+
+    void computeMiddle();
+
+    void moveToOrigin();
 };
 
 

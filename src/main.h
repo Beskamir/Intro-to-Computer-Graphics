@@ -34,11 +34,28 @@ using namespace std;
 int window_width = 1024, window_height = 1024; // Window dimensions
 GLFWwindow *window; // Create "global" glfw window
 OpenGL_Program openGL_program;
+bool fpsMode=false;
+bool scaleMode=false;
+bool rotateMode=false;
 
+struct UseAxis{
+    bool x;
+    bool y;
+    bool z;
+};
+struct ScreenPosition{
+    float x;
+    float y;
+};
+ScreenPosition mouseLocLast;
+ScreenPosition mouseLocCurrent;
+UseAxis useAxis{true, true, true};
 
 int main(int argc, char *argv[]);
 bool setupOpenGL();
 void setupWindowCallbacks();
+
+ScreenPosition getMouseLocation();
 
 //Handle inputs
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);

@@ -32,7 +32,7 @@ public:
 	~ShaderProgram();
 	bool attachShader(string fileName, GLenum type);
 	bool link();
-	bool bind();
+	bool use();
 	static void unbind();
 };
 

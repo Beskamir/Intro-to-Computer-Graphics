@@ -16,6 +16,8 @@ Model::Model() {
 
 Model::Model(string filepath) {
     openOBJ(filepath);
+    computeMiddle();
+    moveToOrigin();
 }
 
 //Following function based on:
@@ -49,6 +51,7 @@ void Model::openOBJ(string filename) {
             sscanf(values, "v %f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
             //cout<<"V: "<<vertex.x<<" "<<vertex.y<<" "<<vertex.z<<endl;
             temp_vertices.push_back(vertex);
+            updateBoundingBox(vertex);
         }
             //Process uv coordinates at each vertex
         else if (line.substr(0,2)=="vt"){
@@ -160,9 +163,11 @@ GLuint Model::openTexture(string filename){
 }
 
 //Following function based on: https://learnopengl.com/code_viewer.php?code=mesh&type=header
-void Model::drawModel() {
+void Model::drawModel(GLint transformationLoc) {
     /*  Render data  */
     GLuint VAO, VBO, EBO;
+
+    glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, glm::value_ptr(meshData.modelTransformation));
 
     /*  Functions    */
     // Initializes all the buffer objects/arrays
@@ -200,6 +205,37 @@ void Model::drawModel() {
     glDrawArrays(GL_TRIANGLES, 0, meshData.vertices.size());
     //glDrawElements(GL_TRIANGLES, meshData.vertices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+}
+
+void Model::updateBoundingBox(vec3 vertex) {
+    if(vertex.x>boundingBox.xCoord[0]){
+        boundingBox.xCoord[0]=vertex.x;
+    }
+    if(vertex.x<boundingBox.xCoord[1]){
+        boundingBox.xCoord[1]=vertex.x;
+    }
+    if(vertex.y>boundingBox.yCoord[0]){
+        boundingBox.yCoord[0]=vertex.y;
+    }
+    if(vertex.y<boundingBox.yCoord[1]){
+        boundingBox.yCoord[1]=vertex.y;
+    }
+    if(vertex.z>boundingBox.zCoord[0]){
+        boundingBox.zCoord[0]=vertex.z;
+    }
+    if(vertex.z<boundingBox.zCoord[1]){
+        boundingBox.zCoord[1]=vertex.z;
+    }
+}
+
+void Model::computeMiddle() {
+    origin.x = (boundingBox.xCoord[0]+boundingBox.xCoord[1])/2;
+    origin.y = (boundingBox.yCoord[0]+boundingBox.yCoord[1])/2;
+    origin.z = (boundingBox.zCoord[0]+boundingBox.zCoord[1])/2;
+}
+
+void Model::moveToOrigin() {
+    meshData.modelTransformation=translate(meshData.modelTransformation,vec3(-origin.x,-origin.y,-origin.z));
 }
 
 

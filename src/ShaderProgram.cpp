@@ -84,7 +84,7 @@ bool ShaderProgram::link(){
 	return true;
 }
 
-bool ShaderProgram::bind(){
+bool ShaderProgram::use(){
 	glUseProgram(id);
 	//if (OpenGL::error("glUseProgram"))
 	//	return false;

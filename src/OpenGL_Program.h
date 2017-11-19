@@ -45,12 +45,27 @@ private:
     void setupTransformations(ShaderProgram shaderProgram, int i);
     void drawModel(Model model);
 
+    // Camera
+    vec3 cameraPosition = vec3(0.0f, 0.0f, 0.0f);
+    vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
+    vec3 cameraUp = vec3(0.0f, 1.0f,  0.0f);
+    float cameraSpeed = 0.05f;
+    GLfloat yaw   = -90.0f;	// Yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right (due to how Eular angles work) so we initially rotate a bit to the left.
+    GLfloat pitch =   0.0f;
+
 public:
 
     ~OpenGL_Program()= default;
     OpenGL_Program()= default;
     void mainRender();
     void init_Program(GLFWwindow *window, int *pInt, int *pInt1);
+    void moveCamera(int key);
+
+    void changeCameraSpeed(float changeSpeed);
+
+    void initalCameraLocation(Model model);
+
+    void rotateView(float xOffset, float yOffset);
 };
 
 
