@@ -73,6 +73,7 @@ private:
     vec2 mouseLocLast = vec2(0, 0);
     vec2 mouseLocCurrent = vec2(0, 0);
     vec2 mousePerpendicular = vec2(0, 0);
+    vec2 mouseLocEndless = vec2(0,0);
     UseAxis useAxis{true, true, true};
     Movement movement{false,false,false,false};
     double initalMouseDistance;
@@ -123,6 +124,8 @@ public:
     void handleKeyRelease(int key);
 
     void handleMouseMovement(double xpos, double ypos);
+
+    void setMouseLocationEndlessGraph();
 };
 
 

@@ -1,9 +1,8 @@
 //
-// Created by Sebastian on 11/13/2017.
+// Main OpenGL Program, does all the input handling and setup of the models
 //
 
 #include "OpenGL_Program.h"
-#include "main.h"
 
 void OpenGL_Program::mainRender(){
     // Define the viewport dimensions
@@ -14,31 +13,20 @@ void OpenGL_Program::mainRender(){
     //Model model = Model("data/models/pyramidTest.obj");
     Model model = Model("data/models/offical/chess_king/king.obj");
     model.addTexture("data/imageData/Tower.png");
-    //model.genImagePlane();
-    //model.getFurthestPoints();
     initalCameraLocation(model);
 
     modelObjects.push_back(model);
-    //loadImage(&mTexture,&imageWidth,&imageHeight);
-    // Set up vertex shaderData (and buffer(s)) and attribute pointers
-    //Mesh imagePlane=genImagePlane(imageWidth,imageHeight);
-//    Mesh imagePlane=genImagePlane(1000,1000);
-//    model.meshData.vertices;
-//    vertexArray verts = model.use();
 
     // main render loop, keeps running until window is closed
     while (!glfwWindowShouldClose(window)){
         // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
         glfwPollEvents();
-
         //Render to screen loop
         renderToScreen(modelObjects);
-
         // Swap the screen buffers
         glfwSwapBuffers(window);
     }
 }
-
 
 void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     // clear screen to a dark grey colour
@@ -47,12 +35,7 @@ void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     // Cull triangles which normal is not towards the camera.
     // http://www.opengl-tutorial.org/beginners-tutorials/tutorial-6-keyboard-and-mouse/
     glEnable(GL_CULL_FACE);
-
-
-
     mShaders.use();
-
-
     // Camera/View transformation
     glm::mat4 view;
     view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
@@ -71,24 +54,7 @@ void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
         //setTextureUsage(1);
     }
     glUseProgram(0); //cleanup
-    //Set image style and whether using a texture or vertex colors
-    //setImageStyle();
-    //setTextureUsage(1);
 }
-
-
-void OpenGL_Program::drawModel(Model model) {
-    //glBindVertexArray(verts.id);
-    //glDrawElements(GL_TRIANGLES,verts.count,GL_UNSIGNED_INT,0);
-    ////glDrawArrays(GL_TRIANGLES, 0, verts.count);
-    //glBindVertexArray(0);
-}
-
-//void OpenGL_Program::setTextureUsage(int textureUsage) {
-//    GLint imageStyleLocation = glGetUniformLocation(mShaders.id, "useTexture");
-//    glUniform1i(imageStyleLocation,textureUsage);
-//}
-
 
 void OpenGL_Program::init_Program(GLFWwindow *window, int *window_width, int *window_height) {
     this->window=window;
@@ -271,15 +237,16 @@ vec2 OpenGL_Program::getMouseLocation() {
 }
 
 double OpenGL_Program::getPositivity() {
-    double expected_y = (mouseLocCurrent.x * (mousePerpendicular.y / mousePerpendicular.x));
-    if(mouseLocLast.y>0){
-        if (expected_y > mouseLocCurrent.y) {
+    double expected_y = (mouseLocEndless.x * (mousePerpendicular.y / mousePerpendicular.x));
+    //double expected_y = (((mouseLocCurrent.x*(abs(xTeleportCounter)+1)) * (mousePerpendicular.y / mousePerpendicular.x))/(abs(yTeleportCounter)+1));
+    if(mouseLocEndless.y>0){
+        if (expected_y > mouseLocEndless.y) {
             return -1;
         } else {
             return 1;
         }
     }else{
-        if (expected_y < mouseLocCurrent.y) {
+        if (expected_y < mouseLocEndless.y ) {
             return -1;
         } else {
             return 1;
@@ -296,29 +263,44 @@ void OpenGL_Program::teleportMouse(double xpos, double ypos) {
     if (mouseLocCurrent.x < -0.75) {
         xTeleportCounter--;
         glfwSetCursorPos(window, ((0.7 + 1.0) / 2) * *window_width, ypos);
-        mouseLocLast = getMouseLocation();
     }
     if (mouseLocCurrent.x > 0.75) {
         xTeleportCounter++;
         glfwSetCursorPos(window, ((-0.7 + 1.0) / 2) * *window_width, ypos);
-        mouseLocLast = getMouseLocation();
     }
     if (mouseLocCurrent.y < -0.75) {
         yTeleportCounter--;
         glfwSetCursorPos(window, xpos, ((0.7 - 1.0) / 2) * -*window_height);
-        mouseLocLast = getMouseLocation();
     }
     if (mouseLocCurrent.y > 0.75) {
         yTeleportCounter++;
         glfwSetCursorPos(window, xpos, ((-0.7 - 1.0) / 2) * -*window_height);
-        mouseLocLast = getMouseLocation();
+    }
+    setMouseLocationEndlessGraph();
+}
+
+void OpenGL_Program::setMouseLocationEndlessGraph() {
+    mouseLocLast = getMouseLocation();
+    if (xTeleportCounter < 0) {
+        mouseLocEndless.x = (abs(mouseLocLast.x) * (xTeleportCounter - 1));
+    } else if (xTeleportCounter > 0) {
+        mouseLocEndless.x = (abs(mouseLocLast.x) * (xTeleportCounter + 1));
+    } else {
+        mouseLocEndless.x = mouseLocLast.x;
+    }
+    if(yTeleportCounter<0){
+        mouseLocEndless.y = (abs(mouseLocLast.y) * (yTeleportCounter - 1));
+    } else if (yTeleportCounter>0) {
+        mouseLocEndless.y = (abs(mouseLocLast.y) * (yTeleportCounter - 1));
+    }else{
+        mouseLocEndless.y = mouseLocLast.y;
     }
 }
 
 void OpenGL_Program::fpsMouseMovement(){
     mouseLocCurrent = getMouseLocation();
     rotateView(mouseLocCurrent.x-mouseLocLast.x,
-                              mouseLocCurrent.y-mouseLocLast.y);
+               mouseLocCurrent.y-mouseLocLast.y);
     glfwSetCursorPos(window,*window_width/2,*window_height/2);
     //mouseLocCurrent = getMouseLocation();
     //cout<<mouseLocCurrent.x<<":"<<mouseLocCurrent.y<<endl;
@@ -330,9 +312,9 @@ void OpenGL_Program::checkForTransformations(double xpos, double ypos) {
     if(scaleMode){
         teleportMouse(xpos,ypos);
         mouseLocCurrent = getMouseLocation();
-        mouseLocCurrent.x*=(abs(xTeleportCounter)+1);
-        mouseLocCurrent.y*=(abs(yTeleportCounter)+1);
-        double scaleFactor = getPositivity() * getMouseDistance(mouseLocCurrent) / initalMouseDistance;
+        //mouseLocCurrent.x*=(abs(xTeleportCounter)+1);
+        //mouseLocCurrent.y*=(abs(yTeleportCounter)+1);
+        double scaleFactor = getPositivity() * getMouseDistance(mouseLocEndless) / initalMouseDistance;
         //cout<<scaleFactor<<endl;
         vec3 scaleVec(scaleFactor,scaleFactor,scaleFactor);
         scaleModel(scaleVec);

@@ -6,9 +6,6 @@
 //#include "setup.h"
 //#include "OpenGL_Program.h"
 
-int window_width = 1024, window_height = 1024; // Window dimensions
-OpenGL_Program openGL_program;
-
 int main(int argc, char *argv[]) {
     GLFWwindow *window; // Create "global" glfw window
 
