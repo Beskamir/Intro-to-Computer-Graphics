@@ -169,6 +169,10 @@ void OpenGL_Program::scaleModel(vec3 scaleVec) {
     modelObjects[0].scaleModel(scaleVec);
 }
 
+void OpenGL_Program::finalizeTransformation() {
+    modelObjects[0].finalizeModelingTransformation();
+}
+
 //void OpenGL_Program::scaleWithWindow(float scaleX, float scaleY) {
 //    //modelObjects[0].scaleWithWindow(scaleX,scaleY);
 //}

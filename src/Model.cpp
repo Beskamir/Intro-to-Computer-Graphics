@@ -165,17 +165,19 @@ GLuint Model::openTexture(string filename){
 
 //Following function based on: https://learnopengl.com/code_viewer.php?code=mesh&type=header
 void Model::drawModel(GLint transformationLoc) {
-    /*  Render data  */
-    GLuint VAO, VBO;
-
     mat4 finalTransformations;
-    finalTransformations=scale(meshData.modelTransformation,tempScaleVec);
+    finalTransformations=scale(finalTransformations,tempScaleVec);
+    //finalTransformations=scale(meshData.modelTransformation,tempScaleVec);
 
-    glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(finalTransformations));
+    glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(finalTransformations*meshData.modelTransformation));
     //glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(meshData.modelTransformation));
 
-    /*  Functions    */
-    // Initializes all the buffer objects/arrays
+    setupBuffers();
+}
+
+//Actually write stuff to the correct buffers
+void Model::setupBuffers(){
+    GLuint VAO, VBO;
 
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
@@ -201,10 +203,10 @@ void Model::drawModel(GLint transformationLoc) {
     // Draw container
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, meshData.vertices.size());
-    //glDrawElements(GL_TRIANGLES, meshData.vertices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
-    // Properly de-allocate all resources once they've outlived their purpose, now the program doesn't randomly crash after it's been running for a while
+    // Properly de-allocate all resources once they've outlived their purpose,
+    // now the program doesn't randomly crash after it's been running for a while
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
 }
@@ -245,6 +247,10 @@ void Model::scaleModel(vec3 scaleVec) {
     tempScaleVec=scaleVec;
     //meshData.modelTransformation*=scaleMat;
     //meshData.modelTransformation=scale(meshData.modelTransformation,vec3(scaleFactor,scaleFactor,scaleFactor));
+}
+
+void Model::finalizeModelingTransformation() {
+
 }
 
 //void Model::scaleWithWindow(float scaleX, float scaleY){

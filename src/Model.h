@@ -102,6 +102,8 @@ private:
     void moveToOrigin();
     void computeMiddle();
     void updateBoundingBox(vec3 vertex);
+    void setupBuffers();
+
     //struct Transformations{
     //    mat4 scaleMat;
     //    mat4 rotateMat;
@@ -126,6 +128,7 @@ public:
     void addTexture(string texturePath);
     GLuint openTexture(string filename);
     void drawModel(GLint modelLoc);
+    void finalizeModelingTransformation();
 
     //void scaleWithWindow(float scaleX, float scaleY);
 };

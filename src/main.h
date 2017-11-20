@@ -37,35 +37,40 @@ OpenGL_Program openGL_program;
 bool fpsMode=false;
 bool scaleMode=false;
 bool rotateMode=false;
+bool moveMode=false;
+bool shiftMode=false;
 
 struct UseAxis{
     bool x;
     bool y;
     bool z;
 };
-struct ScreenPosition{
-    float x;
-    float y;
-};
+//struct ScreenPosition{
+//    float x;
+//    float y;
+//};
 struct Movement{
     bool forward;
     bool backward;
     bool right;
     bool left;
 };
-ScreenPosition mouseLocLast;
-ScreenPosition mouseLocCurrent;
+vec2 mouseLocLast = vec2(0, 0);
+vec2 mouseLocCurrent = vec2(0, 0);
+vec2 mousePerpendicular = vec2(0, 0);
 UseAxis useAxis{true, true, true};
 Movement movement{false,false,false,false};
 double initalMouseDistance;
+int xTeleportCounter = 0;
+int yTeleportCounter = 0;
 
 int main(int argc, char *argv[]);
 bool setupOpenGL();
 void setupWindowCallbacks();
 
-ScreenPosition getMouseLocation();
+vec2 getMouseLocation();
 void teleportMouse(double xpos, double ypos);
-double getMouseDistance(ScreenPosition mousePosition);
+double getMouseDistance(vec2 mousePosition);
 
 //Handle inputs
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);

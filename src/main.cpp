@@ -8,6 +8,8 @@
 
 
 
+double getPositivity();
+
 int main(int argc, char *argv[]) {
     if(!setupOpenGL()){
         return -1;
@@ -75,57 +77,86 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         if (key == GLFW_KEY_ESCAPE){
             glfwSetWindowShouldClose(window, GL_TRUE);
         }
-        if(key==GLFW_KEY_F){
+        else if(key==GLFW_KEY_F && !(rotateMode || scaleMode || moveMode)){
             mouseLocLast = getMouseLocation();
             fpsMode = !fpsMode;
             movement= {false,false,false,false};
         }
-        if(!fpsMode){
-            if(key==GLFW_KEY_S){
-                mouseLocLast = getMouseLocation();
-                initalMouseDistance = getMouseDistance(mouseLocLast);
-                scaleMode = !scaleMode;
+        else if(fpsMode){
+            if(key==GLFW_KEY_W){
+                movement.forward = true;
+                movement.backward = false;
+            }if(key==GLFW_KEY_S){
+                movement.backward = true;
+                movement.forward = false;
+            }if(key==GLFW_KEY_A){
+                movement.left = true;
+                movement.right = false;
+            }if(key==GLFW_KEY_D){
+                movement.right = true;
+                movement.left = false;
             }
-            if(key==GLFW_KEY_R){
+        }
+        else if(!fpsMode){
+            if(key==GLFW_KEY_S && !scaleMode){
                 mouseLocLast = getMouseLocation();
-                rotateMode = !rotateMode;
+                mousePerpendicular = vec2(-mouseLocLast.y,mouseLocLast.x);
+                cout << mouseLocLast.x <<":"<<mouseLocLast.y<<endl;
+                cout << mousePerpendicular.x << ":" << mousePerpendicular.y<<endl;
+                initalMouseDistance = getMouseDistance(mouseLocLast);
+                scaleMode = true;
+                rotateMode = false;
+                moveMode = false;
+                useAxis={true,true,true};
+            }else if(key==GLFW_KEY_R && !rotateMode){
+                mouseLocLast = getMouseLocation();
+                rotateMode = true;
+                moveMode = false;
+                scaleMode = false;
+                useAxis={true,true,true};
+            }else if(key==GLFW_KEY_G && !moveMode){
+                mouseLocLast = getMouseLocation();
+                moveMode = true;
+                rotateMode = false;
+                scaleMode = false;
                 useAxis={true,true,true};
             }
-            if(rotateMode){
-                //Lock to one of the following axis
-                if(key==GLFW_KEY_X){
-                    useAxis={true,false,false};
-                }
-                if(key==GLFW_KEY_Y){
-                    useAxis={false,true,false};
-                }
-                if(key==GLFW_KEY_Z){
-                    useAxis={false,false,true};
+            else if(rotateMode||scaleMode||moveMode){
+                if(key==GLFW_KEY_LEFT_SHIFT||key==GLFW_KEY_RIGHT_SHIFT){
+                    shiftMode=!shiftMode;
+                }//Lock to one of the following axis
+                else if(key==GLFW_KEY_X){
+                    if(shiftMode){
+                        useAxis={false, true, true};
+                        //cout<<"locking to y,z"<<endl;
+                    }else{
+                        useAxis={true, false, false};
+                        //cout<<"locking to x"<<endl;
+                    }
+                }else if(key==GLFW_KEY_Y){
+                    if(shiftMode){
+                        useAxis={true, false, true};
+                    }else{
+                        useAxis={false, true, false};
+                    }
+                }else if(key==GLFW_KEY_Z){
+                    if(shiftMode){
+                        useAxis={true, true, false};
+                    }else{
+                        useAxis={false, false, true};
+                    }
+                }else if(key==GLFW_KEY_A){
+                    useAxis={true,true,true};
                 }
             }
-            if(key==GLFW_KEY_C){
+            else if(key==GLFW_KEY_C){
                 //Center view on object
                 int scaleX = 1;
                 int scaleY = 1;
                 openGL_program.centerView(scaleX,scaleY);
             }
         }
-        if(key==GLFW_KEY_W){
-            movement.forward = true;
-            movement.backward = false;
-        }
-        if(key==GLFW_KEY_S){
-            movement.backward = true;
-            movement.forward = false;
-        }
-        if(key==GLFW_KEY_A){
-            movement.left = true;
-            movement.right = false;
-        }
-        if(key==GLFW_KEY_D){
-            movement.right = true;
-            movement.left = false;
-        }
+
     }
     if(fpsMode){
         openGL_program.moveCamera(movement.forward, movement.backward, movement.right, movement.left);
@@ -135,13 +166,13 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         if(key==GLFW_KEY_W){
             movement.forward = false;
         }
-        if(key==GLFW_KEY_S){
+        else if(key==GLFW_KEY_S){
             movement.backward = false;
         }
-        if(key==GLFW_KEY_A){
+        else if(key==GLFW_KEY_A){
             movement.left = false;
         }
-        if(key==GLFW_KEY_D){
+        else if(key==GLFW_KEY_D){
             movement.right = false;
         }
     }
@@ -161,31 +192,21 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
-    //if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
-    //    mousePressed=true;
-    //    Position currentMouse;
-    //    double xpos, ypos;
-    //    glfwGetCursorPos(window, &xpos, &ypos);
-    //    currentMouse.x=(float)xpos;
-    //    currentMouse.y=(float)ypos;
-    //    lastMousePos=currentMouse;
-    //    //cout << "mouse down" <<endl;
-    //}
-    //if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE){
-    //    mousePressed=false;
-    //    //cout << "mouse up" <<endl;
-    //}
-    //if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && showControlPoints){
-    //}
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+        if(scaleMode||rotateMode||moveMode){
+            openGL_program.finalizeTransformation();
+        }
+        cout << "mouse down" <<endl;
+    }
 }
 
 
 
-ScreenPosition getMouseLocation() {
+vec2 getMouseLocation() {
     double xpos,ypos;
     glfwGetCursorPos(window, &xpos,&ypos);
-    ScreenPosition mouseLocation={(2.0f*((float)(xpos)/(window_width)))-1.0f,
-                                  1.0f-(2.0f*((float)(ypos)/(window_height)))};
+    vec2 mouseLocation={(2.0f*((float)(xpos)/(window_width)))-1.0f,
+                        1.0f-(2.0f*((float)(ypos)/(window_height)))};
     return mouseLocation;
 }
 
@@ -205,14 +226,12 @@ void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
     if(scaleMode){
         teleportMouse(xpos,ypos);
         mouseLocCurrent = getMouseLocation();
-        double scaleFactor = getMouseDistance(mouseLocCurrent)/initalMouseDistance;
-        cout<<scaleFactor<<endl;
+        mouseLocCurrent.x*=(abs(xTeleportCounter)+1);
+        mouseLocCurrent.y*=(abs(yTeleportCounter)+1);
+        double scaleFactor = getPositivity() * getMouseDistance(mouseLocCurrent) / initalMouseDistance;
+        //cout<<scaleFactor<<endl;
         vec3 scaleVec(scaleFactor,scaleFactor,scaleFactor);
         openGL_program.scaleModel(scaleVec);
-        //glfwSetCursorPos(window,window_width/2,window_height/2);
-        //cout<<mouseLocCurrent.x<<":"<<mouseLocCurrent.y<<endl;
-        //cout<<mouseLocLast.x<<":"<<mouseLocLast.y<<endl;
-        mouseLocLast = mouseLocCurrent;
     }
     if(rotateMode){
         mouseLocCurrent = getMouseLocation();
@@ -237,25 +256,46 @@ void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
     //}
 }
 
-double getMouseDistance(ScreenPosition mousePosition) {
+double getPositivity() {
+    double expected_y = (mouseLocCurrent.x * (mousePerpendicular.y / mousePerpendicular.x));
+    if(mouseLocLast.y>0){
+        if (expected_y > mouseLocCurrent.y) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }else{
+        if (expected_y < mouseLocCurrent.y) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+}
+
+double getMouseDistance(vec2 mousePosition) {
     return sqrt(pow(mousePosition.x,2)+pow(mousePosition.y,2));
 }
 
 void teleportMouse(double xpos, double ypos) {
     mouseLocCurrent=getMouseLocation();
     if (mouseLocCurrent.x < -0.75) {
+        xTeleportCounter--;
         glfwSetCursorPos(window, ((0.7 + 1.0) / 2) * window_width, ypos);
         mouseLocLast = getMouseLocation();
     }
     if (mouseLocCurrent.x > 0.75) {
+        xTeleportCounter++;
         glfwSetCursorPos(window, ((-0.7 + 1.0) / 2) * window_width, ypos);
         mouseLocLast = getMouseLocation();
     }
     if (mouseLocCurrent.y < -0.75) {
+        yTeleportCounter--;
         glfwSetCursorPos(window, xpos, ((0.7 - 1.0) / 2) * -window_height);
         mouseLocLast = getMouseLocation();
     }
     if (mouseLocCurrent.y > 0.75) {
+        yTeleportCounter++;
         glfwSetCursorPos(window, xpos, ((-0.7 - 1.0) / 2) * -window_height);
         mouseLocLast = getMouseLocation();
     }

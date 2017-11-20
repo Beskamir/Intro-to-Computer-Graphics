@@ -72,6 +72,8 @@ public:
 
     //void scaleWithWindow(float scaleX, float scaleY);
     void scaleModel(vec3 scaleVec);
+
+    void finalizeTransformation();
 };
 
 
