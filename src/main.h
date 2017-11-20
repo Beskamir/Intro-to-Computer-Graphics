@@ -47,15 +47,25 @@ struct ScreenPosition{
     float x;
     float y;
 };
+struct Movement{
+    bool forward;
+    bool backward;
+    bool right;
+    bool left;
+};
 ScreenPosition mouseLocLast;
 ScreenPosition mouseLocCurrent;
 UseAxis useAxis{true, true, true};
+Movement movement{false,false,false,false};
+double initalMouseDistance;
 
 int main(int argc, char *argv[]);
 bool setupOpenGL();
 void setupWindowCallbacks();
 
 ScreenPosition getMouseLocation();
+void teleportMouse(double xpos, double ypos);
+double getMouseDistance(ScreenPosition mousePosition);
 
 //Handle inputs
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);

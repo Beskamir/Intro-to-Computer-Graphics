@@ -7,7 +7,6 @@
 void OpenGL_Program::mainRender(){
     // Define the viewport dimensions
     glViewport(0, 0, *window_width, *window_height);
-    vector<Model> modelObjects;
 
     //forloop to open all the models and textures
     //Model model = Model("data/models/sphereTest.obj");
@@ -44,6 +43,11 @@ void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     // clear screen to a dark grey colour
     glClearColor(0.55f, 0.55f, 0.55f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // Cull triangles which normal is not towards the camera.
+    // http://www.opengl-tutorial.org/beginners-tutorials/tutorial-6-keyboard-and-mouse/
+    glEnable(GL_CULL_FACE);
+
+
 
     mShaders.use();
 
@@ -61,7 +65,6 @@ void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
 
     GLint modelLoc = glGetUniformLocation(mShaders.id, "modelTransformation");
     for (int i = 0; i < modelObjects.size(); ++i) {
-        setupTransformations(mShaders,i); //set transformations
         modelObjects[i].drawModel(modelLoc);
         //drawModel(modelObjects[i]); //draw the object
         //setTextureUsage(1);
@@ -85,16 +88,6 @@ void OpenGL_Program::drawModel(Model model) {
 //    glUniform1i(imageStyleLocation,textureUsage);
 //}
 
-void OpenGL_Program::setupTransformations(ShaderProgram shaderProgram, int i) {
-    //Create transformations
-    glm::mat4 transformFunction;
-    //transformFunction = glm::scale(transformFunction, glm::vec3(scaleFactor, scaleFactor, 1.0f));
-    //transformFunction = glm::translate(transformFunction, glm::vec3(translate.x, translate.y, 0.0f));
-    // Get matrix's uniform location and set matrix
-    GLint transformationLocation = glGetUniformLocation(shaderProgram.id, "transformation");
-    glUniformMatrix4fv(transformationLocation, 1, GL_FALSE, glm::value_ptr(transformFunction));
-}
-
 
 void OpenGL_Program::init_Program(GLFWwindow *window, int *window_width, int *window_height) {
     this->window=window;
@@ -111,18 +104,18 @@ void OpenGL_Program::init_Program(GLFWwindow *window, int *window_width, int *wi
         cout<<"Error linking shader program"<<endl;
 }
 
-void OpenGL_Program::moveCamera(int key) {
-    if(key == GLFW_KEY_W){
+void OpenGL_Program::moveCamera(bool forward, bool backward, bool right, bool left) {
+    if(forward){
         cameraPosition += cameraSpeed * cameraFront;
     }
-    if(key == GLFW_KEY_S){
+    if(backward){
         cameraPosition -= cameraSpeed * cameraFront;
     }
-    if(key == GLFW_KEY_A){
-        cameraPosition -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
-    }
-    if(key == GLFW_KEY_D){
+    if(right){
         cameraPosition += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+    }
+    if(left){
+        cameraPosition -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
     }
 }
 
@@ -146,23 +139,36 @@ void OpenGL_Program::initalCameraLocation(Model model) {
 }
 
 void OpenGL_Program::rotateView(float xOffset, float yOffset) {
-    cout<< xOffset<<":"<<yOffset<<endl;
+    //cout<< xOffset<<":"<<yOffset<<endl;
     GLfloat sensitivity = 25;	// Change this value to your liking
     xOffset *= sensitivity;
     yOffset *= sensitivity;
 
-    yaw   += xOffset;
+    yaw += xOffset;
     pitch += yOffset;
 
     // Make sure that when pitch is out of bounds, screen doesn't get flipped
-    if (pitch > 89.0f)
+    if (pitch > 89.0f){
         pitch = 89.0f;
-    if (pitch < -89.0f)
+    }
+    if (pitch < -89.0f){
         pitch = -89.0f;
+    }
 
-    glm::vec3 front;
-    front.x = cos(radians(yaw)) * cos(radians(pitch));
-    front.y = sin(radians(pitch));
-    front.z = sin(radians(yaw)) * cos(radians(pitch));
+    vec3 front = vec3(cos(radians(yaw)) * cos(radians(pitch)),
+                      sin(radians(pitch)),
+                      sin(radians(yaw)) * cos(radians(pitch)));
     cameraFront = normalize(front);
 }
+
+void OpenGL_Program::centerView(int scaleX, int scaleY) {
+    //modelObjects[0].centerView(scaleX, scaleY);
+}
+
+void OpenGL_Program::scaleModel(vec3 scaleVec) {
+    modelObjects[0].scaleModel(scaleVec);
+}
+
+//void OpenGL_Program::scaleWithWindow(float scaleX, float scaleY) {
+//    //modelObjects[0].scaleWithWindow(scaleX,scaleY);
+//}

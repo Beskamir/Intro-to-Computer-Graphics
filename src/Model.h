@@ -99,9 +99,19 @@ private:
     //    vector<vector<float>> uvCoords;
     //};
     void openOBJ(string filepath);
-
+    void moveToOrigin();
+    void computeMiddle();
+    void updateBoundingBox(vec3 vertex);
+    //struct Transformations{
+    //    mat4 scaleMat;
+    //    mat4 rotateMat;
+    //    mat4 transformMat;
+    //};
+    //Transformations transformations;
+    //vec3 scaleMat=vec3(1.0f,1.0f,1.0f);
+    //mat4 scaleMat;
+    vec3 tempScaleVec=vec3(1.0f,1.0f,1.0f);
 public:
-
     MeshData meshData;
     Bound boundingBox;
     vec3 origin;
@@ -112,16 +122,12 @@ public:
     Model();
     Model(string filepath);
 
-
+    void scaleModel(vec3 scaleVec);
     void addTexture(string texturePath);
     GLuint openTexture(string filename);
     void drawModel(GLint modelLoc);
 
-    void updateBoundingBox(vec3 vertex);
-
-    void computeMiddle();
-
-    void moveToOrigin();
+    //void scaleWithWindow(float scaleX, float scaleY);
 };
 
 

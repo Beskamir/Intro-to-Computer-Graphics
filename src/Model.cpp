@@ -18,6 +18,7 @@ Model::Model(string filepath) {
     openOBJ(filepath);
     computeMiddle();
     moveToOrigin();
+    //transformations.scaleMat=vec3(1.0f,1.0f,1.0f);
 }
 
 //Following function based on:
@@ -165,9 +166,13 @@ GLuint Model::openTexture(string filename){
 //Following function based on: https://learnopengl.com/code_viewer.php?code=mesh&type=header
 void Model::drawModel(GLint transformationLoc) {
     /*  Render data  */
-    GLuint VAO, VBO, EBO;
+    GLuint VAO, VBO;
 
-    glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, glm::value_ptr(meshData.modelTransformation));
+    mat4 finalTransformations;
+    finalTransformations=scale(meshData.modelTransformation,tempScaleVec);
+
+    glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(finalTransformations));
+    //glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(meshData.modelTransformation));
 
     /*  Functions    */
     // Initializes all the buffer objects/arrays
@@ -175,18 +180,11 @@ void Model::drawModel(GLint transformationLoc) {
     // Create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
     // Load data into vertex buffers
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // A great thing about structs is that their memory layout is sequential for all its items.
-    // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-    // again translates to 3/2 floats which translates to a byte array.
     glBufferData(GL_ARRAY_BUFFER, meshData.vertices.size() * sizeof(Vertex), &meshData.vertices[0], GL_STATIC_DRAW);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshData.indices.size() * sizeof(GLuint), &meshData.indices[0], GL_STATIC_DRAW);
 
     // Set the vertex attribute pointers
     // Vertex Positions
@@ -205,6 +203,10 @@ void Model::drawModel(GLint transformationLoc) {
     glDrawArrays(GL_TRIANGLES, 0, meshData.vertices.size());
     //glDrawElements(GL_TRIANGLES, meshData.vertices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+
+    // Properly de-allocate all resources once they've outlived their purpose, now the program doesn't randomly crash after it's been running for a while
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
 }
 
 void Model::updateBoundingBox(vec3 vertex) {
@@ -237,6 +239,23 @@ void Model::computeMiddle() {
 void Model::moveToOrigin() {
     meshData.modelTransformation=translate(meshData.modelTransformation,vec3(-origin.x,-origin.y,-origin.z));
 }
+
+void Model::scaleModel(vec3 scaleVec) {
+    //tempScaleMat = scale(tempScaleMat,scaleVec);
+    tempScaleVec=scaleVec;
+    //meshData.modelTransformation*=scaleMat;
+    //meshData.modelTransformation=scale(meshData.modelTransformation,vec3(scaleFactor,scaleFactor,scaleFactor));
+}
+
+//void Model::scaleWithWindow(float scaleX, float scaleY){
+//    meshData.modelTransformation=translate(meshData.modelTransformation,vec3(origin.x,origin.y,origin.z));
+//    cout<<origin.x<<":"<<origin.y<<endl;
+//    origin.x*=scaleX;
+//    origin.y*=scaleY;
+//    cout<<scaleX<<":"<<scaleY<<endl;
+//    cout<<origin.x<<":"<<origin.y<<endl;
+//    moveToOrigin();
+//}
 
 
 //void Model::genImagePlane(){
