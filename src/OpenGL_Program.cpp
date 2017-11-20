@@ -3,6 +3,7 @@
 //
 
 #include "OpenGL_Program.h"
+#include "main.h"
 
 void OpenGL_Program::mainRender(){
     // Define the viewport dimensions
@@ -104,18 +105,20 @@ void OpenGL_Program::init_Program(GLFWwindow *window, int *window_width, int *wi
         cout<<"Error linking shader program"<<endl;
 }
 
-void OpenGL_Program::moveCamera(bool forward, bool backward, bool right, bool left) {
-    if(forward){
-        cameraPosition += cameraSpeed * cameraFront;
-    }
-    if(backward){
-        cameraPosition -= cameraSpeed * cameraFront;
-    }
-    if(right){
-        cameraPosition += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
-    }
-    if(left){
-        cameraPosition -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+void OpenGL_Program::moveCamera() {
+    if(fpsMode){
+        if(movement.forward){
+            cameraPosition += cameraSpeed * cameraFront;
+        }
+        if(movement.backward){
+            cameraPosition -= cameraSpeed * cameraFront;
+        }
+        if(movement.right){
+            cameraPosition += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+        }
+        if(movement.left){
+            cameraPosition -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+        }
     }
 }
 
@@ -170,7 +173,208 @@ void OpenGL_Program::scaleModel(vec3 scaleVec) {
 }
 
 void OpenGL_Program::finalizeTransformation() {
-    modelObjects[0].finalizeModelingTransformation();
+    if(scaleMode||rotateMode||moveMode){
+        modelObjects[0].finalizeModelingTransformation();
+    }
+}
+
+void OpenGL_Program::handleKeyPress(int key) {
+    if (key == GLFW_KEY_ESCAPE){
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+    else if(key==GLFW_KEY_F && !(rotateMode || scaleMode || moveMode)){
+        mouseLocLast = getMouseLocation();
+        fpsMode = !fpsMode;
+        movement= {false,false,false,false};
+    }
+    else if(fpsMode){
+        if(key==GLFW_KEY_W){
+            movement.forward = true;
+            movement.backward = false;
+        }if(key==GLFW_KEY_S){
+            movement.backward = true;
+            movement.forward = false;
+        }if(key==GLFW_KEY_A){
+            movement.left = true;
+            movement.right = false;
+        }if(key==GLFW_KEY_D){
+            movement.right = true;
+            movement.left = false;
+        }
+    }
+    else if(!fpsMode){
+        if(key==GLFW_KEY_S && !scaleMode){
+            mouseLocLast = getMouseLocation();
+            mousePerpendicular = vec2(-mouseLocLast.y,mouseLocLast.x);
+            cout << mouseLocLast.x <<":"<<mouseLocLast.y<<endl;
+            cout << mousePerpendicular.x << ":" << mousePerpendicular.y<<endl;
+            initalMouseDistance = getMouseDistance(mouseLocLast);
+            scaleMode = true;
+            rotateMode = false;
+            moveMode = false;
+            useAxis={true,true,true};
+        }else if(key==GLFW_KEY_R && !rotateMode){
+            mouseLocLast = getMouseLocation();
+            rotateMode = true;
+            moveMode = false;
+            scaleMode = false;
+            useAxis={true,true,true};
+        }else if(key==GLFW_KEY_G && !moveMode){
+            mouseLocLast = getMouseLocation();
+            moveMode = true;
+            rotateMode = false;
+            scaleMode = false;
+            useAxis={true,true,true};
+        }
+        else if(rotateMode||scaleMode||moveMode){
+            if(key==GLFW_KEY_LEFT_SHIFT||key==GLFW_KEY_RIGHT_SHIFT){
+                shiftMode=!shiftMode;
+            }//Lock to one of the following axis
+            else if(key==GLFW_KEY_X){
+                if(shiftMode){
+                    useAxis={false, true, true};
+                    //cout<<"locking to y,z"<<endl;
+                }else{
+                    useAxis={true, false, false};
+                    //cout<<"locking to x"<<endl;
+                }
+            }else if(key==GLFW_KEY_Y){
+                if(shiftMode){
+                    useAxis={true, false, true};
+                }else{
+                    useAxis={false, true, false};
+                }
+            }else if(key==GLFW_KEY_Z){
+                if(shiftMode){
+                    useAxis={true, true, false};
+                }else{
+                    useAxis={false, false, true};
+                }
+            }else if(key==GLFW_KEY_A){
+                useAxis={true,true,true};
+            }
+        }
+        else if(key==GLFW_KEY_C){
+            //Center view on object
+            int scaleX = 1;
+            int scaleY = 1;
+            centerView(scaleX,scaleY);
+        }
+    }
+}
+vec2 OpenGL_Program::getMouseLocation() {
+    double xpos,ypos;
+    glfwGetCursorPos(window, &xpos,&ypos);
+    vec2 mouseLocation={(2.0f*((float)(xpos)/(*window_width)))-1.0f,
+                        1.0f-(2.0f*((float)(ypos)/(*window_height)))};
+    return mouseLocation;
+}
+
+double OpenGL_Program::getPositivity() {
+    double expected_y = (mouseLocCurrent.x * (mousePerpendicular.y / mousePerpendicular.x));
+    if(mouseLocLast.y>0){
+        if (expected_y > mouseLocCurrent.y) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }else{
+        if (expected_y < mouseLocCurrent.y) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+}
+
+double OpenGL_Program::getMouseDistance(vec2 mousePosition) {
+    return sqrt(pow(mousePosition.x,2)+pow(mousePosition.y,2));
+}
+
+void OpenGL_Program::teleportMouse(double xpos, double ypos) {
+    mouseLocCurrent=getMouseLocation();
+    if (mouseLocCurrent.x < -0.75) {
+        xTeleportCounter--;
+        glfwSetCursorPos(window, ((0.7 + 1.0) / 2) * *window_width, ypos);
+        mouseLocLast = getMouseLocation();
+    }
+    if (mouseLocCurrent.x > 0.75) {
+        xTeleportCounter++;
+        glfwSetCursorPos(window, ((-0.7 + 1.0) / 2) * *window_width, ypos);
+        mouseLocLast = getMouseLocation();
+    }
+    if (mouseLocCurrent.y < -0.75) {
+        yTeleportCounter--;
+        glfwSetCursorPos(window, xpos, ((0.7 - 1.0) / 2) * -*window_height);
+        mouseLocLast = getMouseLocation();
+    }
+    if (mouseLocCurrent.y > 0.75) {
+        yTeleportCounter++;
+        glfwSetCursorPos(window, xpos, ((-0.7 - 1.0) / 2) * -*window_height);
+        mouseLocLast = getMouseLocation();
+    }
+}
+
+void OpenGL_Program::fpsMouseMovement(){
+    mouseLocCurrent = getMouseLocation();
+    rotateView(mouseLocCurrent.x-mouseLocLast.x,
+                              mouseLocCurrent.y-mouseLocLast.y);
+    glfwSetCursorPos(window,*window_width/2,*window_height/2);
+    //mouseLocCurrent = getMouseLocation();
+    //cout<<mouseLocCurrent.x<<":"<<mouseLocCurrent.y<<endl;
+    //cout<<mouseLocLast.x<<":"<<mouseLocLast.y<<endl;
+    mouseLocLast = getMouseLocation();
+}
+
+void OpenGL_Program::checkForTransformations(double xpos, double ypos) {
+    if(scaleMode){
+        teleportMouse(xpos,ypos);
+        mouseLocCurrent = getMouseLocation();
+        mouseLocCurrent.x*=(abs(xTeleportCounter)+1);
+        mouseLocCurrent.y*=(abs(yTeleportCounter)+1);
+        double scaleFactor = getPositivity() * getMouseDistance(mouseLocCurrent) / initalMouseDistance;
+        //cout<<scaleFactor<<endl;
+        vec3 scaleVec(scaleFactor,scaleFactor,scaleFactor);
+        scaleModel(scaleVec);
+    }
+    if(rotateMode){
+        mouseLocCurrent = getMouseLocation();
+        //openGL_program.rotateModel(mouseLocCurrent.x-mouseLocLast.x,
+        //                          mouseLocCurrent.y-mouseLocLast.y);
+        //cout<<mouseLocCurrent.x<<":"<<mouseLocCurrent.y<<endl;
+        //cout<<mouseLocLast.x<<":"<<mouseLocLast.y<<endl;
+        mouseLocLast = mouseLocCurrent;
+    }
+    if(moveMode){
+
+    }
+}
+
+void OpenGL_Program::handleKeyRelease(int key) {
+    //cout<<key<<endl;
+    if(key==GLFW_KEY_W){
+        movement.forward = false;
+    }
+    else if(key==GLFW_KEY_S){
+        movement.backward = false;
+    }
+    else if(key==GLFW_KEY_A){
+        movement.left = false;
+    }
+    else if(key==GLFW_KEY_D){
+        movement.right = false;
+    }
+}
+
+void OpenGL_Program::handleMouseMovement(double xpos, double ypos) {
+    if(fpsMode){
+        //mouseLocCurrent=getMouseLocation();
+        //teleportMouse(xpos,ypos);
+        fpsMouseMovement();
+    }
+    else{
+        checkForTransformations(xpos,ypos);
+    }
 }
 
 //void OpenGL_Program::scaleWithWindow(float scaleX, float scaleY) {

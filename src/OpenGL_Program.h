@@ -54,13 +54,44 @@ private:
     GLfloat pitch =   0.0f;
     vector<Model> modelObjects;
 
+
+    struct UseAxis{
+        bool x;
+        bool y;
+        bool z;
+    };
+//struct ScreenPosition{
+//    float x;
+//    float y;
+//};
+    struct Movement{
+        bool forward;
+        bool backward;
+        bool right;
+        bool left;
+    };
+    vec2 mouseLocLast = vec2(0, 0);
+    vec2 mouseLocCurrent = vec2(0, 0);
+    vec2 mousePerpendicular = vec2(0, 0);
+    UseAxis useAxis{true, true, true};
+    Movement movement{false,false,false,false};
+    double initalMouseDistance;
+    int xTeleportCounter = 0;
+    int yTeleportCounter = 0;
+
+    bool fpsMode=false;
+    bool scaleMode=false;
+    bool rotateMode=false;
+    bool moveMode=false;
+    bool shiftMode=false;
+
 public:
 
     ~OpenGL_Program()= default;
     OpenGL_Program()= default;
     void mainRender();
     void init_Program(GLFWwindow *window, int *pInt, int *pInt1);
-    void moveCamera(bool forward, bool backward, bool right, bool left);
+    void moveCamera();
 
     void changeCameraSpeed(float changeSpeed);
 
@@ -74,6 +105,24 @@ public:
     void scaleModel(vec3 scaleVec);
 
     void finalizeTransformation();
+
+    void handleKeyPress(int key);
+
+    vec2 getMouseLocation();
+
+    double getPositivity();
+
+    double getMouseDistance(vec2 mousePosition);
+
+    void teleportMouse(double xpos, double ypos);
+
+    void fpsMouseMovement();
+
+    void checkForTransformations(double xpos, double ypos);
+
+    void handleKeyRelease(int key);
+
+    void handleMouseMovement(double xpos, double ypos);
 };
 
 
