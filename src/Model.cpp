@@ -18,9 +18,6 @@ Model::Model(string filepath) {
     openOBJ(filepath);
     computeMiddle();
     moveToOrigin();
-    //tempTransform=scale(tempTransform,vec3(1.0f,1.0f,1.0f));
-    //appliedTransforms=scale(appliedTransforms,vec3(1.0f,1.0f,1.0f));
-    //transformations.scaleMat=vec3(1.0f,1.0f,1.0f);
 }
 
 //Following function based on:
@@ -166,9 +163,20 @@ GLuint Model::openTexture(string filename){
 }
 
 //Following function based on: https://learnopengl.com/code_viewer.php?code=mesh&type=header
-void Model::drawModel(GLint transformationLoc,mat4 tempTransform) {
+void Model::drawModel(GLint transformationLoc, bool transforming,bool worldAxis) {
     mat4 finalTransformations;
-    finalTransformations=tempTransform;
+    if(transforming){
+        if(worldAxis){
+            finalTransformations=tempTransform*appliedTransforms;
+        }
+        else{
+            finalTransformations=appliedTransforms*tempTransform;
+        }
+        tempTransform=mat4();
+    }
+    else{
+        finalTransformations=appliedTransforms;
+    }
     //finalTransformations=scale(meshData.modelTransformation,tempScaleVec);
 
     glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(finalTransformations*meshData.modelTransformation));
@@ -251,11 +259,16 @@ void Model::scaleModel(vec3 scaleVec) {
     //meshData.modelTransformation=scale(meshData.modelTransformation,vec3(scaleFactor,scaleFactor,scaleFactor));
 }
 
-void Model::finalizeModelingTransformation() {
-    //appliedTransforms=appliedTransforms*tempTransform;
-    //tempTransform=mat4();
+void Model::finalizeModelingTransformation(bool worldAxis) {
+    if(worldAxis){
+        appliedTransforms=tempTransform*appliedTransforms;
+    }
+    else{
+        appliedTransforms=appliedTransforms*tempTransform;
+    }
+    tempTransform=mat4();
 }
 
 void Model::setTempTransform(mat4 tempTransform){
-    //this->tempTransform=tempTransform;
+    this->tempTransform=tempTransform;
 }

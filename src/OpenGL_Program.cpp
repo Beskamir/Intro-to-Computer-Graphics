@@ -58,7 +58,7 @@ void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     //cout<<"drawing model: "<<endl;
     GLint modelLoc = glGetUniformLocation(mShaders.id, "modelTransformation");
     for (int i = 0; i < modelObjects.size(); ++i) {
-        modelObjects[i].drawModel(modelLoc, transformations.getTransformation());
+        modelObjects[i].drawModel(modelLoc,(modes.scale||modes.rotate||modes.move),worldAxis);
         //drawModel(modelObjects[i]); //draw the object
         //setTextureUsage(1);
     }
@@ -152,6 +152,8 @@ void OpenGL_Program::handleKeyPress(int key) {
             }
         }else if(key==GLFW_KEY_A){
             useAxis={true,true,true};
+        }else if(key==GLFW_KEY_W){
+            worldAxis=!worldAxis;
         }
     }
 }
@@ -187,17 +189,28 @@ void OpenGL_Program::handleMouseMovement(double xpos, double ypos) {
         mouse.teleportMouse(xpos,ypos);
         transformations.scale({useAxis.x,useAxis.y,useAxis.z},mouse);
         //modelObjects[0].setTempTransform();
+        modelObjects[0].setTempTransform(transformations.getTransformation());
     }
     if(modes.rotate){
-
+        mouse.setMouseCurrent();
+        mouse.teleportMouse(xpos,ypos);
+        transformations.rotate({useAxis.x,useAxis.y,useAxis.z},mouse);
+        //modelObjects[0].setTempTransform();
+        modelObjects[0].setTempTransform(transformations.getTransformation());
     }
     if(modes.move){
-
+        mouse.setMouseCurrent();
+        mouse.teleportMouse(xpos,ypos);
+        transformations.translate({useAxis.x,useAxis.y,useAxis.z},mouse);
+        //modelObjects[0].setTempTransform();
+        modelObjects[0].setTempTransform(transformations.getTransformation());
     }
 }
 
 void OpenGL_Program::finalizeTransformation() {
-    //modelObjects[0].finalizeModelingTransformation();
+    modelObjects[0].finalizeModelingTransformation(worldAxis);
+    modes={false,false,false,false};
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 //void OpenGL_Program::scaleWithWindow(float scaleX, float scaleY) {
 //    //modelObjects[0].scaleWithWindow(scaleX,scaleY);

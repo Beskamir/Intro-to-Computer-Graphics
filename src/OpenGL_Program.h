@@ -67,6 +67,7 @@ private:
         bool z;
     };
     UseAxis useAxis = {false, false, false};
+    bool worldAxis = false;
 
     bool activeKeys[1024]={false};
 

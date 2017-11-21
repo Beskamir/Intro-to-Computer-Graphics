@@ -47,6 +47,8 @@ public:
 
 
     void scale(UseAxis useAxis, Mouse mouse);
+    void rotate(UseAxis useAxis,Mouse mouse);
+    void translate(UseAxis useAxis, Mouse mouse);
     mat4 getTransformation();
     void clear();
 

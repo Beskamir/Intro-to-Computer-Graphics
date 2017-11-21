@@ -60,8 +60,8 @@ private:
         float zCoord[2];
     };
 
-    //mat4 tempTransform;
-    //mat4 appliedTransforms;
+    mat4 tempTransform;
+    mat4 appliedTransforms;
 
     void openOBJ(string filepath);
     void moveToOrigin();
@@ -92,8 +92,8 @@ public:
     void scaleModel(vec3 scaleVec);
     void addTexture(string texturePath);
     GLuint openTexture(string filename);
-    void drawModel(GLint modelLoc, mat4 tempTransform);
-    void finalizeModelingTransformation();
+    void drawModel(GLint modelLoc, bool transforming, bool worldAxis);
+    void finalizeModelingTransformation(bool worldAxis);
 
     //void scaleWithWindow(float scaleX, float scaleY);
     void setTempTransform(mat4 tempTransform);
