@@ -39,40 +39,6 @@ using namespace glm;
 
 class Model {
 private:
-    //typedef struct {
-    //    float x;
-    //    float y;
-    //    float z;
-    //    float w;
-    //} Position;
-    //typedef struct {
-    //    float x;
-    //    float y;
-    //    float z;
-    //} Normal;
-    //typedef struct {
-    //    float s;
-    //    float t;
-    //    float u;
-    //} TexCoord;
-    //typedef struct {
-    //    Position pos;
-    //    Normal norm;
-    //    TexCoord tex;
-    //} Vertex;
-    //typedef struct {
-    //    array<Vertex,3> vertex;
-    //} Triangle;
-
-    //struct Vert{
-    //    float x,y,z;
-    //};
-    //struct Color{
-    //    float r,g,b;
-    //};
-    //struct uvCoord{
-    //    float u,v;
-    //};
     struct Vertex {
         vec3 Position;
         vec3 Normal;
@@ -93,11 +59,10 @@ private:
         float yCoord[2];
         float zCoord[2];
     };
-    //struct MeshData{
-    //    vector<vector<float>> vertices;
-    //    vector<vector<float>> colors;
-    //    vector<vector<float>> uvCoords;
-    //};
+
+    //mat4 tempTransform;
+    //mat4 appliedTransforms;
+
     void openOBJ(string filepath);
     void moveToOrigin();
     void computeMiddle();
@@ -127,10 +92,11 @@ public:
     void scaleModel(vec3 scaleVec);
     void addTexture(string texturePath);
     GLuint openTexture(string filename);
-    void drawModel(GLint modelLoc);
+    void drawModel(GLint modelLoc, mat4 tempTransform);
     void finalizeModelingTransformation();
 
     //void scaleWithWindow(float scaleX, float scaleY);
+    void setTempTransform(mat4 tempTransform);
 };
 
 

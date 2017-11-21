@@ -58,7 +58,7 @@ void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     //cout<<"drawing model: "<<endl;
     GLint modelLoc = glGetUniformLocation(mShaders.id, "modelTransformation");
     for (int i = 0; i < modelObjects.size(); ++i) {
-        modelObjects[i].drawModel(modelLoc);
+        modelObjects[i].drawModel(modelLoc, transformations.getTransformation());
         //drawModel(modelObjects[i]); //draw the object
         //setTextureUsage(1);
     }
@@ -96,16 +96,62 @@ void OpenGL_Program::handleKeyPress(int key) {
     if (key == GLFW_KEY_ESCAPE){
         glfwSetWindowShouldClose(window, GL_TRUE);
     } else if (key == GLFW_KEY_F && !(modes.rotate || modes.scale || modes.move)) {
+        //glfwWindowHint(GLFW_AUTO_ICONIFY, GL_FALSE);
+        transformations.clear();
+        mouse.reset();
         mouse.setMouseLast();
         modes.fps = !modes.fps;
+        if(modes.fps){
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        else{
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
     }
     if(!modes.fps){
-        if (key == GLFW_KEY_S ) {
+        if (key == GLFW_KEY_S && !modes.scale) {
+            transformations.clear();
+            mouse.reset();
+            mouse.setMouseLast();
             modes = {false, true, false, false};
-        } else if (key == GLFW_KEY_R) {
+            useAxis = {true, true, true};
+        } else if (key == GLFW_KEY_R && !modes.rotate) {
+            transformations.clear();
+            mouse.reset();
+            mouse.setMouseLast();
             modes = {false, false, true, false};
-        } else if (key == GLFW_KEY_G) {
+            useAxis = {true, true, true};
+        } else if (key == GLFW_KEY_G && !modes.move) {
+            transformations.clear();
+            mouse.reset();
+            mouse.setMouseLast();
             modes = {false, false, false, true};
+            useAxis = {true, true, true};
+        }
+    }
+    if(modes.rotate || modes.scale || modes.move){
+        if(key==GLFW_KEY_X){
+            if(activeKeys[GLFW_KEY_RIGHT_SHIFT]||activeKeys[GLFW_KEY_LEFT_SHIFT]){
+                useAxis={false, true, true};
+                //cout<<"locking to y,z"<<endl;
+            }else{
+                useAxis={true, false, false};
+                //cout<<"locking to x"<<endl;
+            }
+        }else if(key==GLFW_KEY_Y){
+            if(activeKeys[GLFW_KEY_RIGHT_SHIFT]||activeKeys[GLFW_KEY_LEFT_SHIFT]){
+                useAxis={true, false, true};
+            }else{
+                useAxis={false, true, false};
+            }
+        }else if(key==GLFW_KEY_Z){
+            if(activeKeys[GLFW_KEY_RIGHT_SHIFT]||activeKeys[GLFW_KEY_LEFT_SHIFT]){
+                useAxis={true, true, false};
+            }else{
+                useAxis={false, false, true};
+            }
+        }else if(key==GLFW_KEY_A){
+            useAxis={true,true,true};
         }
     }
 }
@@ -132,12 +178,15 @@ void OpenGL_Program::handleMouseMovement(double xpos, double ypos) {
     if(modes.fps){
         //Move the camera using the mouse
         mouse.setMouseCurrent();
-        camera.rotateView(mouse.getMouseDifference());
+        camera.rotateView(mouse.getMouseDifference(mouse.getMouseCurrent(),mouse.getMouseLast()));
         glfwSetCursorPos(window,*window_width/2,*window_height/2);
         mouse.setMouseLast();
     }
     if(modes.scale){
-
+        mouse.setMouseCurrent();
+        mouse.teleportMouse(xpos,ypos);
+        transformations.scale({useAxis.x,useAxis.y,useAxis.z},mouse);
+        //modelObjects[0].setTempTransform();
     }
     if(modes.rotate){
 
@@ -148,7 +197,7 @@ void OpenGL_Program::handleMouseMovement(double xpos, double ypos) {
 }
 
 void OpenGL_Program::finalizeTransformation() {
-
+    //modelObjects[0].finalizeModelingTransformation();
 }
 //void OpenGL_Program::scaleWithWindow(float scaleX, float scaleY) {
 //    //modelObjects[0].scaleWithWindow(scaleX,scaleY);

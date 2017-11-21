@@ -34,11 +34,18 @@ class Mouse {
 private:
     GLFWwindow *window;
     int *window_width, *window_height;
+    float usableScreenSize = 0.9;
 
     vec2 mouseLastPosition={0,0};
+    vec2 mouseLastPerpendicular={0,0};
     vec2 mouseCurrentPosition={0,0};
+    //vec2 mouseGlobal={0,0};
+    vec2 maxRegion={0.9f,0.9f};
+    vec2 minRegion={-0.9f,-0.9f};
+    mat2 counter = mat2({0,0},{0,0});
 
     vec2 getMouseLocation();
+    vec2 getPerpendicular(vec2 mousePosition);
 
 public:
     Mouse() = default;
@@ -51,8 +58,13 @@ public:
     void setMouseCurrent();
     vec2 getMouseCurrent();
 
-    vec2 getMouseDifference();
+    vec2 getMouseDifference(vec2 mouseFinal, vec2 mouseInitial);
 
+    void reset();
+
+    void teleportMouse(double xpos, double ypose);
+    int getPositivity(vec2 tvec21);
+    double getDistance(vec2 mousePosition);
 };
 
 

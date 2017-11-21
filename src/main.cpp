@@ -62,6 +62,8 @@ bool setupOpenGL(GLFWwindow **window) {
 }
 
 void setupWindowCallbacks(GLFWwindow **window) {
+    //glfwSetInputMode(*window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwWindowHint(GLFW_AUTO_ICONIFY, GL_FALSE);
     glfwSetKeyCallback(*window, key_callback);
     glfwSetFramebufferSizeCallback(*window, framebuffer_size_callback);
     glfwSetScrollCallback(*window, scroll_callback);
@@ -91,7 +93,6 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
         openGL_program.finalizeTransformation();
-        cout << "mouse down" <<endl;
     }
 }
 

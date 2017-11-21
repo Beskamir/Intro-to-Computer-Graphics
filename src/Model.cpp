@@ -18,6 +18,8 @@ Model::Model(string filepath) {
     openOBJ(filepath);
     computeMiddle();
     moveToOrigin();
+    //tempTransform=scale(tempTransform,vec3(1.0f,1.0f,1.0f));
+    //appliedTransforms=scale(appliedTransforms,vec3(1.0f,1.0f,1.0f));
     //transformations.scaleMat=vec3(1.0f,1.0f,1.0f);
 }
 
@@ -164,9 +166,9 @@ GLuint Model::openTexture(string filename){
 }
 
 //Following function based on: https://learnopengl.com/code_viewer.php?code=mesh&type=header
-void Model::drawModel(GLint transformationLoc) {
+void Model::drawModel(GLint transformationLoc,mat4 tempTransform) {
     mat4 finalTransformations;
-    finalTransformations=scale(finalTransformations,tempScaleVec);
+    finalTransformations=tempTransform;
     //finalTransformations=scale(meshData.modelTransformation,tempScaleVec);
 
     glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(finalTransformations*meshData.modelTransformation));
@@ -250,90 +252,10 @@ void Model::scaleModel(vec3 scaleVec) {
 }
 
 void Model::finalizeModelingTransformation() {
-
+    //appliedTransforms=appliedTransforms*tempTransform;
+    //tempTransform=mat4();
 }
 
-//void Model::scaleWithWindow(float scaleX, float scaleY){
-//    meshData.modelTransformation=translate(meshData.modelTransformation,vec3(origin.x,origin.y,origin.z));
-//    cout<<origin.x<<":"<<origin.y<<endl;
-//    origin.x*=scaleX;
-//    origin.y*=scaleY;
-//    cout<<scaleX<<":"<<scaleY<<endl;
-//    cout<<origin.x<<":"<<origin.y<<endl;
-//    moveToOrigin();
-//}
-
-
-//void Model::genImagePlane(){
-//    double scaleHeight, scaleWidth;
-//
-//    if(imageWidth>imageHeight){
-//        scaleHeight=(double)imageHeight/imageWidth;
-//        scaleWidth=(double)imageWidth/imageWidth;
-//    }
-//    else if(imageWidth<imageHeight){
-//        scaleHeight=(double)imageHeight/imageHeight;
-//        scaleWidth=(double)imageWidth/imageHeight;
-//    }
-//    else{
-//        scaleHeight=1;
-//        scaleWidth=1;
-//    }
-//    //cout<<scaleHeight<<":"<<scaleWidth<<endl;
-//
-//    vector<vector<float>> verticies = {{1.0f,  1.0f, 0.0f},
-//                              {1.0f, -1.0f, 0.0f},
-//                              {-1.0f, -1.0f, 0.0f},
-//                              {-1.0f,  1.0f, 0.0f},};
-//    for (int i = 0; i < verticies.size(); ++i) {
-//        verticies[i][0]*=scaleWidth;
-//        verticies[i][1]*=scaleHeight;
-//    }
-//    vector<vector<float>> colors = {{1.0f, 0.0f, 0.0f},
-//                            {0.0f, 1.0f, 0.0f},
-//                            {0.0f, 0.0f, 1.0f},
-//                            {1.0f, 1.0f, 0.0f},};
-//    vector<vector<float>> uvCoords = {{1.0f, 1.0f},
-//                                {1.0f, 0.0f},
-//                                {0.0f, 0.0f},
-//                                {0.0f, 1.0f},};
-//
-//    //Create a square using two triangles and the above defined points
-//    meshData.vertices = {verticies[0],
-//                         verticies[1],
-//                         verticies[3],
-//
-//                         verticies[1],
-//                         verticies[2],
-//                         verticies[3],
-//    };
-//    meshData.colors={colors[0],
-//                     colors[1],
-//                     colors[3],
-//
-//                     colors[1],
-//                     colors[2],
-//                     colors[3],
-//    };
-//    meshData.uvCoords={uvCoords[0],
-//                       uvCoords[1],
-//                       uvCoords[3],
-//
-//                       uvCoords[1],
-//                       uvCoords[2],
-//                       uvCoords[3],
-//    };
-//}
-
-//vertexArray Model::use() {
-//
-//    //glBindTexture(GL_TEXTURE_2D, mTexture);
-//    vertexArray verts(vertices.size());
-//
-//    vertexArray verts(meshData.vertices.size()*meshData.vertices[0].size()/3);
-//    verts.addBuffer("v", 0, meshData.vertices);
-//    verts.addBuffer("c", 1, meshData.colors);
-//    verts.addBuffer("t", 2, meshData.uvCoords);
-//
-//    return verts;
-//}
+void Model::setTempTransform(mat4 tempTransform){
+    //this->tempTransform=tempTransform;
+}

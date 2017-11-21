@@ -34,6 +34,7 @@ using namespace glm;
 #include "Model.h"
 #include "Camera.h"
 #include "Mouse.h"
+#include "Transformations.h"
 
 class OpenGL_Program {
 
@@ -46,6 +47,7 @@ private:
 
     Camera camera;
     Mouse mouse;
+    Transformations transformations;
 
     //Vector array of models within the scene
     vector<Model> modelObjects;
