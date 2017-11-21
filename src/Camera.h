@@ -63,7 +63,7 @@ public:
     //void fpsMouseMovement();
     //void moveCamera(bool forward, bool backward, bool right, bool left);
     void moveCamera(Movement movement, float deltaTime);
-    void rotateView(float xOffset, float yOffset);
+    void rotateView(vec2 mouseOffset);
     void centerView(Model model);
     void changeCameraSpeed(float changeSpeed);
 

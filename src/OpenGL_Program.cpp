@@ -7,6 +7,7 @@
 void OpenGL_Program::mainRender(){
     // Define the viewport dimensions
     glViewport(0, 0, *window_width, *window_height);
+    mouse = Mouse(window, window_width, window_height);
 
     //forloop to open all the models and textures
     //Model model = Model("data/models/sphereTest.obj");
@@ -94,28 +95,19 @@ void OpenGL_Program::handleKeyCallback(int key, int action) {
 void OpenGL_Program::handleKeyPress(int key) {
     if (key == GLFW_KEY_ESCAPE){
         glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-    else if(key==GLFW_KEY_F && !(modes.rotate || modes.scale || modes.move)){
-        //mouseLocLast = getMouseLocation();
+    } else if (key == GLFW_KEY_F && !(modes.rotate || modes.scale || modes.move)) {
+        mouse.setMouseLast();
         modes.fps = !modes.fps;
-        //movement= {false,false,false,false};
     }
-    else if(modes.fps){
-        //if(key==GLFW_KEY_W){
-        //    movement.forward = true;
-        //    movement.backward = false;
-        //}if(key==GLFW_KEY_S){
-        //    movement.backward = true;
-        //    movement.forward = false;
-        //}if(key==GLFW_KEY_A){
-        //    movement.left = true;
-        //    movement.right = false;
-        //}if(key==GLFW_KEY_D){
-        //    movement.right = true;
-        //    movement.left = false;
-        //}
+    if(!modes.fps){
+        if (key == GLFW_KEY_S ) {
+            modes = {false, true, false, false};
+        } else if (key == GLFW_KEY_R) {
+            modes = {false, false, true, false};
+        } else if (key == GLFW_KEY_G) {
+            modes = {false, false, false, true};
+        }
     }
-
 }
 
 void OpenGL_Program::handleScrollCallback(double yoffset) {
@@ -137,7 +129,22 @@ void OpenGL_Program::moveCameraWASD(double deltaTime) {
 }
 
 void OpenGL_Program::handleMouseMovement(double xpos, double ypos) {
+    if(modes.fps){
+        //Move the camera using the mouse
+        mouse.setMouseCurrent();
+        camera.rotateView(mouse.getMouseDifference());
+        glfwSetCursorPos(window,*window_width/2,*window_height/2);
+        mouse.setMouseLast();
+    }
+    if(modes.scale){
 
+    }
+    if(modes.rotate){
+
+    }
+    if(modes.move){
+
+    }
 }
 
 void OpenGL_Program::finalizeTransformation() {

@@ -27,11 +27,13 @@
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
+using namespace glm;
 
 #include "ShaderProgram.h"
 //#include "vertexArray.h"
 #include "Model.h"
 #include "Camera.h"
+#include "Mouse.h"
 
 class OpenGL_Program {
 
@@ -43,6 +45,7 @@ private:
     int *window_width, *window_height;
 
     Camera camera;
+    Mouse mouse;
 
     //Vector array of models within the scene
     vector<Model> modelObjects;

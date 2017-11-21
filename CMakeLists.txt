@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(OpenGL REQUIRED)
 
 #The source files for the project
-set(SOURCE_FILES src/main.cpp src/main.h src/vertexArray.cpp src/vertexArray.h src/ShaderProgram.cpp src/ShaderProgram.h src/OpenGL_Program.cpp src/OpenGL_Program.h  src/Model.cpp src/Model.h src/Camera.cpp src/Camera.h src/Transformations.cpp src/Transformations.h)
+set(SOURCE_FILES src/main.cpp src/main.h src/vertexArray.cpp src/vertexArray.h src/ShaderProgram.cpp src/ShaderProgram.h src/OpenGL_Program.cpp src/OpenGL_Program.h  src/Model.cpp src/Model.h src/Camera.cpp src/Camera.h src/Transformations.cpp src/Transformations.h src/Mouse.cpp src/Mouse.h)
 #src/OpenModel.h src/OpenModel.cpp
 #src/ImageTexture.cpp src/ImageTexture.h
 
