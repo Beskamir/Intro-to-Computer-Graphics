@@ -31,101 +31,60 @@ using namespace std;
 #include "ShaderProgram.h"
 //#include "vertexArray.h"
 #include "Model.h"
+#include "Camera.h"
 
 class OpenGL_Program {
 
 private:
+    //shaders
     ShaderProgram mShaders;
-    //ShaderProgram lineShader;
+    //Window related stuff, (pointer to and dimensions)
     GLFWwindow *window;
     int *window_width, *window_height;
 
-    void renderToScreen(vector<Model> modelObjects);
-    //void setTextureUsage(int textureUsage);
-    void setupTransformations(ShaderProgram shaderProgram, int i);
-    void drawModel(Model model);
+    Camera camera;
 
-    // Camera
-    vec3 cameraPosition = vec3(0.0f, 0.0f, 0.0f);
-    vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
-    vec3 cameraUp = vec3(0.0f, 1.0f,  0.0f);
-    float cameraSpeed = 0.05f;
-    GLfloat yaw   = -90.0f;	// Yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right (due to how Eular angles work) so we initially rotate a bit to the left.
-    GLfloat pitch =   0.0f;
+    //Vector array of models within the scene
     vector<Model> modelObjects;
 
+    struct Modes{
+        bool fps;
+        bool scale;
+        bool rotate;
+        bool move;
+    };
+    Modes modes = {false,false,false,false};
 
+    // Axis which to rotate a given object around
     struct UseAxis{
         bool x;
         bool y;
         bool z;
     };
-//struct ScreenPosition{
-//    float x;
-//    float y;
-//};
-    struct Movement{
-        bool forward;
-        bool backward;
-        bool right;
-        bool left;
-    };
-    vec2 mouseLocLast = vec2(0, 0);
-    vec2 mouseLocCurrent = vec2(0, 0);
-    vec2 mousePerpendicular = vec2(0, 0);
-    vec2 mouseLocEndless = vec2(0,0);
-    UseAxis useAxis{true, true, true};
-    Movement movement{false,false,false,false};
-    double initalMouseDistance;
-    int xTeleportCounter = 0;
-    int yTeleportCounter = 0;
+    UseAxis useAxis = {false, false, false};
 
-    bool fpsMode=false;
-    bool scaleMode=false;
-    bool rotateMode=false;
-    bool moveMode=false;
-    bool shiftMode=false;
+    bool activeKeys[1024]={false};
+
+
+    void renderToScreen(vector<Model> modelObjects);
 
 public:
 
     ~OpenGL_Program()= default;
     OpenGL_Program()= default;
     void mainRender();
-    void init_Program(GLFWwindow *window, int *pInt, int *pInt1);
-    void moveCamera();
-
-    void changeCameraSpeed(float changeSpeed);
-
-    void initalCameraLocation(Model model);
-
-    void rotateView(float xOffset, float yOffset);
-
-    void centerView(int scaleX, int scaleY);
-
-    //void scaleWithWindow(float scaleX, float scaleY);
-    void scaleModel(vec3 scaleVec);
-
-    void finalizeTransformation();
+    void init_Program(GLFWwindow *window, int *window_width, int *window_height);
+    void handleKeyCallback(int key, int action);
 
     void handleKeyPress(int key);
 
-    vec2 getMouseLocation();
+    void handleScrollCallback(double yoffset);
 
-    double getPositivity();
-
-    double getMouseDistance(vec2 mousePosition);
-
-    void teleportMouse(double xpos, double ypos);
-
-    void fpsMouseMovement();
-
-    void checkForTransformations(double xpos, double ypos);
-
-    void handleKeyRelease(int key);
+    void moveCameraWASD(double deltaTime);
 
     void handleMouseMovement(double xpos, double ypos);
 
-    void setMouseLocationEndlessGraph();
+    void finalizeTransformation();
 };
 
 

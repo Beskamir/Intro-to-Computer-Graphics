@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7)
-project(Assignment2)
+project(Assignment3)
 
-set(PROJECT_NAME Assignment2) #Macro the project name
+set(PROJECT_NAME Assignment3) #Macro the project name
 set(CMAKE_CXX_STANDARD 11)
 
 
@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(OpenGL REQUIRED)
 
 #The source files for the project
-set(SOURCE_FILES src/main.cpp src/main.h src/vertexArray.cpp src/vertexArray.h src/ShaderProgram.cpp src/ShaderProgram.h src/OpenGL_Program.cpp src/OpenGL_Program.h  src/Model.cpp src/Model.h )
+set(SOURCE_FILES src/main.cpp src/main.h src/vertexArray.cpp src/vertexArray.h src/ShaderProgram.cpp src/ShaderProgram.h src/OpenGL_Program.cpp src/OpenGL_Program.h  src/Model.cpp src/Model.h src/Camera.cpp src/Camera.h src/Transformations.cpp src/Transformations.h)
 #src/OpenModel.h src/OpenModel.cpp
 #src/ImageTexture.cpp src/ImageTexture.h
 

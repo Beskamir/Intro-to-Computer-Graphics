@@ -71,27 +71,20 @@ void setupWindowCallbacks(GLFWwindow **window) {
 
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
-    if (action == GLFW_PRESS){
-        openGL_program.handleKeyPress(key);
-    }
-
-    openGL_program.moveCamera();
-
-    if(action==GLFW_RELEASE){
-        openGL_program.handleKeyRelease(key);
-    }
+    openGL_program.handleKeyCallback(key, action);
 }
 
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     //cout << xoffset << ":"<< yoffset<<endl;
-    float scalingSpeed=0.005f;
-    if(yoffset>0){
-        openGL_program.changeCameraSpeed(scalingSpeed);
-    }
-    if(yoffset<0){
-        openGL_program.changeCameraSpeed(-scalingSpeed);
-    }
+    //float scalingSpeed=0.005f;
+    openGL_program.handleScrollCallback(yoffset);
+    //if(yoffset>0){
+    //    openGL_program.changeCameraSpeed(scalingSpeed);
+    //}
+    //if(yoffset<0){
+    //    openGL_program.changeCameraSpeed(-scalingSpeed);
+    //}
 }
 
 
