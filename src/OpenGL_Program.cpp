@@ -49,6 +49,10 @@ void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     // Cull triangles which normal is not towards the camera.
     // http://www.opengl-tutorial.org/beginners-tutorials/tutorial-6-keyboard-and-mouse/
     glEnable(GL_CULL_FACE);
+    //zbuffer enabled thanks to: https://stackoverflow.com/questions/1046029/depth-buffer-in-opengl
+    glClearDepth(1.0f);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
 
     mShaders.use();
 
