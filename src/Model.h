@@ -92,7 +92,7 @@ public:
     void scaleModel(vec3 scaleVec);
     void addTexture(string texturePath);
     GLuint openTexture(string filename);
-    void drawModel(GLint modelLoc, bool transforming, bool worldAxis);
+    void drawModel(GLint modelLoc, GLint tInverseLoc, bool transforming, bool worldAxis);
     void finalizeModelingTransformation(bool worldAxis);
 
     //void scaleWithWindow(float scaleX, float scaleY);

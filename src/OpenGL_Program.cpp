@@ -11,6 +11,7 @@ void OpenGL_Program::mainRender(){
 
     //forloop to open all the models and textures
     //Model model = Model("data/models/sphereTest.obj");
+    //Model model = Model("data/models/offical/coffee_cup/coffee_cup.obj");
     //Model model = Model("data/models/pyramidTest.obj");
     Model model = Model("data/models/offical/chess_king/king.obj");
     model.addTexture("data/imageData/Tower.png");
@@ -50,15 +51,20 @@ void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     glEnable(GL_CULL_FACE);
 
     mShaders.use();
+
+
+
     // Camera/View transformation
     GLint viewLoc = glGetUniformLocation(mShaders.id, "view");
     GLint projLoc = glGetUniformLocation(mShaders.id, "projection");
-    camera.setupCameraTransformationMatrices(viewLoc,projLoc,*window_width,*window_height);
+    GLint viewPosLoc = glGetUniformLocation(mShaders.id, "viewPos");
+    camera.setupCameraTransformationMatrices(viewLoc,projLoc, viewPosLoc,*window_width,*window_height);
 
     //cout<<"drawing model: "<<endl;
     GLint modelLoc = glGetUniformLocation(mShaders.id, "modelTransformation");
+    GLint tInvModelLoc = glGetUniformLocation(mShaders.id, "tInverseModel");
     for (int i = 0; i < modelObjects.size(); ++i) {
-        modelObjects[i].drawModel(modelLoc,(modes.scale||modes.rotate||modes.move),worldAxis);
+        modelObjects[i].drawModel(modelLoc,tInvModelLoc,(modes.scale||modes.rotate||modes.move),worldAxis);
         //drawModel(modelObjects[i]); //draw the object
         //setTextureUsage(1);
     }
@@ -94,7 +100,9 @@ void OpenGL_Program::handleKeyCallback(int key, int action) {
 
 void OpenGL_Program::handleKeyPress(int key) {
     if (key == GLFW_KEY_ESCAPE){
-        glfwSetWindowShouldClose(window, GL_TRUE);
+        modes={false,false,false,false};
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        //glfwSetWindowShouldClose(window, GL_TRUE);
     } else if (key == GLFW_KEY_F && !(modes.rotate || modes.scale || modes.move)) {
         //glfwWindowHint(GLFW_AUTO_ICONIFY, GL_FALSE);
         transformations.clear();

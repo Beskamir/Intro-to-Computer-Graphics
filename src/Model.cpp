@@ -163,7 +163,7 @@ GLuint Model::openTexture(string filename){
 }
 
 //Following function based on: https://learnopengl.com/code_viewer.php?code=mesh&type=header
-void Model::drawModel(GLint transformationLoc, bool transforming,bool worldAxis) {
+void Model::drawModel(GLint transformationLoc, GLint tInverseLocation, bool transforming,bool worldAxis) {
     mat4 finalTransformations;
     if(transforming){
         if(worldAxis){
@@ -180,6 +180,8 @@ void Model::drawModel(GLint transformationLoc, bool transforming,bool worldAxis)
     //finalTransformations=scale(meshData.modelTransformation,tempScaleVec);
 
     glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(finalTransformations*meshData.modelTransformation));
+    //cout<<tInverseLocation<<endl;
+    glUniformMatrix4fv(tInverseLocation, 1, GL_FALSE, value_ptr(mat3(transpose(inverse(finalTransformations*meshData.modelTransformation)))));
     //glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(meshData.modelTransformation));
 
     setupBuffers();

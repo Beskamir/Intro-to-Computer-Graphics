@@ -24,7 +24,7 @@ void Camera::initalCameraLocation(Model model) {
 //    return lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 //
 //}
-void Camera::setupCameraTransformationMatrices(GLint viewLocation, GLint projectionLocation, int window_width, int window_height){
+void Camera::setupCameraTransformationMatrices(GLint viewLocation, GLint projectionLocation, GLint viewPosLoc, int window_width, int window_height){
     // Create camera transformation
     mat4 view;
     mat4 projection;
@@ -36,6 +36,8 @@ void Camera::setupCameraTransformationMatrices(GLint viewLocation, GLint project
     // Pass the matrices to the shader
     glUniformMatrix4fv(viewLocation, 1, GL_FALSE, value_ptr(view));
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, value_ptr(projection));
+
+    glUniform3f(viewPosLoc,cameraPosition.x,cameraPosition.y,cameraPosition.z);
 }
 
 

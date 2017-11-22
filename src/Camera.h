@@ -67,7 +67,7 @@ public:
     void centerView(Model model);
     void changeCameraSpeed(float changeSpeed);
 
-    void setupCameraTransformationMatrices(GLint viewLocation, GLint projectionLocation, int window_width, int window_height);
+    void setupCameraTransformationMatrices(GLint viewLocation, GLint projectionLocation, GLint viewPosLoc, int window_width, int window_height);
 
     ~Camera()= default;
 
