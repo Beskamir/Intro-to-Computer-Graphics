@@ -8,13 +8,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-Model::Model() {
 
-
-
-}
-
-Model::Model(string filepath) {
+void Model::addModel(string filepath) {
     openOBJ(filepath);
     computeMiddle();
     moveToOrigin();
@@ -115,15 +110,31 @@ void Model::openOBJ(string filename) {
     //filename = filepath;
 }
 
-void Model::addTexture(string texturePath){
+void Model::addTexture(char type, string texturePath){
     //filesystem::path p(texturePath);
-    //cout << "filename and extension : " << p.filename() << std::endl; // file.ext
-    //cout << "filename only          : " << p.stem() << std::endl;     // file
-    Texture texture;
-    texture.id=openTexture(texturePath);
-    //texture.type=p.stem().string();
-
-
+    GLuint texture;
+    texture=openTexture(texturePath);
+    //cout<<type<<endl;
+    switch (type){
+        case 'd':
+            meshData.textures.diffuse = texture;
+            meshData.useTextures.diffuse = true;
+            break;
+        case 'a':
+            meshData.textures.ambiantOcculusion = texture;
+            meshData.useTextures.ambiantOcculusion = true;
+            break;
+        case 's':
+            meshData.textures.specular=texture;
+            meshData.useTextures.specular = true;
+            break;
+        case 'n':
+            meshData.textures.normal=texture;
+            meshData.useTextures.normal = true;
+            break;
+        default:
+            cout<<"'"<<type<<"' is an invalid texture type."<<endl;
+    }
 }
 
 GLuint Model::openTexture(string filename){
@@ -150,8 +161,8 @@ GLuint Model::openTexture(string filename){
         glGenerateMipmap(GL_TEXTURE_2D);
 
         //Texture parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 
     }
     else{
@@ -162,8 +173,19 @@ GLuint Model::openTexture(string filename){
     return textureID;
 }
 
-//Following function based on: https://learnopengl.com/code_viewer.php?code=mesh&type=header
-void Model::drawModel(GLint transformationLoc, GLint tInverseLocation, bool transforming,bool worldAxis) {
+void Model::drawModel(ShaderProgram shaderProgram, bool transforming,bool worldAxis) {
+
+    setupTransformations(shaderProgram, transforming, worldAxis);
+
+    setupTextures(shaderProgram);
+
+    setupBuffers();
+}
+
+void Model::setupTransformations(ShaderProgram shaderProgram, bool transforming, bool worldAxis) {
+    GLint transformationLoc = glGetUniformLocation(shaderProgram.id, "modelTransformation");
+    //GLint tInverseLocation = glGetUniformLocation(shaderProgram.id, "tInverseModel");
+
     mat4 finalTransformations;
     if(transforming){
         if(worldAxis){
@@ -177,17 +199,49 @@ void Model::drawModel(GLint transformationLoc, GLint tInverseLocation, bool tran
     else{
         finalTransformations=appliedTransforms;
     }
-    //finalTransformations=scale(meshData.modelTransformation,tempScaleVec);
 
     glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(finalTransformations*meshData.modelTransformation));
-    //cout<<tInverseLocation<<endl;
-    glUniformMatrix4fv(tInverseLocation, 1, GL_FALSE, value_ptr(mat3(transpose(inverse(finalTransformations*meshData.modelTransformation)))));
-    //glUniformMatrix4fv(transformationLoc, 1, GL_FALSE, value_ptr(meshData.modelTransformation));
 
-    setupBuffers();
+    ////cout<<tInverseLocation<<endl;
+    //glUniformMatrix4fv(tInverseLocation, 1, GL_FALSE, value_ptr(mat3(transpose(inverse(finalTransformations*meshData.modelTransformation)))));
+}
+
+void Model::setupTextures(ShaderProgram shaderProgram) {
+    glUniform1i(glGetUniformLocation(shaderProgram.id,"textureData.diffuse"),0);
+    glUniform1i(glGetUniformLocation(shaderProgram.id,"textureData.ambiantOcculusion"),1);
+    glUniform1i(glGetUniformLocation(shaderProgram.id,"textureData.specular"),2);
+    //glUniform1i(glGetUniformLocation(shaderProgram.id,"textureData.specular"),3);
+
+    //cout<<meshData.textures.diffuse<<endl;
+    //cout<<meshData.textures.normal<<endl;
+
+    if(meshData.useTextures.diffuse){
+        glUniform1i(glGetUniformLocation(shaderProgram.id,"useTexture.diffuse"), true);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,meshData.textures.diffuse);
+    }else{
+        glUniform1i(glGetUniformLocation(shaderProgram.id,"useTexture.diffuse"), false);
+    }
+    if(meshData.useTextures.ambiantOcculusion){
+        glUniform1i(glGetUniformLocation(shaderProgram.id,"useTexture.ambiantOcculusion"), true);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D,meshData.textures.ambiantOcculusion);
+    }else{
+        glUniform1i(glGetUniformLocation(shaderProgram.id,"useTexture.ambiantOcculusion"), false);
+    }
+    if(meshData.useTextures.specular){
+        glUniform1i(glGetUniformLocation(shaderProgram.id,"useTexture.specular"), true);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D,meshData.textures.specular);
+    }else{
+        glUniform1i(glGetUniformLocation(shaderProgram.id,"useTexture.specular"), false);
+    }
+    //glActiveTexture(GL_TEXTURE3);
+    //glBindTexture(GL_TEXTURE_2D,meshData.textures.normal);
 }
 
 //Actually write stuff to the correct buffers
+//Following function based on: https://learnopengl.com/code_viewer.php?code=mesh&type=header
 void Model::setupBuffers(){
     GLuint VAO, VBO;
 
@@ -254,13 +308,6 @@ void Model::moveToOrigin() {
     meshData.modelTransformation=translate(meshData.modelTransformation,vec3(-origin.x,-origin.y,-origin.z));
 }
 
-void Model::scaleModel(vec3 scaleVec) {
-    //tempScaleMat = scale(tempScaleMat,scaleVec);
-    tempScaleVec=scaleVec;
-    //meshData.modelTransformation*=scaleMat;
-    //meshData.modelTransformation=scale(meshData.modelTransformation,vec3(scaleFactor,scaleFactor,scaleFactor));
-}
-
 void Model::finalizeModelingTransformation(bool worldAxis) {
     if(worldAxis){
         appliedTransforms=tempTransform*appliedTransforms;
@@ -273,4 +320,23 @@ void Model::finalizeModelingTransformation(bool worldAxis) {
 
 void Model::setTempTransform(mat4 tempTransform){
     this->tempTransform=tempTransform;
+}
+
+void Model::setUseTextures(char type){
+    switch (type){
+        case 'd':
+            meshData.useTextures.diffuse = !meshData.useTextures.diffuse;
+            break;
+        case 'a':
+            meshData.useTextures.ambiantOcculusion = !meshData.useTextures.ambiantOcculusion;
+            break;
+        case 's':
+            meshData.useTextures.specular = !meshData.useTextures.specular;
+            break;
+        case 'n':
+            meshData.useTextures.normal = !meshData.useTextures.normal;
+            break;
+        default:
+            cout<<"'"<<type<<"' is an invalid texture type."<<endl;
+    }
 }

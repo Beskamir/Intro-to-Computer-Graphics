@@ -70,27 +70,31 @@ private:
     bool worldAxis = false;
 
     bool activeKeys[1024]={false};
-
+    int selected = 0;
 
     void renderToScreen(vector<Model> modelObjects);
-
-public:
-
-    ~OpenGL_Program()= default;
-    OpenGL_Program()= default;
-    void mainRender();
-    void init_Program(GLFWwindow *window, int *window_width, int *window_height);
-    void handleKeyCallback(int key, int action);
-
+    void handleNonFPS_Mode(int key);
+    void handleTransformationMode(int key);
+    void moveCameraWASD(double deltaTime);
     void handleKeyPress(int key);
 
+public:
+    ~OpenGL_Program()= default;
+    OpenGL_Program()= default;
+
+    void init_Program(GLFWwindow *window, int *window_width, int *window_height);
+    void commandLineArgs(vector<string> commandlineContents);
+    void mainRender();
+
+    void handleKeyCallback(int key, int action);
     void handleScrollCallback(double yoffset);
 
-    void moveCameraWASD(double deltaTime);
+    void handleTextureModes(int key);
+    void tryActivatingTransformations(int key);
 
     void handleMouseMovement(double xpos, double ypos);
-
-    void finalizeTransformation();
+    void endCurrentMode(); //is called by mouse click
+    void parseConfigFile(string filepath);
 };
 
 

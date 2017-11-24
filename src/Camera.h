@@ -70,8 +70,6 @@ public:
     void setupCameraTransformationMatrices(GLint viewLocation, GLint projectionLocation, GLint viewPosLoc, int window_width, int window_height);
 
     ~Camera()= default;
-
-    //mat4 getViewMatrix();
 };
 
 

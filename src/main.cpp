@@ -7,15 +7,39 @@
 //#include "OpenGL_Program.h"
 
 int main(int argc, char *argv[]) {
+    //cout << argv[1]<<endl;
+    if (argc < 1) {
+        printf("Usage: <config file> or <model texture1 texture2 ...>\n");
+        return -1;
+    }
+    //If successful store commandline args in a vector of strings
+    vector<string> commandlineContents;
+    //cout<<argv[1]<<endl;
+    //cout<<argc<<endl;
+    for (int i = 1; i < argc; ++i) {
+        string element = argv[i];
+        commandlineContents.push_back(element);
+    }
+
     GLFWwindow *window; // Create "global" glfw window
 
     if(!setupOpenGL(&window)){
         return -1;
     }
-    setupWindowCallbacks(&window);
+    // Cull triangles which normal is not towards the camera.
+    // http://www.opengl-tutorial.org/beginners-tutorials/tutorial-6-keyboard-and-mouse/
+    glEnable(GL_CULL_FACE);
+    //zbuffer enabled thanks to: https://stackoverflow.com/questions/1046029/depth-buffer-in-opengl
+    glEnable(GL_DEPTH_TEST);
+    //glClearDepth(1.0f);
+    //glDepthFunc(GL_LESS);
 
     //OpenGL_Program openGL_program(window);
+    //give OpenGL_Program the things it needs to operate
     openGL_program.init_Program(window, &window_width, &window_height);
+    openGL_program.commandLineArgs(commandlineContents);
+
+    setupWindowCallbacks(&window);
     openGL_program.mainRender();
 
     //Call the mainRender method which actually sets up the verts to be drawn
@@ -92,7 +116,7 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
-        openGL_program.finalizeTransformation();
+        openGL_program.endCurrentMode();
     }
 }
 

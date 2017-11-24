@@ -31,6 +31,7 @@
 //#include <boost/filesystem.hpp>
 
 #include "vertexArray.h"
+#include "ShaderProgram.h"
 //#include "ImageTexture.h"
 
 //using namespace boost;
@@ -44,15 +45,28 @@ private:
         vec3 Normal;
         vec2 uvCoords;
     };
-    struct Texture {
-        GLuint id;
-        string type;
+    //struct Texture {
+    //    GLuint id;
+    //    //string type;
+    //};
+    struct Textures {
+        GLuint diffuse;
+        GLuint ambiantOcculusion;
+        GLuint specular;
+        GLuint normal;
     };
+    struct UseTextures{
+        bool diffuse;
+        bool ambiantOcculusion;
+        bool specular;
+        bool normal;
+    };
+
     struct MeshData{
         vector<Vertex> vertices;
-        //vector<int> indices;
         mat4 modelTransformation;
-        vector<Texture> textures;
+        Textures textures;
+        UseTextures useTextures={false,false,false,false};
     };
     struct Bound{
         float xCoord[2];
@@ -68,6 +82,9 @@ private:
     void computeMiddle();
     void updateBoundingBox(vec3 vertex);
     void setupBuffers();
+    void setupTransformations(ShaderProgram shaderProgram, bool transforming, bool worldAxis);
+    void setupTextures(ShaderProgram shaderProgram);
+
 
     //struct Transformations{
     //    mat4 scaleMat;
@@ -86,17 +103,23 @@ public:
     //GLuint mTexture=0;
     //int imageWidth=0, imageHeight=0;
 
-    Model();
-    Model(string filepath);
+    Model() = default;
+    ~Model() = default;
+    //Model(string filepath);
 
-    void scaleModel(vec3 scaleVec);
-    void addTexture(string texturePath);
+    void addModel(string filepath);
+
+    //void addTexture(string texturePath);
+    void addTexture(char type, string texturePath);
     GLuint openTexture(string filename);
-    void drawModel(GLint modelLoc, GLint tInverseLoc, bool transforming, bool worldAxis);
+    void drawModel(ShaderProgram shaderProgram, bool transforming, bool worldAxis);
+
     void finalizeModelingTransformation(bool worldAxis);
 
     //void scaleWithWindow(float scaleX, float scaleY);
     void setTempTransform(mat4 tempTransform);
+
+    void setUseTextures(char type);
 };
 
 

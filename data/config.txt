@@ -1,0 +1,6 @@
+#### First model
+>M: data/models/offical/chess_king/king.obj
+ D: data/textures/testTexture.jpg
+#### Second Model
+>M: data/models/offical/coffee_cup/coffee_cup.obj
+ D: data/textures/testTexture.jpg
