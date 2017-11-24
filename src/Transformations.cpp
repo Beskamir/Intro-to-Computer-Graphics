@@ -12,7 +12,7 @@ mat4 Transformations::getTransformation() {
     return transformation;
 }
 
-void Transformations::scale(Transformations::UseAxis useAxis, Mouse mouse) {
+void Transformations::scale(bvec3 useAxis, Mouse mouse) {
 
     //double scaleFactor = (mouse.getPositivity(mouse.getMouseDifference()) * mouse.getDistance(mouse.getMouseDifference()))/mouse.getDistance(mouse.getMouseLast());
 
@@ -37,8 +37,25 @@ void Transformations::scale(Transformations::UseAxis useAxis, Mouse mouse) {
     tempTransform = glm::scale(tempTransform,scalar);
     transformation = tempTransform;
 }
+void Transformations::scale(bvec3 useAxis, float scaleFactor) {
+    mat4 tempTransform;
+    vec3 scalar = vec3(1.0f,1.0f,1.0f);
 
-void Transformations::rotate(Transformations::UseAxis useAxis, Mouse mouse) {
+    if(useAxis.x){
+        scalar.x=scaleFactor;
+    }
+    if(useAxis.y){
+        scalar.y=scaleFactor;
+    }
+    if(useAxis.z){
+        scalar.z=scaleFactor;
+    }
+
+    tempTransform = glm::scale(tempTransform,scalar);
+    transformation = tempTransform;
+}
+
+void Transformations::rotate(bvec3 useAxis, Mouse mouse) {
     vec2 mouseAbsPosition = mouse.getMouseDifference(mouse.getMouseCurrent(),vec2(0,0));
     float angle = (float) (mouse.getDistance(mouseAbsPosition)
                            / mouse.getDistance(mouse.getMouseLast()));
@@ -58,7 +75,25 @@ void Transformations::rotate(Transformations::UseAxis useAxis, Mouse mouse) {
     transformation = tempTransform;
 }
 
-void Transformations::translate(Transformations::UseAxis useAxis, Mouse mouse) {
+void Transformations::rotate(bvec3 useAxis, float angle) {
+
+    mat4 tempTransform;
+    vec3 gimble = vec3(0.0f,0.0f,0.0f);
+
+    if(useAxis.x){
+        gimble.x=1.0f;
+    }
+    if(useAxis.y){
+        gimble.y=1.0f;
+    }
+    if(useAxis.z){
+        gimble.z=1.0f;
+    }
+    tempTransform = glm::rotate(tempTransform,angle,gimble);
+    transformation = tempTransform;
+}
+
+void Transformations::translate(bvec3 useAxis, Mouse mouse) {
     vec2 mouseAbsPosition = mouse.getMouseDifference(mouse.getMouseCurrent(),vec2(0,0));
     float distance = (float)(mouse.getPositivity(mouseAbsPosition)
                              * (mouse.getDistance(mouseAbsPosition)
@@ -86,6 +121,36 @@ void Transformations::translate(Transformations::UseAxis useAxis, Mouse mouse) {
     }
     else if(useAxis.z){
         translate.z=distance;
+    }
+    tempTransform = glm::translate(tempTransform,translate);
+    //transformation = tempTransform;
+    transformation = tempTransform;
+}
+
+void Transformations::translate(bvec3 useAxis, vec3 move) {
+
+    mat4 tempTransform;
+    vec3 translate = vec3(0.0f,0.0f,0.0f);
+    if(useAxis.x&&useAxis.y&&useAxis.z){
+        translate = move;
+    }
+    else if(useAxis.x&&useAxis.y){
+        translate = vec3(move.x,move.y,0.0f);
+    }
+    else if(useAxis.y&&useAxis.z){
+        translate = vec3(0.0f,move.y,move.z);
+    }
+    else if(useAxis.x&&useAxis.z){
+        translate = vec3(move.x,0.0f,move.z);
+    }
+    else if(useAxis.x){
+        translate.x=move.x;
+    }
+    else if(useAxis.y){
+        translate.y=move.y;
+    }
+    else if(useAxis.z){
+        translate.z=move.z;
     }
     tempTransform = glm::translate(tempTransform,translate);
     //transformation = tempTransform;

@@ -1,6 +1,15 @@
-#### First model
->M: data/models/offical/chess_king/king.obj
- D: data/textures/testTexture.jpg
-#### Second Model
->M: data/models/offical/coffee_cup/coffee_cup.obj
- D: data/textures/testTexture.jpg
+#### table model
+>M: data/models/offical/oak_table/oak_table.obj
+ D: data/models/offical/oak_table/oak_table.colour.jpg
+ A: data/models/offical/oak_table/oak_table.ao.png
+// #### donut model
+// >M: data/models/offical/donut/donut.obj
+//  D: data/models/offical/donut/donut.colour.plain.png
+//  A: data/models/offical/donut/donut.ao.png
+// #### First model
+// >M: data/models/offical/chess_king/king.obj
+//  D: data/models/offical/chess_king/king.colour.white.png
+//  A: data/models/offical/chess_king/king.ao.png
+// #### Second Model
+// >M: data/models/offical/coffee_cup/coffee_cup.obj
+//  D: data/models/offical/coffee_cup/coffee_cup.colour.png

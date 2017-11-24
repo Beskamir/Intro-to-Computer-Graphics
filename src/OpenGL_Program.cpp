@@ -38,6 +38,10 @@ void OpenGL_Program::mainRender(){
         glfwPollEvents();
         moveCameraWASD(1.0f);
 
+        if(!(modes.fps||keyboardNumericInput[currentAxis].empty())){
+            keyboardTransformations();
+        }
+
         //Render to screen loop
         renderToScreen(modelObjects);
         // Swap the screen buffers
@@ -99,6 +103,9 @@ void OpenGL_Program::handleKeyPress(int key) {
     if (key == GLFW_KEY_ESCAPE){
         modes={false,false,false,false};
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        transformations.clear();
+        keyboardNumericInput[currentAxis] = "";
+        modelObjects[selected].clearTempTransformations();
         //glfwSetWindowShouldClose(window, GL_TRUE);
     } else if (key == GLFW_KEY_F && !(modes.rotate || modes.scale || modes.move)) {
         //glfwWindowHint(GLFW_AUTO_ICONIFY, GL_FALSE);
@@ -122,6 +129,7 @@ void OpenGL_Program::handleNonFPS_Mode(int key) {
     if (modes.rotate || modes.scale || modes.move) {
         handleTransformationMode(key);
         tryActivatingTransformations(key);
+        tryUsingNumericKeyInput(key);
     }
     else if(activeKeys[GLFW_KEY_LEFT_CONTROL]||activeKeys[GLFW_KEY_RIGHT_CONTROL]){
         handleTextureModes(key);
@@ -133,6 +141,7 @@ void OpenGL_Program::handleNonFPS_Mode(int key) {
 
 void OpenGL_Program::tryActivatingTransformations(int key) {
     if (key == GLFW_KEY_S && !modes.scale) {
+        keyboardNumericInput[currentAxis]="";
         transformations.clear();
         mouse.reset();
         mouse.setMouseLast();
@@ -140,6 +149,7 @@ void OpenGL_Program::tryActivatingTransformations(int key) {
         useAxis = {true, true, true};
     }
     if (key == GLFW_KEY_R && !modes.rotate) {
+        keyboardNumericInput[currentAxis]="";
         transformations.clear();
         mouse.reset();
         mouse.setMouseLast();
@@ -147,6 +157,7 @@ void OpenGL_Program::tryActivatingTransformations(int key) {
         useAxis = {true, true, true};
     }
     if (key == GLFW_KEY_G && !modes.move) {
+        keyboardNumericInput[currentAxis]="";
         transformations.clear();
         mouse.reset();
         mouse.setMouseLast();
@@ -176,21 +187,36 @@ void OpenGL_Program::handleTransformationMode(int key) {
             useAxis = {false, true, true};
             //cout<<"locking to y,z"<<endl;
         } else {
+            axisSelected = {true,false,false};
             useAxis = {true, false, false};
             //cout<<"locking to x"<<endl;
         }
+        if(activeKeys[GLFW_KEY_RIGHT_CONTROL]||activeKeys[GLFW_KEY_LEFT_CONTROL]){
+            axisSelected = {true, false, false};
+        }
+        keyboardNumericInput[0] = "";
     } else if (key == GLFW_KEY_Y) {
         if (activeKeys[GLFW_KEY_RIGHT_SHIFT] || activeKeys[GLFW_KEY_LEFT_SHIFT]) {
             useAxis = {true, false, true};
         } else {
+            axisSelected = {false,true,false};
             useAxis = {false, true, false};
         }
+        if(activeKeys[GLFW_KEY_RIGHT_CONTROL]||activeKeys[GLFW_KEY_LEFT_CONTROL]){
+            axisSelected = {false, true, false};
+        }
+        keyboardNumericInput[1] = "";
     } else if (key == GLFW_KEY_Z) {
         if (activeKeys[GLFW_KEY_RIGHT_SHIFT] || activeKeys[GLFW_KEY_LEFT_SHIFT]) {
             useAxis = {true, true, false};
         } else {
+            axisSelected = {false,false,true};
             useAxis = {false, false, true};
         }
+        if(activeKeys[GLFW_KEY_RIGHT_CONTROL]||activeKeys[GLFW_KEY_LEFT_CONTROL]){
+            axisSelected = {false, false, true};
+        }
+        keyboardNumericInput[2] = "";
     } else if (key == GLFW_KEY_A) {
         useAxis = {true, true, true};
     } else if (key == GLFW_KEY_W) {
@@ -212,7 +238,7 @@ void OpenGL_Program::handleScrollCallback(double yoffset) {
 void OpenGL_Program::moveCameraWASD(double deltaTime) {
     if(modes.fps){
         //Pass along {W,S,D,A} == {forward, backward, right, left}
-        camera.moveCamera({activeKeys[GLFW_KEY_W],activeKeys[GLFW_KEY_S],activeKeys[GLFW_KEY_D],activeKeys[GLFW_KEY_A]}, (float) deltaTime);
+        camera.moveCamera({activeKeys[GLFW_KEY_W],activeKeys[GLFW_KEY_S],activeKeys[GLFW_KEY_D],activeKeys[GLFW_KEY_A],activeKeys[GLFW_KEY_E],activeKeys[GLFW_KEY_Q]}, (float) deltaTime);
     }
 }
 
@@ -225,23 +251,26 @@ void OpenGL_Program::handleMouseMovement(double xpos, double ypos) {
         mouse.setMouseLast();
     }
     if(modes.scale){
+        axisSelected = {true,false,false};
         mouse.setMouseCurrent();
         mouse.teleportMouse(xpos,ypos);
-        transformations.scale({useAxis.x,useAxis.y,useAxis.z},mouse);
+        transformations.scale(useAxis,mouse);
         //modelObjects[0].setTempTransform();
         modelObjects[selected].setTempTransform(transformations.getTransformation());
     }
     if(modes.rotate){
+        axisSelected = {true,false,false};
         mouse.setMouseCurrent();
         mouse.teleportMouse(xpos,ypos);
-        transformations.rotate({useAxis.x,useAxis.y,useAxis.z},mouse);
+        transformations.rotate(useAxis,mouse);
         //modelObjects[0].setTempTransform();
         modelObjects[selected].setTempTransform(transformations.getTransformation());
     }
     if(modes.move){
+        axisSelected = {true,false,false};
         mouse.setMouseCurrent();
         mouse.teleportMouse(xpos,ypos);
-        transformations.translate({useAxis.x,useAxis.y,useAxis.z},mouse);
+        transformations.translate(useAxis,mouse);
         //modelObjects[0].setTempTransform();
         modelObjects[selected].setTempTransform(transformations.getTransformation());
     }
@@ -254,7 +283,6 @@ void OpenGL_Program::endCurrentMode() {
 }
 
 void OpenGL_Program::commandLineArgs(vector<string> commandlineContents) {
-    bool isConfigFile = false;
     if(commandlineContents[0].substr(commandlineContents[0].find_last_of('.') + 1) == "txt") {
         parseConfigFile(commandlineContents[0]);
     } else {
@@ -300,4 +328,120 @@ void OpenGL_Program::parseConfigFile(string filename) {
             modelObjects[counter].addTexture('s',line.substr(4, line.size()-1));
         }
     }
+}
+
+void OpenGL_Program::tryUsingNumericKeyInput(int key) {
+    string previous="";
+    for (int i = 0; i < keyboardNumericInput->length(); ++i) {
+        previous = keyboardNumericInput[i];
+    }
+    getNumericKeyInput(key); //if key pressed is valid store in string
+
+    fixStringErrors(previous);
+
+    //transformUsingNumericValues()
+    //double numericKeyboardInput = atof(tempKeyboardNumericInput.c_str());
+    //cout<<key<<endl;
+}
+
+void OpenGL_Program::keyboardTransformations() {
+    if(modes.scale){
+        transformations.scale(useAxis,transform.x);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+    if(modes.rotate){
+        transformations.rotate(useAxis,transform.x);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+    if(modes.move){
+        transformations.translate(useAxis,transform);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+}
+
+void OpenGL_Program::getNumericKeyInput(int key) {
+    if(key==GLFW_KEY_MINUS){
+        //Negate value
+        if(keyboardNumericInput[currentAxis].substr(0,1)=="-"){
+            keyboardNumericInput[currentAxis]=keyboardNumericInput[currentAxis].substr(1,keyboardNumericInput[currentAxis].size()-1);
+        }else{
+            keyboardNumericInput[currentAxis]="-"+keyboardNumericInput[currentAxis];
+        }
+    }
+    if(key==GLFW_KEY_PERIOD){
+        if(keyboardNumericInput[currentAxis].empty()){
+            keyboardNumericInput[currentAxis] += '.';
+        } else{
+            bool foundDot = false;
+                if(keyboardNumericInput[currentAxis].find('0')=='.'){
+                    foundDot= true;
+                }
+            if(!foundDot){
+                keyboardNumericInput[currentAxis] += '.';
+            }
+        }
+    }
+    if(key>=48&&key<=57){
+        keyboardNumericInput[currentAxis] += key;
+    }
+}
+
+void OpenGL_Program::fixStringErrors(string previous) {
+//fix probable errors in string
+    string tempKeyboardNumericInput = keyboardNumericInput[currentAxis];
+    if(!keyboardNumericInput[currentAxis].empty()){
+        if(tempKeyboardNumericInput.substr(0,1)=="."){
+            tempKeyboardNumericInput = "0"+tempKeyboardNumericInput;
+        }
+        if(tempKeyboardNumericInput.substr(tempKeyboardNumericInput.length()-1,tempKeyboardNumericInput.length())=="."){
+            tempKeyboardNumericInput += "0";
+        }
+    }
+    //vec3 tempTransform=transform;
+    //sscanf(tempKeyboardNumericInput.c_str(),"%f,%f,%f",&transform.x,&transform.y,&transform.z);
+
+    cout<<"\nUnprocessed keyboard input: \n\t"<<keyboardNumericInput<<endl;
+    cout<<"Processed keyboard input: \n\t";
+
+    if(axisSelected.x){
+        cout << "<X>:[";
+        if(useAxis.x){
+            sscanf(tempKeyboardNumericInput.c_str(),"%f",&transform.x);
+        }
+        else{
+            transform.x=0;
+        }
+    }
+    else{
+        cout << "x:[";
+    }
+    cout << transform.x << "]";
+    if(axisSelected.y){
+        cout << "<Y>:[";
+        if(useAxis.y){
+            sscanf(tempKeyboardNumericInput.c_str(),"%f",&transform.y);
+        }
+        else{
+            transform.y=0;
+        }
+    }
+    else{
+        cout << "y:[";
+    }
+    cout << transform.y << "]";
+    //cout << "y:[" << transform.y << "]";
+    if(axisSelected.z){
+        cout << "<Z>:[";
+        if(useAxis.z){
+            sscanf(tempKeyboardNumericInput.c_str(),"%f",&transform.z);
+        }
+        else{
+            transform.z=0;
+        }
+    }
+    else{
+        cout << "z:[";
+    }
+    cout << transform.z << "]\n";
+    //cout << "z:[" << transform.z << "]\n\n" << endl;
 }

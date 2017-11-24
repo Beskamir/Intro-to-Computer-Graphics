@@ -51,6 +51,8 @@ private:
         bool backward;
         bool right;
         bool left;
+        bool up;
+        bool down;
     };
 
     //void updateCameraVectors();

@@ -58,6 +58,12 @@ void Camera::moveCamera(Movement movement, float deltaTime) {
         cameraPosition -= normalize(cross(cameraFront, cameraUp)) * velocity;
         //cameraPosition -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
     }
+    if(movement.up){
+        cameraPosition += cameraUp * velocity;
+    }
+    if(movement.down){
+        cameraPosition -= cameraUp * velocity;
+    }
 }
 
 void Camera::changeCameraSpeed(float changeSpeed) {

@@ -146,18 +146,8 @@ GLuint Model::openTexture(string filename){
     unsigned char* image = stbi_load(filename.c_str(), &imageWidth, &imageHeight, &imageLayers, STBI_rgb);
 
     if(image != nullptr){
-        GLenum format;
-        if(imageLayers==3){
-            format=GL_RGB;
-        }
-        else if(imageLayers==4){
-            format=GL_RGBA;
-        }
-        else{
-            cout<<"Incorrect image format: "<<imageLayers<<endl;
-        }
         glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, format, GL_UNSIGNED_BYTE, image);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         //Texture parameters
@@ -339,4 +329,8 @@ void Model::setUseTextures(char type){
         default:
             cout<<"'"<<type<<"' is an invalid texture type."<<endl;
     }
+}
+
+void Model::clearTempTransformations() {
+    tempTransform=mat4();
 }

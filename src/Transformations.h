@@ -34,25 +34,24 @@ using namespace glm;
 class Transformations {
 private:
     mat4 transformation;
-    // Axis which to rotate a given object around
-    struct UseAxis{
-        bool x;
-        bool y;
-        bool z;
-    };
 
 public:
     Transformations()= default;
     ~Transformations()= default;
 
 
-    void scale(UseAxis useAxis, Mouse mouse);
-    void rotate(UseAxis useAxis,Mouse mouse);
-    void translate(UseAxis useAxis, Mouse mouse);
+    void scale(bvec3 useAxis, Mouse mouse);
+    void rotate(bvec3 useAxis,Mouse mouse);
+    void translate(bvec3 useAxis, Mouse mouse);
     mat4 getTransformation();
     void clear();
 
 
+    void scale(bvec3 useAxis, float scaleFactor);
+
+    void rotate(bvec3 useAxis, float angle);
+
+    void translate(bvec3 useAxis, vec3 move);
 };
 
 

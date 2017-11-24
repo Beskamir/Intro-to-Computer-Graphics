@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 
+
 //Modified to do it for both Windows and non-windows.
 #ifdef _WIN32
 #include <GL/glew.h>
@@ -49,6 +50,8 @@ private:
     Mouse mouse;
     Transformations transformations;
 
+    string keyboardNumericInput[3];
+
     //Vector array of models within the scene
     vector<Model> modelObjects;
 
@@ -61,13 +64,13 @@ private:
     Modes modes = {false,false,false,false};
 
     // Axis which to rotate a given object around
-    struct UseAxis{
-        bool x;
-        bool y;
-        bool z;
-    };
-    UseAxis useAxis = {false, false, false};
+    bvec3 useAxis = {false, false, false};
+    bvec3 axisSelected = {true,false,false};
+    int currentAxisCounter = 0;
+    int currentAxis = 0;
     bool worldAxis = false;
+
+    vec3 transform;
 
     bool activeKeys[1024]={false};
     int selected = 0;
@@ -95,6 +98,16 @@ public:
     void handleMouseMovement(double xpos, double ypos);
     void endCurrentMode(); //is called by mouse click
     void parseConfigFile(string filepath);
+
+    void tryUsingNumericKeyInput(int key);
+
+    void keyboardTransformations();
+
+    void getNumericKeyInput(int key);
+
+    void fixStringErrors(string previous);
+
+    void switchToOtherAxis();
 };
 
 

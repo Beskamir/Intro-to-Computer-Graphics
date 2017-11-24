@@ -115,6 +115,7 @@ public:
     void drawModel(ShaderProgram shaderProgram, bool transforming, bool worldAxis);
 
     void finalizeModelingTransformation(bool worldAxis);
+    void clearTempTransformations();
 
     //void scaleWithWindow(float scaleX, float scaleY);
     void setTempTransform(mat4 tempTransform);
