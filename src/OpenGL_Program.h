@@ -65,12 +65,15 @@ private:
 
     // Axis which to rotate a given object around
     bvec3 useAxis = {false, false, false};
-    bvec3 axisSelected = {true,false,false};
-    int currentAxisCounter = 0;
+    //bvec3 axisSelected = {true,false,false};
+    //int currentAxisCounter = 0;
     int currentAxis = 0;
     bool worldAxis = false;
 
-    vec3 transform;
+    //vec3 transform;
+    vec3 tempTranslateVector;
+    float transformRate = 0.05f;
+
 
     bool activeKeys[1024]={false};
     int selected = 0;
@@ -82,10 +85,10 @@ private:
     void handleKeyPress(int key);
     float getDistance(vec3 coord1, vec3 coord2);
     void selectObject();
-    void fixStringErrors();
-    void getNumericKeyInput(int key);
-    void keyboardTransformations();
-    void tryUsingNumericKeyInput(int key);
+    //void fixStringErrors();
+    //void getNumericKeyInput(int key);
+    //void keyboardTransformations();
+    //void tryUsingNumericKeyInput(int key);
     void parseConfigFile(string filepath);
     void tryActivatingTransformations(int key);
     void endCurrentMode(); //is called by mouse click
