@@ -121,6 +121,8 @@ public:
     void setTempTransform(mat4 tempTransform);
 
     void setUseTextures(char type);
+
+    vec3 getOrigin();
 };
 
 

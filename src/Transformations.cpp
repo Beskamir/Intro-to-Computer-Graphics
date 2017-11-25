@@ -93,7 +93,7 @@ void Transformations::rotate(bvec3 useAxis, float angle) {
     transformation = tempTransform;
 }
 
-void Transformations::translate(bvec3 useAxis, Mouse mouse) {
+void Transformations::translate(bvec3 useAxis, Mouse mouse,vec3 projectedMousePos) {
     vec2 mouseAbsPosition = mouse.getMouseDifference(mouse.getMouseCurrent(),vec2(0,0));
     float distance = (float)(mouse.getPositivity(mouseAbsPosition)
                              * (mouse.getDistance(mouseAbsPosition)

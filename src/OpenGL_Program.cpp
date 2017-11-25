@@ -9,19 +9,7 @@ void OpenGL_Program::mainRender(){
     glViewport(0, 0, *window_width, *window_height);
     mouse = Mouse(window, window_width, window_height);
 
-    //forloop to open all the models and textures
-    //Model model;
-    //Model model = Model("data/models/sphereTest.obj");
-    //Model model = Model("data/models/offical/coffee_cup/coffee_cup.obj");
-    //Model model = Model("data/models/pyramidTest.obj");
-    //Model model = Model("data/models/offical/oak_chair/oak_chair.obj");
-    //model.addModel("data/models/offical/chess_king/king.obj");
-    //model.addTexture('d',"data/textures/testTexture.jpg");
-    //model.addTexture("data/models/offical/oak_chair/oak_table.colour.jpg");
-    //modelObjects.push_back(model);
     camera.initalCameraLocation(modelObjects[selected]);
-
-    //camera.initalCameraLocation(model);
 
     //GLfloat deltaTime = 0.0f;
     //GLfloat lastFrame = 0.0f;
@@ -51,7 +39,7 @@ void OpenGL_Program::mainRender(){
 
 void OpenGL_Program::renderToScreen(vector<Model> modelObjects) {
     // clear screen to a dark grey colour
-    glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     mShaders.use();
@@ -126,6 +114,16 @@ void OpenGL_Program::handleKeyPress(int key) {
 }
 
 void OpenGL_Program::handleNonFPS_Mode(int key) {
+    if(key==GLFW_KEY_D&&(activeKeys[GLFW_KEY_LEFT_SHIFT]||activeKeys[GLFW_KEY_RIGHT_SHIFT])){
+        keyboardNumericInput[currentAxis]="";
+        transformations.clear();
+        mouse.reset();
+        mouse.setMouseLast();
+        modes = {false, false, false, true};
+        useAxis = {true, true, true};
+        modelObjects.push_back(modelObjects[selected]);
+        selected = modelObjects.size()-1;
+    }
     if (modes.rotate || modes.scale || modes.move) {
         handleTransformationMode(key);
         tryActivatingTransformations(key);
@@ -267,10 +265,11 @@ void OpenGL_Program::handleMouseMovement(double xpos, double ypos) {
         modelObjects[selected].setTempTransform(transformations.getTransformation());
     }
     if(modes.move){
+        vec3 projectedMousePos = getProjectedMousePosition();
         axisSelected = {true,false,false};
         mouse.setMouseCurrent();
         mouse.teleportMouse(xpos,ypos);
-        transformations.translate(useAxis,mouse);
+        transformations.translate(useAxis,mouse,projectedMousePos);
         //modelObjects[0].setTempTransform();
         modelObjects[selected].setTempTransform(transformations.getTransformation());
     }
@@ -282,8 +281,19 @@ void OpenGL_Program::endCurrentMode() {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
+void OpenGL_Program::handleMouseClick() {
+    if(modes.move||modes.fps||modes.rotate||modes.scale){
+        endCurrentMode();
+    }
+    else{
+        selectObject();
+    }
+
+}
+
 void OpenGL_Program::commandLineArgs(vector<string> commandlineContents) {
     if(commandlineContents[0].substr(commandlineContents[0].find_last_of('.') + 1) == "txt") {
+        //cout<<"parsing file"<<endl;
         parseConfigFile(commandlineContents[0]);
     } else {
         Model model;
@@ -331,13 +341,13 @@ void OpenGL_Program::parseConfigFile(string filename) {
 }
 
 void OpenGL_Program::tryUsingNumericKeyInput(int key) {
-    string previous="";
-    for (int i = 0; i < keyboardNumericInput->length(); ++i) {
-        previous = keyboardNumericInput[i];
-    }
+    //string previous="";
+    //for (int i = 0; i < keyboardNumericInput->length(); ++i) {
+    //    previous = keyboardNumericInput[i];
+    //}
     getNumericKeyInput(key); //if key pressed is valid store in string
 
-    fixStringErrors(previous);
+    fixStringErrors();
 
     //transformUsingNumericValues()
     //double numericKeyboardInput = atof(tempKeyboardNumericInput.c_str());
@@ -386,7 +396,7 @@ void OpenGL_Program::getNumericKeyInput(int key) {
     }
 }
 
-void OpenGL_Program::fixStringErrors(string previous) {
+void OpenGL_Program::fixStringErrors() {
 //fix probable errors in string
     string tempKeyboardNumericInput = keyboardNumericInput[currentAxis];
     if(!keyboardNumericInput[currentAxis].empty()){
@@ -400,11 +410,11 @@ void OpenGL_Program::fixStringErrors(string previous) {
     //vec3 tempTransform=transform;
     //sscanf(tempKeyboardNumericInput.c_str(),"%f,%f,%f",&transform.x,&transform.y,&transform.z);
 
-    cout<<"\nUnprocessed keyboard input: \n\t"<<keyboardNumericInput<<endl;
-    cout<<"Processed keyboard input: \n\t";
+    //cout<<"\nUnprocessed keyboard input: \n\t"<<keyboardNumericInput<<endl;
+    //cout<<"Processed keyboard input: \n\t";
 
     if(axisSelected.x){
-        cout << "<X>:[";
+        //cout << "<X>:[";
         if(useAxis.x){
             sscanf(tempKeyboardNumericInput.c_str(),"%f",&transform.x);
         }
@@ -413,11 +423,11 @@ void OpenGL_Program::fixStringErrors(string previous) {
         }
     }
     else{
-        cout << "x:[";
+        //cout << "x:[";
     }
-    cout << transform.x << "]";
+    //cout << transform.x << "]";
     if(axisSelected.y){
-        cout << "<Y>:[";
+        //cout << "<Y>:[";
         if(useAxis.y){
             sscanf(tempKeyboardNumericInput.c_str(),"%f",&transform.y);
         }
@@ -426,12 +436,12 @@ void OpenGL_Program::fixStringErrors(string previous) {
         }
     }
     else{
-        cout << "y:[";
+        //cout << "y:[";
     }
-    cout << transform.y << "]";
+    //cout << transform.y << "]";
     //cout << "y:[" << transform.y << "]";
     if(axisSelected.z){
-        cout << "<Z>:[";
+        //cout << "<Z>:[";
         if(useAxis.z){
             sscanf(tempKeyboardNumericInput.c_str(),"%f",&transform.z);
         }
@@ -440,8 +450,54 @@ void OpenGL_Program::fixStringErrors(string previous) {
         }
     }
     else{
-        cout << "z:[";
+        //cout << "z:[";
     }
-    cout << transform.z << "]\n";
+    //cout << transform.z << "]\n";
     //cout << "z:[" << transform.z << "]\n\n" << endl;
+}
+
+//Select object function heavily based on: https://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
+void OpenGL_Program::selectObject() {
+
+    vec3 sceneCoordinates = getProjectedMousePosition();
+    vec2 closest = vec2(-1,-1);
+
+    for (int i = 0; i < modelObjects.size(); ++i) {
+        if (closest.y < 0) {
+            closest = vec2(getDistance(modelObjects[i].getOrigin(), sceneCoordinates), i);
+        } else if (closest.x > getDistance(modelObjects[i].getOrigin(), sceneCoordinates)) {
+            closest = vec2(getDistance(modelObjects[i].getOrigin(), sceneCoordinates), i);
+        }
+    }
+    //cout << closest.x<<":"<<closest.y<<endl;
+    selected = (int) closest.y; //set which model is active/selected
+
+    //printf("Coordinates in object space: %f, %f, %f\n",
+    //       sceneCoordinates.x, sceneCoordinates.y, sceneCoordinates.z);
+}
+
+//Way too tired to figure this out right now, taking the function from here: https://www.opengl.org/discussion_boards/showthread.php/175295-glm-vector-distanceSquare
+float OpenGL_Program::getDistance(vec3 coord1, vec3 coord2) {
+    vec3 temp = coord1 - coord2;
+    return dot(temp, temp);
+}
+
+vec3 OpenGL_Program::getProjectedMousePosition() {
+    vec2 mouseLocation = mouse.getMouseScreenLoc();
+    GLbyte color[4];
+    GLfloat depth;
+    //GLuint index;
+
+    glReadPixels((GLuint) mouseLocation.x, *window_height - (GLuint) mouseLocation.y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+    glReadPixels((GLuint) mouseLocation.x, *window_height - (GLuint) mouseLocation.y - 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+    //glReadPixels((GLuint) mouseLocation.x, *window_height - (GLuint) mouseLocation.y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+
+    //printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
+    //       (GLuint) mouseLocation.x, (GLuint) mouseLocation.y, color[0], color[1], color[2], color[3], depth, index);
+
+    vec4 viewport = vec4(0, 0, *window_width, *window_height);
+    vec3 windowCoordinates = vec3(mouseLocation.x, *window_height - mouseLocation.y - 1, depth);
+    vec3 sceneCoordinates = unProject(windowCoordinates, camera.getView(), camera.getProjection(), viewport);
+
+    return sceneCoordinates;
 }

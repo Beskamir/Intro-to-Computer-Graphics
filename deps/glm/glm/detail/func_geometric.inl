@@ -161,7 +161,7 @@ namespace detail
 
 	// dot
 	template <typename T>
-	GLM_FUNC_QUALIFIER T dot(T x, T y)
+	GLM_FUNC_QUALIFIER float dot(T x, T y)
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'dot' accepts only floating-point inputs");
 		return x * y;

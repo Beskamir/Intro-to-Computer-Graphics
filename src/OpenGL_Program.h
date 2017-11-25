@@ -80,6 +80,15 @@ private:
     void handleTransformationMode(int key);
     void moveCameraWASD(double deltaTime);
     void handleKeyPress(int key);
+    float getDistance(vec3 coord1, vec3 coord2);
+    void selectObject();
+    void fixStringErrors();
+    void getNumericKeyInput(int key);
+    void keyboardTransformations();
+    void tryUsingNumericKeyInput(int key);
+    void parseConfigFile(string filepath);
+    void tryActivatingTransformations(int key);
+    void endCurrentMode(); //is called by mouse click
 
 public:
     ~OpenGL_Program()= default;
@@ -93,21 +102,12 @@ public:
     void handleScrollCallback(double yoffset);
 
     void handleTextureModes(int key);
-    void tryActivatingTransformations(int key);
 
     void handleMouseMovement(double xpos, double ypos);
-    void endCurrentMode(); //is called by mouse click
-    void parseConfigFile(string filepath);
 
-    void tryUsingNumericKeyInput(int key);
+    void handleMouseClick();
 
-    void keyboardTransformations();
-
-    void getNumericKeyInput(int key);
-
-    void fixStringErrors(string previous);
-
-    void switchToOtherAxis();
+    vec3 getProjectedMousePosition();
 };
 
 

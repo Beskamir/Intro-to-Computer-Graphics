@@ -55,6 +55,8 @@ private:
         bool down;
     };
 
+    mat4 view;
+    mat4 projection;
     //void updateCameraVectors();
 
 public:
@@ -72,6 +74,10 @@ public:
     void setupCameraTransformationMatrices(GLint viewLocation, GLint projectionLocation, GLint viewPosLoc, int window_width, int window_height);
 
     ~Camera()= default;
+
+    mat4 getView();
+
+    mat4 getProjection();
 };
 
 

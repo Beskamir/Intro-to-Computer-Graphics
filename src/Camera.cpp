@@ -26,9 +26,6 @@ void Camera::initalCameraLocation(Model model) {
 //}
 void Camera::setupCameraTransformationMatrices(GLint viewLocation, GLint projectionLocation, GLint viewPosLoc, int window_width, int window_height){
     // Create camera transformation
-    mat4 view;
-    mat4 projection;
-
     view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
     //view = lookAt(vec3(0,0,5.85537815),vec3(0,0,4.85537815),vec3(0,1,0));
     projection = perspective(cameraFOV, (GLfloat)window_width/(GLfloat)window_height, 0.1f, 1000.0f);
@@ -100,14 +97,11 @@ void Camera::centerView(Model model) {
 
 }
 
-//void Camera::fpsMouseMovement() {
-//    mouseLocCurrent = getMouseLocation();
-//    rotateView(mouseLocCurrent.x-mouseLocLast.x,
-//               mouseLocCurrent.y-mouseLocLast.y);
-//    glfwSetCursorPos(window,*window_width/2,*window_height/2);
-//    //mouseLocCurrent = getMouseLocation();
-//    //cout<<mouseLocCurrent.x<<":"<<mouseLocCurrent.y<<endl;
-//    //cout<<mouseLocLast.x<<":"<<mouseLocLast.y<<endl;
-//    mouseLocLast = getMouseLocation();
-//}
 
+mat4 Camera::getView(){
+    return view;
+}
+
+mat4 Camera::getProjection(){
+    return projection;
+}

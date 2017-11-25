@@ -334,3 +334,8 @@ void Model::setUseTextures(char type){
 void Model::clearTempTransformations() {
     tempTransform=mat4();
 }
+
+vec3 Model::getOrigin(){
+    vec4 newOrigin = appliedTransforms*vec4(origin,1.0f);
+    return vec3(newOrigin.x,newOrigin.y,newOrigin.z);
+}

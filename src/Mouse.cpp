@@ -20,11 +20,15 @@ vec2 Mouse::getMouseLast() {
 }
 
 vec2 Mouse::getMouseLocation() {
+    vec2 screenCoords = getMouseScreenLoc();
+    vec2 mouseLocation={(2.0f*((screenCoords.x)/(*window_width)))-1.0f,
+                        1.0f-(2.0f*((screenCoords.y)/(*window_height)))};
+    return mouseLocation;
+}
+vec2 Mouse::getMouseScreenLoc(){
     double xpos,ypos;
     glfwGetCursorPos(window, &xpos,&ypos);
-    vec2 mouseLocation={(2.0f*((float)(xpos)/(*window_width)))-1.0f,
-                        1.0f-(2.0f*((float)(ypos)/(*window_height)))};
-    return mouseLocation;
+    return vec2(xpos,ypos);
 }
 
 void Mouse::setMouseCurrent() {

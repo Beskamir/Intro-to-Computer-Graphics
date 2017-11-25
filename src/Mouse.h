@@ -65,6 +65,8 @@ public:
     void teleportMouse(double xpos, double ypose);
     int getPositivity(vec2 tvec21);
     double getDistance(vec2 mousePosition);
+
+    vec2 getMouseScreenLoc();
 };
 
 

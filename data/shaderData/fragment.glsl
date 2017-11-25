@@ -24,6 +24,7 @@ struct Material{
     vec3 diffuse;
     vec3 ambiantOcculusion;
     vec3 specular;
+    float reflectivity;
 };
 
 // Texture samplers
@@ -36,7 +37,7 @@ uniform vec3 lightPos = vec3(5.0f,5.0f,5.0f);
 uniform vec3 viewPos;
 uniform TextureData textureData;
 uniform UseTexture useTexture;
-uniform Material material = {vec3(0.75f,0.25f,0.0f),vec3(0.25f,0.25f,0.25f),vec3(0.75f,0.25f,0.0f)};
+uniform Material material = {vec3(0.75f,0.25f,0.0f),vec3(0.25f,0.25f,0.25f),vec3(0.5f,0.5f,0.5f),32};
 //material.diffuse=vec3(0.75f,0.25f,0.0f);
 
 //declare functions
@@ -107,16 +108,18 @@ vec3 getDiffuseLighting(){
 }
 
 vec3 getSpecularLighting(){
-//    if(useTexture.specular){
-//        diffuseColor = textureColor;
-//    }
-//    else{
+    vec3 specularStrength = vec3(0.5f);
+    if(useTexture.specular){
+        specularStrength = vec3(texture(textureData.specular,uvCoord));
+    }
+    else{
+        specularStrength = material.specular;
 //        diffuseColor = material.diffuse;
-//    }
+    }
 
-    float specStrength=0.5f;
+//    float specStrength=0.5f;
     vec3 viewDir = normalize(viewPos - modelPos);
     vec3 reflectDir = reflect(-lightDirection,norm);
-    float specular = pow(max(dot(viewDir,reflectDir),0.0),32);
-    return specStrength * specular * lighting;
+    float specular = pow(max(dot(viewDir,reflectDir),0.0),material.reflectivity);
+    return specular * lighting * specularStrength;
 }
