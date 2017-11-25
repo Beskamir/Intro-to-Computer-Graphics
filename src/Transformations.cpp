@@ -93,34 +93,51 @@ void Transformations::rotate(bvec3 useAxis, float angle) {
     transformation = tempTransform;
 }
 
-void Transformations::translate(bvec3 useAxis, Mouse mouse,vec3 projectedMousePos) {
-    vec2 mouseAbsPosition = mouse.getMouseDifference(mouse.getMouseCurrent(),vec2(0,0));
-    float distance = (float)(mouse.getPositivity(mouseAbsPosition)
-                             * (mouse.getDistance(mouseAbsPosition)
-                           / mouse.getDistance(mouse.getMouseLast())));
+void Transformations::translate(bvec3 useAxis, vec3 selectedObject, vec3 projectedMousePos) {
+    //vec3 mouseAbsPosition = getDistance(projectedMousePos,vec3(0,0,0));
+    vec3 mouseAbsPosition = projectedMousePos-selectedObject;
+    //float movementRate = 0.05f;
+    //if(mouseAbsPosition.x>1){
+    //    mouseBasedTranslation.x+=movementRate;
+    //}
+    //if(mouseAbsPosition.x<1){
+    //    mouseBasedTranslation.x-=movementRate;
+    //}
+    //if(mouseAbsPosition.y>1){
+    //    mouseBasedTranslation.y+=movementRate;
+    //}
+    //if(mouseAbsPosition.y<1){
+    //    mouseBasedTranslation.y-=movementRate;
+    //}
+    //if(mouseAbsPosition.z>1){
+    //    mouseBasedTranslation.z+=movementRate;
+    //}
+    //if(mouseAbsPosition.z<1){
+    //    mouseBasedTranslation.z-=movementRate;
+    //}
 
     mat4 tempTransform;
     vec3 translate = vec3(0.0f,0.0f,0.0f);
     if(useAxis.x&&useAxis.y&&useAxis.z){
-        translate = vec3(mouseAbsPosition,distance);
+        translate = vec3(mouseBasedTranslation);
     }
     else if(useAxis.x&&useAxis.y){
-        translate = vec3(mouseAbsPosition,0.0f);
+        translate = vec3(mouseBasedTranslation.x,mouseBasedTranslation.y,0.0f);
     }
     else if(useAxis.y&&useAxis.z){
-        translate = vec3(0.0f,mouseAbsPosition);
+        translate = vec3(0.0f,mouseBasedTranslation.y,mouseBasedTranslation.z);
     }
     else if(useAxis.x&&useAxis.z){
-        translate = vec3(mouseAbsPosition.x,0.0f,mouseAbsPosition.y);
+        translate = vec3(mouseBasedTranslation.x,0.0f,mouseBasedTranslation.y);
     }
     else if(useAxis.x){
-        translate.x=distance;
+        translate.x=mouseBasedTranslation.x;
     }
     else if(useAxis.y){
-        translate.y=distance;
+        translate.y=mouseBasedTranslation.y;
     }
     else if(useAxis.z){
-        translate.z=distance;
+        translate.z=mouseBasedTranslation.z;
     }
     tempTransform = glm::translate(tempTransform,translate);
     //transformation = tempTransform;

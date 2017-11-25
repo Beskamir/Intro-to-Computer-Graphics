@@ -1,39 +1,83 @@
-#### bishop
->M: data/models/provided/chess_bishop/bishop.obj
- D: data/models/provided/chess_bishop/bishop.colour.white.png
- A: data/models/provided/chess_bishop/bishop.ao.png
-
 #### board
 >M: data/models/provided/chess_board/board.obj
  D: data/models/provided/chess_board/board.colour.png
  A: data/models/provided/chess_board/board.ao.png
 
-#### king
+#### bishop white
+>M: data/models/provided/chess_bishop/bishop.obj
+ D: data/models/provided/chess_bishop/bishop.colour.white.png
+ A: data/models/provided/chess_bishop/bishop.ao.png
+#### bishop black
+>M: data/models/provided/chess_bishop/bishop.obj
+ D: data/models/provided/chess_bishop/bishop.colour.black.png
+ A: data/models/provided/chess_bishop/bishop.ao.png
+
+#### king white
 >M: data/models/provided/chess_king/king.obj
  D: data/models/provided/chess_king/king.colour.white.png
  A: data/models/provided/chess_king/king.ao.png
+#### king black
+>M: data/models/provided/chess_king/king.obj
+ D: data/models/provided/chess_king/king.colour.black.png
+ A: data/models/provided/chess_king/king.ao.png
 
-#### knight
+#### knight white
 >M: data/models/provided/chess_knight/knight.obj
  D: data/models/provided/chess_knight/knight.colour.white.png
  A: data/models/provided/chess_knight/knight.ao.png
+#### knight black
+>M: data/models/provided/chess_knight/knight.obj
+ D: data/models/provided/chess_knight/knight.colour.black.png
+ A: data/models/provided/chess_knight/knight.ao.png
 
-#### pawn
+#### pawn white
 >M: data/models/provided/chess_pawn/pawn.obj
  D: data/models/provided/chess_pawn/pawn.colour.white.png
  A: data/models/provided/chess_pawn/pawn.ao.png
+#### pawn black
+>M: data/models/provided/chess_pawn/pawn.obj
+ D: data/models/provided/chess_pawn/pawn.colour.black.png
+ A: data/models/provided/chess_pawn/pawn.ao.png
 
-#### queen
+#### queen white
 >M: data/models/provided/chess_queen/queen.obj
  D: data/models/provided/chess_queen/queen.colour.white.png
  A: data/models/provided/chess_queen/queen.ao.png
+#### queen black
+>M: data/models/provided/chess_queen/queen.obj
+ D: data/models/provided/chess_queen/queen.colour.black.png
+ A: data/models/provided/chess_queen/queen.ao.png
 
-#### rook
+#### rook white
 >M: data/models/provided/chess_rook/rook.obj
  D: data/models/provided/chess_rook/rook.colour.white.png
+ A: data/models/provided/chess_rook/rook.ao.png
+#### rook black
+>M: data/models/provided/chess_rook/rook.obj
+ D: data/models/provided/chess_rook/rook.colour.black.png
  A: data/models/provided/chess_rook/rook.ao.png
 
 #### table model
 >M: data/models/provided/oak_table/oak_table.obj
  D: data/models/provided/oak_table/oak_table.colour.jpg
  A: data/models/provided/oak_table/oak_table.ao.png
+
+#### plate
+>M: data/models/provided/plate/plate.obj
+ D: data/models/provided/plate/plate.colour.png
+ A: data/models/provided/plate/plate.ao.png
+
+#### chair
+>M: data/models/provided/oak_chair/oak_chair.obj
+ D: data/models/provided/oak_chair/oak_table.colour.jpg
+ A: data/models/provided/oak_chair/oak_chair.ao.png
+
+#### donut
+>M: data/models/provided/donut/donut.obj
+ D: data/models/provided/donut/donut.colour.chocolate.png
+ A: data/models/provided/donut/donut.ao.png
+
+#### donut
+>M: data/models/provided/coffee_cup/coffee_cup.obj
+ D: data/models/provided/coffee_cup/coffee_cup.colour.png
+ A: data/models/provided/coffee_cup/coffee_cup.ao.png

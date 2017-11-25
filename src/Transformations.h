@@ -34,6 +34,7 @@ using namespace glm;
 class Transformations {
 private:
     mat4 transformation;
+    vec3 mouseBasedTranslation;
 
 public:
     Transformations()= default;
@@ -42,7 +43,7 @@ public:
 
     void scale(bvec3 useAxis, Mouse mouse);
     void rotate(bvec3 useAxis,Mouse mouse);
-    void translate(bvec3 useAxis, Mouse mouse, vec3 projectedMousePos);
+    void translate(bvec3 useAxis, vec3 selectedObject, vec3 projectedMousePos);
     mat4 getTransformation();
     void clear();
 

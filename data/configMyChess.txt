@@ -1,0 +1,66 @@
+#### bishop white
+>M: data/chessPieces/bishop/bishop.obj
+ D: data/chessPieces/bishop/bishop01_d.png
+ A: data/chessPieces/bishop/bishop_ao.png
+ S: data/chessPieces/bishop/bishop_s.png
+#### bishop black
+>M: data/chessPieces/bishop/bishop.obj
+ D: data/chessPieces/bishop/bishop02_d.png
+ A: data/chessPieces/bishop/bishop_ao.png
+ S: data/chessPieces/bishop/bishop_s.png
+
+#### king white
+>M: data/chessPieces/king/king.obj
+ D: data/chessPieces/king/king01_d.png
+ A: data/chessPieces/king/king_ao.png
+ S: data/chessPieces/king/king_s.png
+#### king black
+>M: data/chessPieces/king/king.obj
+ D: data/chessPieces/king/king01_d.png
+ A: data/chessPieces/king/king_ao.png
+ S: data/chessPieces/king/king_s.png
+
+#### knight white
+>M: data/chessPieces/knight/knight.obj
+ D: data/chessPieces/knight/knight01_d.png
+ A: data/chessPieces/knight/knight_ao.png
+ S: data/chessPieces/knight/knight_s.png
+#### knight black
+>M: data/chessPieces/knight/knight.obj
+ D: data/chessPieces/knight/knight02_d.png
+ A: data/chessPieces/knight/knight_ao.png
+ S: data/chessPieces/knight/knight_s.png
+
+#### pawn white
+>M: data/chessPieces/pawn/pawn.obj
+ D: data/chessPieces/pawn/pawn01_d.png
+ A: data/chessPieces/pawn/pawn_ao.png
+ S: data/chessPieces/pawn/pawn_s.png
+#### pawn black
+>M: data/chessPieces/pawn/pawn.obj
+ D: data/chessPieces/pawn/pawn02_d.png
+ A: data/chessPieces/pawn/pawn_ao.png
+ S: data/chessPieces/pawn/pawn_s.png
+
+#### queen white
+>M: data/chessPieces/queen/queen.obj
+ D: data/chessPieces/queen/queen01_d.png
+ A: data/chessPieces/queen/queen_ao.png
+ S: data/chessPieces/queen/queen_s.png
+#### queen black
+>M: data/chessPieces/queen/queen.obj
+ D: data/chessPieces/queen/queen02_d.png
+ A: data/chessPieces/queen/queen_ao.png
+ S: data/chessPieces/queen/queen_s.png
+
+#### rook white
+>M: data/chessPieces/rook/rook.obj
+ D: data/chessPieces/rook/rook01_d.png
+ A: data/chessPieces/rook/rook_ao.png
+ S: data/chessPieces/rook/rook_s.png
+#### rook black
+>M: data/chessPieces/rook/rook.obj
+ D: data/chessPieces/rook/rook02_d.png
+ A: data/chessPieces/rook/rook_ao.png
+ S: data/chessPieces/rook/rook_s.png
+

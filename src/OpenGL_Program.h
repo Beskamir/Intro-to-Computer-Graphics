@@ -108,6 +108,10 @@ public:
     void handleMouseClick();
 
     vec3 getProjectedMousePosition();
+
+    void placeCameraConsideringAllModels();
+
+    void moveModelUsingKeyboard();
 };
 
 

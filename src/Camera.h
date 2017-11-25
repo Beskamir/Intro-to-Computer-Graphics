@@ -61,8 +61,6 @@ private:
 
 public:
     Camera()= default;
-    void initalCameraLocation(Model model);
-
     //void centerView(int scaleX, int scaleY);
     //void fpsMouseMovement();
     //void moveCamera(bool forward, bool backward, bool right, bool left);
@@ -78,6 +76,8 @@ public:
     mat4 getView();
 
     mat4 getProjection();
+
+    void initalCameraLocation(Model model, float *xCoord, float *yCoord, float *zCoord);
 };
 
 

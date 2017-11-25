@@ -4,18 +4,21 @@
 
 #include "Camera.h"
 
-void Camera::initalCameraLocation(Model model) {
+void Camera::initalCameraLocation(Model model, float xCoord[2],float yCoord[2],float zCoord[2]) {
     //cout<<model.origin.x<<":"<<model.origin.y<<":"<<model.origin.z<<endl;
     //updateCameraVectors();
     //cameraPosition = model.origin;
-    cameraPosition.z += model.boundingBox.zCoord[0];
+    view = lookAt(vec3(0.0f, 0.0f, 3.0f),
+                  vec3(model.getOrigin()),
+                  vec3(0.0f, 0.0f, 0.0f));
+    cameraPosition.z += zCoord[0];
     float moveBackBy;
-    if (abs(model.boundingBox.yCoord[0]) > abs(model.boundingBox.xCoord[0])) {
-        moveBackBy = abs(model.boundingBox.yCoord[0]);
+    if (abs(xCoord[0]) > abs(yCoord[0])) {
+        moveBackBy = abs(yCoord[0]);
     } else {
-        moveBackBy = abs(model.boundingBox.xCoord[0]);
+        moveBackBy = abs(xCoord[0]);
     }
-    cameraPosition.z += moveBackBy + (1 / model.boundingBox.zCoord[0]); //This seems to work pretty well
+    cameraPosition.z += moveBackBy + (1 / zCoord[0]); //This seems to work pretty well
 
     //cameraPosition={0.0f,0.0f,3.0f};
 }
@@ -94,7 +97,25 @@ void Camera::rotateView(vec2 mouseOffset) {
 }
 
 void Camera::centerView(Model model) {
+    //cout<<model.origin.x<<":"<<model.origin.y<<":"<<model.origin.z<<endl;
+    //updateCameraVectors();
+    //cameraPosition = model.origin;
+    cameraPosition = vec3(0.0f, 0.0f, 0.0f);
+    cameraFront = vec3(0.0f, 0.0f, -1.0f);
+    cameraUp = vec3(0.0f, 1.0f, 0.0f);
+    view = lookAt(vec3(0.0f, 0.0f, 3.0f),
+                  vec3(model.getOrigin()),
+                  vec3(0.0f, 0.0f, 0.0f));
+    cameraPosition.z += model.boundingBox.zCoord[0];
+    float moveBackBy;
+    if (abs(model.boundingBox.yCoord[0]) > abs(model.boundingBox.xCoord[0])) {
+        moveBackBy = abs(model.boundingBox.yCoord[0]);
+    } else {
+        moveBackBy = abs(model.boundingBox.xCoord[0]);
+    }
+    cameraPosition.z += moveBackBy + (1 / model.boundingBox.zCoord[0]); //This seems to work pretty well
 
+    //cameraPosition={0.0f,0.0f,3.0f};
 }
 
 

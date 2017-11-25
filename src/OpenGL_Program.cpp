@@ -8,8 +8,7 @@ void OpenGL_Program::mainRender(){
     // Define the viewport dimensions
     glViewport(0, 0, *window_width, *window_height);
     mouse = Mouse(window, window_width, window_height);
-
-    camera.initalCameraLocation(modelObjects[selected]);
+    placeCameraConsideringAllModels();
 
     //GLfloat deltaTime = 0.0f;
     //GLfloat lastFrame = 0.0f;
@@ -28,6 +27,9 @@ void OpenGL_Program::mainRender(){
 
         if(!(modes.fps||keyboardNumericInput[currentAxis].empty())){
             keyboardTransformations();
+        }
+        if(modes.move){
+            moveModelUsingKeyboard();
         }
 
         //Render to screen loop
@@ -109,6 +111,9 @@ void OpenGL_Program::handleKeyPress(int key) {
         }
     }
     if(!modes.fps){
+        if(key == GLFW_KEY_C){
+            camera.centerView(modelObjects[selected]);
+        }
         handleNonFPS_Mode(key);
     }
 }
@@ -264,12 +269,20 @@ void OpenGL_Program::handleMouseMovement(double xpos, double ypos) {
         //modelObjects[0].setTempTransform();
         modelObjects[selected].setTempTransform(transformations.getTransformation());
     }
-    if(modes.move){
-        vec3 projectedMousePos = getProjectedMousePosition();
+    if(modes.move && !(activeKeys[GLFW_KEY_U]||activeKeys[GLFW_KEY_I]||activeKeys[GLFW_KEY_O]||activeKeys[GLFW_KEY_J]||activeKeys[GLFW_KEY_K]||activeKeys[GLFW_KEY_L])){
+        vec2 mouseLocation = mouse.getMouseScreenLoc();
+        GLfloat depth=0.5f;
+
+        //vec3 projectedMousePos = getProjectedMousePosition();
+        vec4 viewport = vec4(0, 0, *window_width, *window_height);
+        vec3 windowCoordinates = vec3(mouseLocation.x, *window_height - mouseLocation.y - 1, depth);
+        vec3 sceneCoordinates = unProject(windowCoordinates, camera.getView(), camera.getProjection(), viewport);
+
+
         axisSelected = {true,false,false};
         mouse.setMouseCurrent();
         mouse.teleportMouse(xpos,ypos);
-        transformations.translate(useAxis,mouse,projectedMousePos);
+        transformations.translate(useAxis,modelObjects[selected].getOrigin(),sceneCoordinates);
         //modelObjects[0].setTempTransform();
         modelObjects[selected].setTempTransform(transformations.getTransformation());
     }
@@ -500,4 +513,71 @@ vec3 OpenGL_Program::getProjectedMousePosition() {
     vec3 sceneCoordinates = unProject(windowCoordinates, camera.getView(), camera.getProjection(), viewport);
 
     return sceneCoordinates;
+}
+
+void OpenGL_Program::placeCameraConsideringAllModels() {
+    float xCoord[2]={0,0};
+    float yCoord[2]={0,0};
+    float zCoord[2]={0,0};
+    for (int i = 0; i < modelObjects.size(); ++i) {
+        if(modelObjects[i].boundingBox.xCoord[0]>xCoord[0]){
+            xCoord[0]=modelObjects[i].boundingBox.xCoord[0];
+        }
+        if(modelObjects[i].boundingBox.xCoord[1]>xCoord[1]){
+            xCoord[1]=modelObjects[i].boundingBox.xCoord[1];
+        }
+        if(modelObjects[i].boundingBox.yCoord[0]>yCoord[0]){
+            yCoord[0]=modelObjects[i].boundingBox.yCoord[0];
+        }
+        if(modelObjects[i].boundingBox.yCoord[1]>yCoord[1]){
+            yCoord[1]=modelObjects[i].boundingBox.yCoord[1];
+        }
+        if(modelObjects[i].boundingBox.zCoord[0]>zCoord[0]){
+            zCoord[0]=modelObjects[i].boundingBox.zCoord[0];
+        }
+        if(modelObjects[i].boundingBox.zCoord[1]>zCoord[1]){
+            zCoord[1]=modelObjects[i].boundingBox.zCoord[1];
+        }
+    }
+
+    camera.initalCameraLocation(modelObjects[selected],xCoord,yCoord,zCoord);
+}
+
+void OpenGL_Program::moveModelUsingKeyboard() {
+    float transformRate = 0.05f;
+    if(activeKeys[GLFW_KEY_U]){
+        transform.y+=transformRate;
+        transformations.translate(useAxis,transform);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+    if(activeKeys[GLFW_KEY_O]){
+        transform.y-=transformRate;
+        transformations.translate(useAxis,transform);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+    if(activeKeys[GLFW_KEY_I]){
+        transform.z+=transformRate;
+        transformations.translate(useAxis,transform);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+    if(activeKeys[GLFW_KEY_K]){
+        transform.z-=transformRate;
+        transformations.translate(useAxis,transform);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+    if(activeKeys[GLFW_KEY_J]){
+        transform.x-=transformRate;
+        transformations.translate(useAxis,transform);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+    if(activeKeys[GLFW_KEY_L]){
+        transform.x+=transformRate;
+        transformations.translate(useAxis,transform);
+        modelObjects[selected].setTempTransform(transformations.getTransformation());
+    }
+    //modelObjects[0].setTempTransform();
+    //    if(modes.fps){
+    //        //Pass along {W,S,D,A} == {forward, backward, right, left}
+    //        camera.moveCamera({activeKeys[GLFW_KEY_W],activeKeys[GLFW_KEY_S],activeKeys[GLFW_KEY_D],activeKeys[GLFW_KEY_A],activeKeys[GLFW_KEY_E],activeKeys[GLFW_KEY_Q]}, (float) deltaTime);
+    //    }
 }
