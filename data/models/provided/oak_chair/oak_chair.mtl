@@ -1,0 +1,24 @@
+# Blender MTL File: 'Oak Table.blend'
+# Material Count: 2
+
+newmtl RED_OAK.001
+Ns 482.558109
+Ka 1.000000 1.000000 1.000000
+Kd 0.350828 0.187724 0.072475
+Ks 0.272152 0.272152 0.272152
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Doug/Documents/Business/Cummins A&D/3D Projects/Depository/Textures/Wood floors/url-1.jpeg
+
+newmtl RED_OAK.001_NONE
+Ns 482.558109
+Ka 1.000000 1.000000 1.000000
+Kd 0.350828 0.187724 0.072475
+Ks 0.272152 0.272152 0.272152
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Doug/Documents/Business/Cummins A&D/3D Projects/Depository/Textures/Wood floors/url-1.jpeg
