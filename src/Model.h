@@ -30,7 +30,6 @@
 //#include <boost/tokenizer.hpp>
 //#include <boost/filesystem.hpp>
 
-#include "vertexArray.h"
 #include "ShaderProgram.h"
 //#include "ImageTexture.h"
 
