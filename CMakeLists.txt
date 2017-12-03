@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(OpenGL REQUIRED)
 
 #The source files for the project
-set(SOURCE_FILES src/main.cpp src/main.h src/ShaderProgram.cpp src/ShaderProgram.h src/OpenGL_Program.cpp src/OpenGL_Program.h  src/Model.cpp src/Model.h src/Camera.cpp src/Camera.h src/Transformations.cpp src/Transformations.h src/Mouse.cpp src/Mouse.h)
+set(SOURCE_FILES src/OpenGL/mainOpenGL.cpp src/OpenGL/mainOpenGL.h src/OpenGL/ShaderProgram.cpp src/OpenGL/ShaderProgram.h src/OpenGL/OpenGL_Program.cpp src/OpenGL/OpenGL_Program.h src/OpenGL/Model.cpp src/OpenGL/Model.h src/OpenGL/Camera.cpp src/OpenGL/Camera.h src/OpenGL/Transformations.cpp src/OpenGL/Transformations.h src/OpenGL/Mouse.cpp src/OpenGL/Mouse.h src/Scene/Model.cpp src/Scene/Model.h src/Scene/Models/Sphere.cpp src/Scene/Models/Sphere.h src/Scene/Models/Plane.cpp src/Scene/Models/Plane.h src/Scene/Models/Mesh.cpp src/Scene/Models/Mesh.h src/main.cpp src/Raytracer/RayTracer.cpp src/Raytracer/RayTracer.h src/Scene/Camera.cpp src/Scene/Camera.h src/Raytracer/Image.cpp src/Raytracer/Image.h)
 #src/OpenModel.h src/OpenModel.cpp
 #src/ImageTexture.cpp src/ImageTexture.h
 

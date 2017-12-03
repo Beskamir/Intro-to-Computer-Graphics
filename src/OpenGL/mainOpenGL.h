@@ -31,10 +31,7 @@
 
 using namespace std;
 
-int window_width = 1024, window_height = 1024; // Window dimensions
-OpenGL_Program openGL_program;
-
-int main(int argc, char *argv[]);
+int mainOpenGL(int argc, char *argv[]);
 bool setupOpenGL(GLFWwindow **window);
 void setupWindowCallbacks(GLFWwindow **window);
 
