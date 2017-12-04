@@ -6,9 +6,9 @@
 #define ASSIGNMENT4_PLANE_H
 
 
-#include "../Model.h"
-
-class Plane: public Model{
+class Plane{
+    Plane() = default;
+    ~Plane() = default;
 
 };
 
