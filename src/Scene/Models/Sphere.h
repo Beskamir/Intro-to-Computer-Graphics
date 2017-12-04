@@ -13,25 +13,28 @@
 #include <iostream>
 #include <vector>
 
+#include "../Model.h"
+
 using namespace std;
 using namespace glm;
 
-class Sphere{
+class Sphere:public Model{
 private:
-    vec3 origin={0,0,0};
+    vec3 center={0,0,0};
     float radius = 1.0f;
+    Color color;
 
 public:
     Sphere() = default;
-    Sphere(vec3 origin,float radius);
-    ~Sphere() = default;
-
-
+    Sphere(vec3 center,float radius,Color color = Color(1));
+    ~Sphere() override = default;
 
 
     void move(vec3 deltaMovement);
     void changeSize(float scalar);
 
+    bool intersect(Intersection& intersection) override;
+    bool doesIntersect(Ray& ray) override;
 
 };
 

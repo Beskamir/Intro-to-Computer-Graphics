@@ -24,7 +24,8 @@ void Scene::generateMyScene() {
 }
 
 void Scene::generateDefaultScene() {
-    addSphere(vec3(400, 130, 320),120);
+    addSphere(vec3(400, 130, 320),120,Color(0,1,1,1));
+    addSphere(vec3(400, 100, 300),100,Color(1,0,0.5,1));
     //addSquare(vec3(550,0,0),vec3(0,0,0),vec3(0,0,560),vec3(550,0,560));
     //addSquare(vec3((560,550,0)),vec3(560,550,560),vec3(0,550,560),vec3(550,0,560));
     //addSquare(vec3(550, 0, 560),vec3(0, 0, 560),vec3(0, 550, 560),vec3(560, 550, 560));
@@ -65,11 +66,15 @@ void Scene::loadConfig(string config) {
             modelMeshes[counter].addTexture('s',line.substr(4, line.size()-1));
         }
     }
+    //for (int i = 0; i < modelMeshes.size(); ++i) {
+    //    modelObjects.addModel(modelMeshes[i]);
+    //}
 }
 
-void Scene::addSphere(vec3 pos, float radius) {
-    Sphere sphere(pos,radius);
+void Scene::addSphere(vec3 pos, float radius,Color color) {
+    Sphere sphere(pos,radius,color);
     modelSpheres.push_back(sphere);
+    //modelObjects.addModel(sphere);
 }
 
 vector<Sphere> Scene::getSpheres() {
@@ -79,3 +84,7 @@ vector<Sphere> Scene::getSpheres() {
 vector<Mesh> Scene::getMeshes() {
     return modelMeshes;
 }
+
+//ModelSet Scene::getModelObjects() {
+//    return modelObjects;
+//}

@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(OpenGL REQUIRED)
 
 #The source files for the project
-set(SOURCE_FILES src/Scene/Models/Sphere.cpp src/Scene/Models/Sphere.h src/Scene/Models/Plane.cpp src/Scene/Models/Plane.h src/Scene/Models/Mesh.cpp src/Scene/Models/Mesh.h src/main.cpp src/Raytracer/RayTracer.cpp src/Raytracer/RayTracer.h src/Scene/Camera.cpp src/Scene/Camera.h src/Raytracer/ImageData.cpp src/Raytracer/ImageData.h src/Scene/Scene.cpp src/Scene/Scene.h src/Raytracer/Ray.cpp src/Raytracer/Ray.h src/Raytracer/Color.cpp src/Raytracer/Color.h)
+set(SOURCE_FILES src/Scene/Models/Sphere.cpp src/Scene/Models/Sphere.h src/Scene/Models/Plane.cpp src/Scene/Models/Plane.h src/Scene/Models/Mesh.cpp src/Scene/Models/Mesh.h src/main.cpp src/Raytracer/RayTracer.cpp src/Raytracer/RayTracer.h src/Scene/Camera.cpp src/Scene/Camera.h src/Raytracer/ImageData.cpp src/Raytracer/ImageData.h src/Scene/Scene.cpp src/Scene/Scene.h src/Raytracer/Ray.cpp src/Raytracer/Ray.h src/Raytracer/Color.cpp src/Raytracer/Color.h src/Raytracer/Intersection.cpp src/Raytracer/Intersection.h src/Scene/Model.cpp src/Scene/Model.h src/myMath.h src/Scene/Models/ModelSet.cpp src/Scene/Models/ModelSet.h)
 
 #src/OpenGL/mainOpenGL.cpp src/OpenGL/mainOpenGL.h src/OpenGL/ShaderProgram.cpp src/OpenGL/ShaderProgram.h src/OpenGL/OpenGL_Program.cpp src/OpenGL/OpenGL_Program.h src/OpenGL/Model.cpp src/OpenGL/Model.h src/OpenGL/Camera.cpp src/OpenGL/Camera.h src/OpenGL/Transformations.cpp src/OpenGL/Transformations.h src/OpenGL/Mouse.cpp src/OpenGL/Mouse.h
 

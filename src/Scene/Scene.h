@@ -16,6 +16,7 @@
 //#include "Model.h"
 #include "Models/Mesh.h"
 #include "Models/Sphere.h"
+#include "Models/ModelSet.h"
 
 
 using namespace glm;
@@ -25,6 +26,7 @@ private:
     //vector<Model> modelObjects;
     vector<Sphere> modelSpheres;
     vector<Mesh> modelMeshes;
+    //ModelSet modelObjects;
 
     //Setup the initial scene
     void generateDefaultScene();
@@ -37,10 +39,13 @@ public:
 
     void setupScene(string &sceneType);
 
-    void addSphere(vec3 pos=vec3(0,0,0),float radius=1.0f);
+    void addSphere(vec3 pos=vec3(0,0,0),float radius=1.0f,Color color=Color(0));
+
+    //bool isIntersect(Intersect &intersection);
 
     vector<Sphere> getSpheres();
     vector<Mesh> getMeshes();
+    //ModelSet getModelObjects();
     //void addPlane();
     //void addCube();
     //void addSquare();

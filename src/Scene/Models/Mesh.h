@@ -10,9 +10,9 @@
 
 using namespace std;
 
-//#include "../Model.h"
+#include "../Model.h"
 
-class Mesh {
+class Mesh: public Model {
 
 public:
     Mesh() = default;
@@ -20,6 +20,10 @@ public:
 
     void addModel(string filepath);
     void addTexture(char type, string texturePath);
+
+    bool intersect(Intersection& intersection) override;
+
+    bool doesIntersect(Ray& ray) override;
 };
 
 
