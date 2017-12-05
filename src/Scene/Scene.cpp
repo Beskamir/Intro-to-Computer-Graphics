@@ -25,12 +25,45 @@ void Scene::generateMyScene() {
 
 void Scene::generateDefaultScene() {
     addSphere(vec3(400, 130, 320),120,Color(0,1,1,1));
-    //addSphere(vec3(400, 100, 300),100,Color(1,0,0.5,1));
-    //addSquare(vec3(550,0,0),vec3(0,0,0),vec3(0,0,560),vec3(550,0,560));
-    //addSquare(vec3((560,550,0)),vec3(560,550,560),vec3(0,550,560),vec3(550,0,560));
-    //addSquare(vec3(550, 0, 560),vec3(0, 0, 560),vec3(0, 550, 560),vec3(560, 550, 560));
-    //addSquare(vec3(0, 0, 560), vec3(0, 0, 0), vec3(0, 550, 0), vec3(0, 550, 560));
-    //addSquare(vec3(550, 0, 0), vec3(550, 0, 560), vec3(560, 550, 560), vec3(560, 550, 0));
+    //Generate points for the squares
+    vec3 p1 = vec3(0,0,0);
+    vec3 p2 = vec3(550,0,0);
+    vec3 p3 = vec3(0,0,560);
+    vec3 p4 = vec3(550,0,560);
+    vec3 p5 = vec3(560,550,0);
+    vec3 p6 = vec3(560,550,560);
+    vec3 p7 = vec3(0,550,560);
+    vec3 p8 = vec3(0,550,0);
+    //Generate all the normals for the squares
+    vec3 n1 = vec3(0.0,-1.0,0.0);
+    vec3 n2 = vec3(0.0,1.0,0.0);
+    vec3 n3 = vec3(1.0,0.0,0.0);
+    vec3 n4 = vec3(-1.0,0.0,0.0);
+    vec3 n5 = vec3(0.0,0.0,-1.0);
+
+    Material material;
+    Mesh squareMesh;
+    // Add in bottom square
+    squareMesh.addTriangle(p1,p3,p2,n2);
+    squareMesh.addTriangle(p4,p2,p3,n2);
+    // Add in top square
+    squareMesh.addTriangle(p5,p7,p6,n1);
+    squareMesh.addTriangle(p8,p7,p5,n1);
+    // Add in left square
+    squareMesh.addTriangle(p3,p1,p8,n3);
+    squareMesh.addTriangle(p3,p8,p7,n3);
+    // Add in back square
+    squareMesh.addTriangle(p4,p3,p7,n5);
+    squareMesh.addTriangle(p4,p7,p6,n5);
+
+    //squareMesh.setMaterial(material);
+    modelMeshes.push_back(squareMesh);
+
+    Mesh rightSquare;
+    // Add in right square
+    rightSquare.addTriangle(p4,p2,p5,n4);
+    rightSquare.addTriangle(p4,p5,p6,n4);
+    modelMeshes.push_back(rightSquare);
 
 }
 

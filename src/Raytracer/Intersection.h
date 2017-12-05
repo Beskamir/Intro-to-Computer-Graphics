@@ -6,7 +6,7 @@
 #define ASSIGNMENT4_INTERSECTION_H
 
 
-#include "Color.h"
+#include "../Scene/Shading/Color.h"
 #include "Ray.h"
 class Model;
 

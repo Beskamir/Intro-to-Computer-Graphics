@@ -28,8 +28,8 @@ public:
     void clamp(float minValue = 0.0f, float maxValue = 1.0f);
     void applyGammaCorrection(float exposure, float gamma);
 
-    Color operator + (Color);
-    Color operator * (double);
+    Color operator + (Color color);
+    Color operator * (float s);
 
 
 };

@@ -20,17 +20,17 @@ int main(int argc, char *argv[]) {
 
     int width = 1024;
     int height = 1024;
-    double pi = 3.14159265358979323846264338327950288;
+    //double pi = 3.14159265358979323846264338327950288;
 
     //Setup final output image
     ImageData imageData(width, height);
     //Setup the camera
-    Camera camera(vec3(-5,1,0),vec3(0,1,0),vec3(0,1,0),(float)pi/4,(float)width/(float)height);
+    Camera camera(vec3(278, 273, -150),vec3(278, 273, 0),vec3(1,0,0),45,(float)width/(float)height);
 
     Scene scene;
     scene.setupScene(sceneType);
 
-    RayTracer rayTracer;
+    RayTracer rayTracer(2,width,height);
     rayTracer.cpuRender(&imageData, camera, scene);
     //cout<<sceneType<<endl;
 

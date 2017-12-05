@@ -33,8 +33,11 @@ private:
 
     vec2 cameraSize;
 
+    float scalar;
+    float cameraAspectRatio;
+
 public:
-    Camera(vec3 cameraOrigin, vec3 cameraTarget, vec3 upguide, float fov, float aspectRatio);
+    Camera(vec3 cameraOrigin, vec3 target, vec3 upguide, float fov, float aspectRatio);
 
     ~Camera() = default;
 
