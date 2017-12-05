@@ -20,26 +20,41 @@ void Mesh::addTriangle(vector<vec3> point,vec3 normal,vector<vec2> uv) {
         uv.emplace_back(vec3(0));
         uv.emplace_back(vec3(0));
     }
+    Triangle tempTriangle = {};
     for (int i = 0; i < 3; ++i) {
-        Vertex vertex;
-        vertex.Position = point[i];
-        vertex.Normal = normal;
-        vertex.uvCoords = uv[i];
-        meshData.vertices.push_back(vertex);
+        //Vertex tempVertex;
+        tempTriangle.vertex[i].Position = point[i];
+        tempTriangle.vertex[i].Normal = normal;
+        tempTriangle.vertex[i].uvCoords = uv[i];
+        //tempTriangle.vertex[i]=tempVertex;
     }
+    meshData.triangles.push_back(tempTriangle);
 }
 
 //following function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
-bool Mesh::rayTriangleIntersect(const vec3 &vert0, const vec3 &vert1, const vec3 &vert2, Ray &ray, float &tNearTemp, vec2 &uvTemp) {
-    vec3 edge1 = vert1 - vert0;
-    vec3 edge2 = vert2 - vert0;
+bool Mesh::rayTriangleIntersect(Triangle &tempTriangle, Ray &ray, float &tNearTemp, vec2 &uvTemp) {
+    vec3 v0 = tempTriangle.vertex[0].Position;
+    vec3 v1 = tempTriangle.vertex[1].Position;
+    vec3 v2 = tempTriangle.vertex[2].Position;
+
+    for (int i = 0; i < 3; ++i) {
+        //cout<<"drawing triangle: "<<endl;
+        for (int j = 0; j < 3; ++j) {
+            //cout<<tempTriangle.vertex[i].Position[j]<<",";
+        }
+        //cout<<endl;
+    }
+
+    vec3 edge1 = v1 - v0;
+    vec3 edge2 = v2 - v0;
+
     vec3 pVector = cross(ray.getDirection(),edge2);
     float det = dot(edge1, pVector);
     if(det == 0 || det < 0){
         return false;
     }
 
-    vec3 tVector = ray.getOrigin() - vert0;
+    vec3 tVector = ray.getOrigin() - v0;
     uvTemp.x = dot(tVector, pVector);
     if(uvTemp.x<0 || uvTemp.x>det){
         return false;
@@ -59,13 +74,15 @@ bool Mesh::rayTriangleIntersect(const vec3 &vert0, const vec3 &vert1, const vec3
 //following function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 bool Mesh::intersect(Ray &ray, float &tNearI, int &indexI, vec2 &uvI) {
     bool intersect = false;
-    for (int i = 0; i < meshData.vertices.size()/3; ++i) {
-        const vec3 & vert0 = meshData.vertices[i].Position;
-        const vec3 & vert1 = meshData.vertices[i+1].Position;
-        const vec3 & vert2 =  meshData.vertices[i+2].Position;
+    for (int i = 0; i < meshData.triangles.size(); ++i) {
+        Triangle tempTriangle = meshData.triangles[i];
+        //cout<<"Drawing triangle: "<<i<<endl;
+        //const vec3 & vert0 = meshData.triangles[i].vertex[0].Position;
+        //const vec3 & vert1 = meshData.triangles[i].vertex[1].Position;
+        //const vec3 & vert2 = meshData.triangles[i].vertex[2].Position;
         float tNearTemp = tNearI;
         vec2 uvTemp;
-        if (rayTriangleIntersect(vert0, vert1, vert2, ray, tNearTemp, uvTemp) && tNearTemp < tNearI) {
+        if (rayTriangleIntersect(tempTriangle, ray, tNearTemp, uvTemp) && tNearTemp < tNearI) {
             tNearI = tNearTemp;
             uvI = uvTemp;
             indexI = i;
@@ -78,15 +95,15 @@ bool Mesh::intersect(Ray &ray, float &tNearI, int &indexI, vec2 &uvI) {
 //following function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 void Mesh::getSurfaceProperties(vec3 &hitPoint, Ray &ray, int &index, vec2 &uv, vec3 &normal, vec2 &stCoords) {
 
-    const vec3 &v0 = meshData.vertices[index].Position;
-    const vec3 &v1 = meshData.vertices[index+1].Position;
-    const vec3 &v2 = meshData.vertices[index+2].Position;
+    const vec3 &v0 = meshData.triangles[index].vertex[0].Position;
+    const vec3 &v1 = meshData.triangles[index].vertex[1].Position;
+    const vec3 &v2 = meshData.triangles[index].vertex[2].Position;
     vec3 edge0 = normalize(v1 - v0);
     vec3 edge1 = normalize(v2 - v1);
     normal = normalize(cross(edge0, edge1));
-    const vec2 &st0 = meshData.vertices[index].uvCoords;
-    const vec2 &st1 = meshData.vertices[index+1].uvCoords;
-    const vec2 &st2 = meshData.vertices[index+2].uvCoords;
+    const vec2 &st0 = meshData.triangles[index].vertex[0].uvCoords;
+    const vec2 &st1 = meshData.triangles[index].vertex[1].uvCoords;
+    const vec2 &st2 = meshData.triangles[index].vertex[2].uvCoords;
     stCoords = st0 * (1 - uv.x - uv.y) + st1 * uv.x + st2 * uv.y;
 
 }
@@ -162,10 +179,11 @@ void Mesh::openOBJ(string filename) {
     Vertex vertex;
 
     //Store the file's contents in proper MeshData setup
+    Triangle tempTriangle;
     for (int i = 0; i < vertexIndices.size(); ++i) {
         vertex.Position = temp_vertices[vertexIndices[i]];
         vertex.Normal = temp_normals[normalIndices[i]];
         vertex.uvCoords = temp_uvs[uvIndices[i]];
-        meshData.vertices.push_back(vertex);
+        //meshData.vertices.push_back(vertex);
     }
 }

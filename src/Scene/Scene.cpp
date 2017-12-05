@@ -126,12 +126,14 @@ void Scene::genDefaultSquares() {
     vec3 normal3 = vec3(1.0,0.0,0.0);
     vec3 normal4 = vec3(0.0,0.0,1.0);
 
+    Mesh squareMesh;
     //add all the sides of the smaller square
-    addSquare(vert3, vert1, vert5, vert7, normal0);
-    addSquare(vert6, vert7, vert5, vert4, normal1);
-    addSquare(vert2, vert3, vert7, vert6, normal2);
-    addSquare(vert0, vert1, vert3, vert2, normal3);
-    addSquare(vert4, vert5, vert1, vert0, normal4);
+    //addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0);
+    //addSquare(squareMesh, vert6, vert7, vert5, vert4, normal1);
+    //addSquare(squareMesh, vert2, vert3, vert7, vert6, normal2);
+    //addSquare(squareMesh, vert0, vert1, vert3, vert2, normal3);
+    addSquare(squareMesh, vert4, vert5, vert1, vert0, normal4);
+    modelMeshes.push_back(squareMesh);
 }
 
 void Scene::genDefaultLights() {
@@ -141,10 +143,9 @@ void Scene::genDefaultLights() {
     lights.push_back(new DirectionalLight(vec3(278, 273, -150),vec3(5)));
 }
 
-void Scene::addSquare(vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 normal) {
+void Scene::addSquare(Mesh &squareMesh, vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 normal) {
     Mesh tempSquare;
-    tempSquare.addTriangle({vert0,vert1,vert3},normal);
-    tempSquare.addTriangle({vert1,vert2,vert3},normal);
-    modelMeshes.push_back(tempSquare);
-
+    squareMesh.addTriangle({vert0,vert1,vert3},normal);
+    squareMesh.addTriangle({vert1,vert2,vert3},normal);
+    //modelMeshes.push_back(tempSquare);
 }

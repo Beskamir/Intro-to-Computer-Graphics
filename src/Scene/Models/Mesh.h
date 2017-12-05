@@ -20,9 +20,11 @@ public:
         vec3 Normal;
         vec2 uvCoords;
     };
-    //vector<Vertex> verticies;
+    struct Triangle{
+        Vertex vertex[3];
+    };
     struct MeshData{
-        vector<Vertex> vertices;
+        vector<Triangle> triangles;
     };
     MeshData meshData;
 public:
@@ -42,7 +44,7 @@ public:
     void openOBJ(string filename);
 
     bool
-    rayTriangleIntersect(const vec3 &vert0, const vec3 &vert1, const vec3 &vert2, Ray &ray, float &tNearTemp, vec2 &uvTemp);
+    rayTriangleIntersect(Triangle &tempTriangle, Ray &ray, float &tNearTemp, vec2 &uvTemp);
 };
 
 

@@ -23,7 +23,7 @@ void RayTracer::cpuRender(ImageData *image, Camera camera, Scene scene) {
     vector<Light*> lights = scene.getLights();
     vector<Model*> modelSet;
     for (int i = 0; i < modelSpheres.size(); ++i) {
-        modelSet.push_back(&modelSpheres[i]);
+        //modelSet.push_back(&modelSpheres[i]);
     }
     for (int j = 0; j < modelMeshes.size(); ++j) {
         modelSet.push_back(&modelMeshes[j]);
