@@ -8,56 +8,30 @@
 //#include "Ray.h"
 //#include "../Scene/Shading/Light.h"
 
-RayTracer::RayTracer(int samples, int width, int height, int maxDepth) {
+RayTracer::RayTracer(int samples, int width, int height, int maxDepth,vec3 backgroundColor) {
     this->samples = samples;
     this->width = width;
     this->height = height;
     this->maxDepth = maxDepth;
+    this->backgroundColor = backgroundColor;
 }
 
 void RayTracer::cpuRender(ImageData *image, Camera camera, Scene scene) {
 
     vector<Sphere> modelSpheres = scene.getSpheres();
     vector<Mesh> modelMeshes = scene.getMeshes();
-    Light lights;// = scene.getLights();
+    vector<Light*> lights = scene.getLights();
     vector<Model*> modelSet;
     for (int i = 0; i < modelSpheres.size(); ++i) {
         modelSet.push_back(&modelSpheres[i]);
     }
     for (int j = 0; j < modelMeshes.size(); ++j) {
-        //modelSet.push_back(modelMeshes[j]);
+        modelSet.push_back(&modelMeshes[j]);
     }
 
-    //modelObjects[0].
-    vec3 distance;
     for (int x = 0; x < width; ++x) {
         for (int y = 0; y < height; ++y) {
-
-            //Color pixel = superSample(x,y,modelSet,camera);
-            vec3 pixel(0);
-
-            //vec2 screenCoord((((2.0f * (x)) / (float)width) - 1.0f),
-            //                 (1.0f - ((2.0f * (y)) / (float)height)));
-            ////pixel = castRay(ray);
-            //Ray ray = camera.generateRay(screenCoord);
-            //
-            //Intersection intersection(ray);
-            //if(modelSet.intersect(intersection)){
-            //    pixel = intersection.getColor();
-            //}
-            pixel = superSample(x,y,modelSet,camera,lights);
-            //for (int i = 0; i < modelSpheres.size(); ++i) {
-            //    if(modelSpheres[i].intersect(intersection)){
-            //        pixel = intersection.getColor();
-            //    }
-            //}
-
-
-            //if(){
-            //    pixel =
-            //}
-            //distance = scene.getSphereCollisions(ray);
-
+            vec3 pixel = superSample(x,y,modelSet,camera,lights);
             image->storePixel(x, y, pixel);
         }
     }
@@ -68,9 +42,9 @@ void RayTracer::cpuRender(ImageData *image, Camera camera, Scene scene) {
 // following function thanks to what was provided alongside the assignment.
 // This function generates point on the image plane and starts a trace through them.
 // Grid supersampling is also implemented.
-vec3 RayTracer::superSample(int x, int y, vector<Model*> modelSet,Camera camera,Light lights){
+vec3 RayTracer::superSample(int x, int y, vector<Model*> modelSet,Camera camera,vector<Light*> lights){
     vec2 windowCoord;
-    vec3 color(0);
+    vec3 color = backgroundColor;
     for(int i = 0; i < samples; i++){
         for(int j = 0; j < samples; j++){
             windowCoord.x = (float) x + (float)i/(float)samples;
@@ -80,18 +54,14 @@ vec3 RayTracer::superSample(int x, int y, vector<Model*> modelSet,Camera camera,
 
             Ray ray = camera.generateRay(screenCoord);
             color = color + castRay(ray, modelSet, lights, 0);
-
-            //Ray r = scene->makeRay(one,two);
-            //c = c+trace(r,0);
         }
     }
-    color = color*(float)(1.0/float(samples*samples));
-    return color;
+    return color*(float)(1.0/float(samples*samples));;
 }
 
 //Function based heavily on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
-vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, Light lights, int depth){
-    vec3 hitColor(0);
+vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, vector<Light*> lights, int depth){
+    vec3 hitColor = backgroundColor;
     if(depth > maxDepth){
         return hitColor;
     }
@@ -107,7 +77,7 @@ vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, Light lights, int dept
         //vec3 tempHitPoint = hitPoint;
         switch(hitObject->material.type){
             default:
-                hitColor = computeDiffuse(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights);
+                hitColor = computeDiffuse(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights, uv);
                 break;
         }
     }
@@ -115,6 +85,37 @@ vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, Light lights, int dept
 }
 
 
+
+vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, vector<Light*> &lights, vec2 uv) {
+
+    vec3 lightAmount = vec3(0);
+    vec3 specularColor = vec3(0);
+    vec3 shadowOrigin = dot(ray.getDirection(),normal)?
+                        hitPoint + normal * biasValue :
+                        hitPoint - normal * biasValue;
+
+    for (int i = 0; i < lights.size(); ++i) {
+        vec3 lightDirection = lights[i]->getDirection(hitPoint);
+
+        float lightDistance = lengthSquared(lightDirection);
+        lightDirection = normalize(lightDirection);
+
+        float lightDotNormal = std::max(0.0f,dot(lightDirection,normal));
+        Model *shadowHitObject = nullptr;
+        float tNearShadow = ray.getTimeValueMax();
+
+        Ray shadowRay(shadowOrigin,lightDirection);
+        bool inShadow = trace(shadowRay,modelSet,tNearShadow,index,uv,&shadowHitObject) && (tNearShadow * tNearShadow < lightDistance);
+
+        lightAmount += (float)(1-inShadow) * lights[i]->getColor() * lightDotNormal;
+        vec3 reflectionDirection = reflect(-lightDirection,normal);
+        specularColor += powf(std::max(0.f, -dot(reflectionDirection,ray.getDirection())),hitObject->material.specularExponent) * lights[i]->getColor();
+    }
+
+    vec3 hitColor = (lightAmount * hitObject->evalDiffuseColor(stCoords) * hitObject->material.diffuse + specularColor * hitObject->material.specular);
+
+    return hitColor;
+}
 
 void RayTracer::gpuRender(Scene scene,Camera camera) {
 
@@ -138,14 +139,4 @@ bool RayTracer::trace(Ray &ray, vector<Model*> &modelSet, float &tNear, int &ind
     }
 
     return (*hitObject != nullptr);
-}
-
-vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &tvec3, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, Light &lights) {
-
-    vec3 lightAmt = vec3(10);
-    vec3 specularColor = vec3(0);
-
-    vec3 hitColor = (lightAmt * hitObject->evalDiffuseColor(stCoords) * hitObject->material.diffuse + specularColor * hitObject->material.specular);
-
-    return hitColor;
 }

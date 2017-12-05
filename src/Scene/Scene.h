@@ -16,6 +16,7 @@
 //#include "Model.h"
 #include "Models/Mesh.h"
 #include "Models/Sphere.h"
+#include "Shading/Light.h"
 //#include "Models/ModelSet.h"
 
 
@@ -26,6 +27,7 @@ private:
     //vector<Model> modelObjects;
     vector<Sphere> modelSpheres;
     vector<Mesh> modelMeshes;
+    vector<Light*> lights;
     //ModelSet modelObjects;
 
     //Setup the initial scene
@@ -49,6 +51,11 @@ public:
     //void addPlane();
     //void addCube();
     //void addSquare();
+    vector<Light *> getLights();
+
+    void genDefaultSquares();
+
+    void genDefaultLights();
 };
 
 
