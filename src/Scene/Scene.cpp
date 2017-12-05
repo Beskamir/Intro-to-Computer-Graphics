@@ -25,7 +25,7 @@ void Scene::generateMyScene() {
 
 void Scene::generateDefaultScene() {
     addSphere(vec3(400, 130, 320),120,Color(0,1,1,1));
-    addSphere(vec3(400, 100, 300),100,Color(1,0,0.5,1));
+    //addSphere(vec3(400, 100, 300),100,Color(1,0,0.5,1));
     //addSquare(vec3(550,0,0),vec3(0,0,0),vec3(0,0,560),vec3(550,0,560));
     //addSquare(vec3((560,550,0)),vec3(560,550,560),vec3(0,550,560),vec3(550,0,560));
     //addSquare(vec3(550, 0, 560),vec3(0, 0, 560),vec3(0, 550, 560),vec3(560, 550, 560));
