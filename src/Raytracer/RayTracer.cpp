@@ -70,6 +70,7 @@ vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, vector<Light*> lights,
     Model *hitObject = nullptr;
     vec2 uv;
     if(trace(ray,modelSet,tNear,index,uv,&hitObject)){
+        //return vec3(1);
         vec3 hitPoint = ray.calculate(tNear);
         vec3 normal;
         vec2 stCoords;
@@ -128,8 +129,10 @@ bool RayTracer::trace(Ray &ray, vector<Model*> &modelSet, float &tNear, int &ind
         float tNearI = ray.getTimeValueMax();
         int indexI;
         vec2 uvI;
+        //return true;
         //modelSet[i]->intersect(ray,tNearI,indexI,uvI);
         if(modelSet[i]->intersect(ray,tNearI,indexI,uvI) && tNearI<tNear){
+            //cout<<"false"<<endl;
             //cout<<"i"<<endl;
             *hitObject = modelSet[i];
             tNear = tNearI;

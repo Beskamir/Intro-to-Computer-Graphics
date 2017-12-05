@@ -56,6 +56,8 @@ public:
     void genDefaultSquares();
 
     void genDefaultLights();
+
+    void addSquare(vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 tvec31);
 };
 
 

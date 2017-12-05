@@ -106,38 +106,45 @@ void Scene::genDefaultSquares() {
     vec3 n4 = vec3(-1.0,0.0,0.0);
     vec3 n5 = vec3(0.0,0.0,-1.0);
 
-    Material material;
-    Mesh squareMesh;
-    // Add in bottom square
-    squareMesh.addTriangle(p1,p3,p2,n2);
-    squareMesh.addTriangle(p4,p2,p3,n2);
-    // Add in top square
-    squareMesh.addTriangle(p5,p7,p6,n1);
-    squareMesh.addTriangle(p8,p7,p5,n1);
-    // Add in left square
-    squareMesh.addTriangle(p3,p1,p8,n3);
-    squareMesh.addTriangle(p3,p8,p7,n3);
-    // Add in back square
-    squareMesh.addTriangle(p4,p3,p7,n5);
-    squareMesh.addTriangle(p4,p7,p6,n5);
+    //smaller square verts
+    vec3 vert0 = vec3(52,  0,   225);
+    vec3 vert1 = vec3(52,  165, 225);
 
-    //squareMesh.setMaterial(material);
-    modelMeshes.push_back(squareMesh);
+    vec3 vert2 = vec3(100, 0,   65);
+    vec3 vert3 = vec3(100, 165, 65);
 
-    Mesh rightSquare;
-    // Add in right square
-    rightSquare.addTriangle(p4,p2,p5,n4);
-    rightSquare.addTriangle(p4,p5,p6,n4);
-    modelMeshes.push_back(rightSquare);
+    vec3 vert4 = vec3(210, 0,   272);
+    vec3 vert5 = vec3(210, 165, 272);
+
+    vec3 vert6 = vec3(260, 0,   114);
+    vec3 vert7 = vec3(260, 165, 114);
+
+    //smaller square normals
+    vec3 normal0 = vec3(0.0,1.0,0.0);
+    vec3 normal1 = vec3(0.0,0.0,-1.0);
+    vec3 normal2 = vec3(-1.0,0.0,0.0);
+    vec3 normal3 = vec3(1.0,0.0,0.0);
+    vec3 normal4 = vec3(0.0,0.0,1.0);
+
+    //add all the sides of the smaller square
+    addSquare(vert3, vert1, vert5, vert7, normal0);
+    addSquare(vert6, vert7, vert5, vert4, normal1);
+    addSquare(vert2, vert3, vert7, vert6, normal2);
+    addSquare(vert0, vert1, vert3, vert2, normal3);
+    addSquare(vert4, vert5, vert1, vert0, normal4);
 }
 
 void Scene::genDefaultLights() {
     lights.push_back(new PointLight(vec3(185.0,2000.0,169.0),vec3(5)));
     lights.push_back(new PointLight(vec3(400.0,2000.0,320.0),vec3(5)));
     //lights.push_back(new PointLight(vec3(400.0,200.0,320.0),vec3(1000)));
-    //lights.push_back(new DirectionalLight(vec3(278, 273, -150),vec3(5)));
+    lights.push_back(new DirectionalLight(vec3(278, 273, -150),vec3(5)));
 }
 
-//ModelSet Scene::getModelObjects() {
-//    return modelObjects;
-//}
+void Scene::addSquare(vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 normal) {
+    Mesh tempSquare;
+    tempSquare.addTriangle({vert0,vert1,vert3},normal);
+    tempSquare.addTriangle({vert1,vert2,vert3},normal);
+    modelMeshes.push_back(tempSquare);
+
+}

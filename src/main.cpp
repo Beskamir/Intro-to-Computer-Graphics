@@ -25,12 +25,12 @@ int main(int argc, char *argv[]) {
     //Setup final output image
     ImageData imageData(width, height);
     //Setup the camera
-    Camera camera(vec3(278, 273, -150),vec3(278, 273, 0),vec3(1,0,0),45,(float)width/(float)height);
+    Camera camera(vec3(278, 273, -500),vec3(278, 273, 0),vec3(1,0,0),55,(float)width/(float)height);
 
     Scene scene;
     scene.setupScene(sceneType);
 
-    RayTracer rayTracer(2,width,height,5,vec3(0));
+    RayTracer rayTracer(2,width,height,5,vec3(1));
     rayTracer.cpuRender(&imageData, camera, scene);
     //cout<<sceneType<<endl;
 
