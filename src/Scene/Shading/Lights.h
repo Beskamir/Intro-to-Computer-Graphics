@@ -7,8 +7,8 @@
 
 
 class Lights {
-
 public:
+
 
 };
 

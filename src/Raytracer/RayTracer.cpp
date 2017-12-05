@@ -69,7 +69,7 @@ void RayTracer::cpuRender(ImageData *image, Camera camera, Scene scene) {
 // Grid supersampling is also implemented.
 Color RayTracer::superSample(int x, int y, ModelSet modelSet,Camera camera,Lights lights){
     vec2 windowCoord;
-    Color color = Color(0.0,0.0,0.0,0.0);
+    Color color(0);
     for(int i = 0; i < samples; i++){
         for(int j = 0; j < samples; j++){
             windowCoord.x = (float) x + (float)i/(float)samples;
