@@ -31,10 +31,12 @@ class Ray {
 private:
     vec3 rayOrigin = vec3(0,0,0);
     vec3 direction;
-    float rayTImeValueMax;
+    float rayTimeValueMax;
 
 public:
     Ray() = default;
+
+    //Ray(Ray &rayOld);
     Ray(vec3 rayOrigin, vec3 direction, float rayTImeValueMax = RAY_T_MAX);
 
     ~Ray()= default;

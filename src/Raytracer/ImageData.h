@@ -23,7 +23,7 @@ public:
 
     void writeToPPM(string name, float exposure = 1.0f, float gamma = 2.2f);
 
-    void storePixel(int x, int y, Color color);
+    void storePixel(int x, int y, vec3 color);
 
     int getWidth() {
         return width;

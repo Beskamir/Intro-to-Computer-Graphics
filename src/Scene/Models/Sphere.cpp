@@ -7,8 +7,7 @@
 Sphere::Sphere(vec3 origin, float radius, Color color) {
     this->center=origin;
     this->radius=radius;
-    this->color=color;
-
+    //this->color=color;
 }
 
 void Sphere::changeSize(float scalar) {
@@ -19,80 +18,34 @@ void Sphere::move(vec3 deltaMovement) {
     center+=deltaMovement;
 }
 
-bool Sphere::intersect(Intersection &intersection) {
-// Transform ray so we can consider origin-centred sphere
-    Ray localRay = intersection.getRay();
+//Function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+bool Sphere::intersect(Ray &ray, float &tNear, int &index, vec2 &uv) {
+    Ray localRay(ray.getOrigin(),ray.getDirection());
     localRay.moveRay(center);
-    //localRay.origin -= centre;
-
-    // Calculate quadratic coefficients
-    //float a = localRay.direction.length2();
+    //float a = dot(localRay.getDirection(),localRay.getDirection());
+    //float b = 2*dot(localRay.getDirection(),localRay.getOrigin());
+    //float c = dot(localRay.getOrigin(),localRay.getOrigin() - square(radius));
     float a = lengthSquared(localRay.getDirection());
     float b = 2 * dot(localRay.getDirection(),localRay.getOrigin());
     float c = lengthSquared(localRay.getOrigin()) - square(radius);
 
-    // Check whether we intersect
-    float discriminant = (b*b) - 4 * a * c;
-
-    if (discriminant < 0.0f)
-    {
-        return false;
-    }
-
-    // Find two points of intersection, t1 close and t2 far
-    float t1 = (-b - sqrt(discriminant)) / (2 * a);
-    float t2 = (-b + sqrt(discriminant)) / (2 * a);
-
-
-    float tValue = intersection.getRayTimeValue();
-
+    float t0, t1;
+    if(!solveQuadratic(a, b, c, t0, t1)) return false;
     // First check if close intersection is valid
-    if (t1 > RAY_T_MIN && t1 < tValue){
-        intersection.setRayTimeValue(t1);
+    if (t0 > RAY_T_MIN && t0 < tNear){
+        tNear = t0;
     }
-    else if (t2 > RAY_T_MIN && t2 < tValue){
-        intersection.setRayTimeValue(t2);
+    else if (t1 > RAY_T_MIN && t1 < tNear){
+        tNear = t1;
     }
     else{
-        // Neither is valid
         return false;
     }
-
-    // Finish populating intersection
-    intersection.setModelPointer(this);
-    intersection.setColor(color);
-
+    //cout<<"hit"<<endl;
     return true;
 }
 
-bool Sphere::doesIntersect(Ray &ray) {
-// Transform ray so we can consider origin-centred sphere
-    Ray localRay = ray;
-    localRay.moveRay(center);
-
-    // Calculate quadratic coefficients
-    float a = lengthSquared(localRay.getDirection());
-    float b = 2 * dot(localRay.getDirection(), localRay.getOrigin());
-    float c = lengthSquared(localRay.getOrigin()) - square(radius);
-
-    // Check whether we intersect
-    float discriminant = square(b) - 4 * a * c;
-
-    if (discriminant < 0.0f)
-    {
-        return false;
-    }
-
-    float tValue = ray.getTimeValueMax();
-
-    // Find two points of intersection, t1 close and t2 far
-    float t1 = (-b - sqrt(discriminant)) / (2 * a);
-    if (t1 > RAY_T_MIN && t1 < tValue)
-        return true;
-
-    float t2 = (-b + sqrt(discriminant)) / (2 * a);
-    if (t2 > RAY_T_MIN && t2 < tValue)
-        return true;
-
-    return false;
+//Function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+void Sphere::getSurfaceProperties(vec3 &hitPoint, Ray &ray, int &index, vec2 &uv, vec3 &normal, vec2 &stCoords) {
+    normal = normalize(hitPoint - center);
 }

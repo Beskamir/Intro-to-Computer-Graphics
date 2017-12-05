@@ -6,7 +6,19 @@
 #define ASSIGNMENT4_MATERIAL_H
 
 
+#include "MaterialTypes.h"
+
 class Material {
+private:
+    MaterialType materialType;
+
+public:
+    Material();
+    Material(MaterialType materialType);
+    ~Material() = default;
+
+
+    MaterialType getMaterialType();
 
 };
 

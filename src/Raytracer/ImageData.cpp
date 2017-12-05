@@ -19,8 +19,8 @@ ImageData::ImageData(int width, int height) {
     }
 }
 
-void ImageData::storePixel(int x, int y, Color color) {
-    framebuffer[x][y] = color;
+void ImageData::storePixel(int x, int y, vec3 color) {
+    framebuffer[x][y] = Color(color.r,color.g,color.b,1.0f);
 }
 
 //write to ppm based on: https://rosettacode.org/wiki/Bitmap/Write_a_PPM_file#C

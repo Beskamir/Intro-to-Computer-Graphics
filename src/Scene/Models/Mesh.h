@@ -23,8 +23,10 @@ public:
     void addTriangle(vec3 p1, vec3 p2, vec3 p3, vec3 normal);
     void addTexture(char type, string texturePath);
 
-    bool intersect(Intersection& intersection) override;
-    bool doesIntersect(Ray& ray) override;
+    bool intersect(Ray &ray,float &tNearI,int &indexI,vec2 &uvI) override;
+
+    void getSurfaceProperties(vec3 &hitPoint, Ray &ray, int &index, vec2 &uv, vec3 &normal, vec2 &stCoords) override;
+
 };
 
 

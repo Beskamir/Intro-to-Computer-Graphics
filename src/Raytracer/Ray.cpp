@@ -7,7 +7,7 @@
 Ray::Ray(const vec3 rayOrigin, const vec3 direction, float rayTImeValueMax) {
     this->rayOrigin=rayOrigin;
     this->direction=direction;
-    this->rayTImeValueMax=rayTImeValueMax;
+    this->rayTimeValueMax=rayTImeValueMax;
 }
 
 vec3 Ray::calculate(float t) {
@@ -27,5 +27,11 @@ vec3 Ray::getDirection(){
 }
 
 float Ray::getTimeValueMax() {
-    return rayTImeValueMax;
+    return rayTimeValueMax;
 }
+
+//Ray::Ray(Ray &rayOld) {
+//    rayOrigin = rayOld.getOrigin();
+//    direction = rayOld.getDirection();
+//    rayTimeValueMax = rayOld.getTimeValueMax();
+//}

@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     Scene scene;
     scene.setupScene(sceneType);
 
-    RayTracer rayTracer(2,width,height);
+    RayTracer rayTracer(2,width,height,5);
     rayTracer.cpuRender(&imageData, camera, scene);
     //cout<<sceneType<<endl;
 

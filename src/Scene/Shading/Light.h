@@ -6,7 +6,7 @@
 #define ASSIGNMENT4_LIGHTS_H
 
 
-class Lights {
+class Light {
 public:
 
 

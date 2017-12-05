@@ -6,9 +6,9 @@
 #define ASSIGNMENT4_POINTLIGHT_H
 
 
-#include "Lights.h"
+#include "Light.h"
 
-class PointLight: public Lights {
+class PointLight: public Light {
 
 };
 
