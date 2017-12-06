@@ -126,13 +126,26 @@ void Scene::genDefaultSquares() {
     vec3 normal3 = vec3(1.0,0.0,0.0);
     vec3 normal4 = vec3(0.0,0.0,1.0);
 
+    addSphere(vert0,10.0f);
+    addSphere(vert1,10.0f);
+    addSphere(vert2,10.0f);
+    addSphere(vert3,10.0f);
+    addSphere(vert4,10.0f);
+    addSphere(vert5,10.0f);
+    addSphere(vert6,10.0f);
+    addSphere(vert7,10.0f);
+
     Mesh squareMesh;
     //add all the sides of the smaller square
-    //addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0);
-    //addSquare(squareMesh, vert6, vert7, vert5, vert4, normal1);
-    //addSquare(squareMesh, vert2, vert3, vert7, vert6, normal2);
+    addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0);
+    //addSquare(squareMesh, vert6, vert7, vert5, vert4, normal4);
+    addSquare(squareMesh, vert4, vert5, vert7, vert6, normal4);
+    //set the floor of the square
+    addSquare(squareMesh, vert2, vert3, vert7, vert6, normal2);
     //addSquare(squareMesh, vert0, vert1, vert3, vert2, normal3);
-    addSquare(squareMesh, vert4, vert5, vert1, vert0, normal4);
+    addSquare(squareMesh, vert2, vert3, vert1, vert0, normal3);
+    //addSquare(squareMesh, vert4, vert5, vert1, vert0, normal4);
+    addSquare(squareMesh, vert0, vert1, vert5, vert4, normal4);
     modelMeshes.push_back(squareMesh);
 }
 
@@ -144,8 +157,8 @@ void Scene::genDefaultLights() {
 }
 
 void Scene::addSquare(Mesh &squareMesh, vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 normal) {
-    Mesh tempSquare;
+    //Mesh tempSquare;
     squareMesh.addTriangle({vert0,vert1,vert3},normal);
-    squareMesh.addTriangle({vert1,vert2,vert3},normal);
+    //squareMesh.addTriangle({vert1,vert2,vert3},normal);
     //modelMeshes.push_back(tempSquare);
 }
