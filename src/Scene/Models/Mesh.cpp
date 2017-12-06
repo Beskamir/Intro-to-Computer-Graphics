@@ -26,48 +26,44 @@ void Mesh::addTriangle(vector<vec3> point,vec3 normal,vector<vec2> uv) {
         tempTriangle.vertex[i].Position = point[i];
         tempTriangle.vertex[i].Normal = normal;
         tempTriangle.vertex[i].uvCoords = uv[i];
+        //cout<<i<<" Pos: "<<point[i].x<<","<<point[i].y<<","<<point[i].z<<endl;
         //tempTriangle.vertex[i]=tempVertex;
     }
     meshData.triangles.push_back(tempTriangle);
 }
 
-//following function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+//following function heavily based on:
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
 bool Mesh::rayTriangleIntersect(Triangle &tempTriangle, Ray &ray, float &tNearTemp, vec2 &uvTemp) {
     vec3 v0 = tempTriangle.vertex[0].Position;
     vec3 v1 = tempTriangle.vertex[1].Position;
     vec3 v2 = tempTriangle.vertex[2].Position;
 
-    for (int i = 0; i < 3; ++i) {
-        //cout<<"drawing triangle: "<<endl;
-        for (int j = 0; j < 3; ++j) {
-            //cout<<tempTriangle.vertex[i].Position[j]<<",";
-        }
-        //cout<<endl;
-    }
+    vec3 v0v1_edge = v1 - v0;
+    vec3 v0v2_edge = v2 - v0;
 
-    vec3 edge1 = v1 - v0;
-    vec3 edge2 = v2 - v0;
-
-    vec3 pVector = cross(ray.getDirection(),edge2);
-    float det = dot(edge1, pVector);
-    if(det == 0 || det < 0){
+    vec3 pVector = cross(ray.getDirection(),v0v2_edge);
+    float determinate = dot(v0v1_edge,pVector);
+    if((determinate)<kEpsilon){
         return false;
     }
+
+    float inverseDet = 1/determinate;
 
     vec3 tVector = ray.getOrigin() - v0;
-    uvTemp.x = dot(tVector, pVector);
-    if(uvTemp.x<0 || uvTemp.x>det){
+    uvTemp.x = dot(tVector,pVector) * inverseDet;
+    if(uvTemp.x < 0 || uvTemp.x > 1){
         return false;
     }
 
-    vec3 qVector = cross(tVector,edge1);
-    uvTemp.y = dot(ray.getDirection(),qVector);
-    if(uvTemp.y < 0 || uvTemp.y>det){
+    vec3 qVector = cross(tVector,v0v1_edge);
+    uvTemp.y = dot(ray.getDirection(),qVector) * inverseDet;
+    if(uvTemp.y < 0 || uvTemp.x + uvTemp.y >1){
         return false;
     }
 
-    tNearTemp = dot(edge2,qVector) / det ;
-    uvTemp /= det;
+    tNearTemp = dot(v0v2_edge,qVector) * inverseDet;
     return true;
 }
 
@@ -100,7 +96,8 @@ void Mesh::getSurfaceProperties(vec3 &hitPoint, Ray &ray, int &index, vec2 &uv, 
     const vec3 &v2 = meshData.triangles[index].vertex[2].Position;
     vec3 edge0 = normalize(v1 - v0);
     vec3 edge1 = normalize(v2 - v1);
-    normal = normalize(cross(edge0, edge1));
+    normal = meshData.triangles[index].vertex[1].Normal;
+    //normal = normalize(cross(edge0, edge1));
     const vec2 &st0 = meshData.triangles[index].vertex[0].uvCoords;
     const vec2 &st1 = meshData.triangles[index].vertex[1].uvCoords;
     const vec2 &st2 = meshData.triangles[index].vertex[2].uvCoords;
@@ -185,5 +182,10 @@ void Mesh::openOBJ(string filename) {
         vertex.Normal = temp_normals[normalIndices[i]];
         vertex.uvCoords = temp_uvs[uvIndices[i]];
         //meshData.vertices.push_back(vertex);
+        tempTriangle.vertex[i%3] = vertex;
+        if((i+1)%3==0){
+            meshData.triangles.push_back(tempTriangle);
+            //cout<<"writting Verts"<<endl;
+        }
     }
 }

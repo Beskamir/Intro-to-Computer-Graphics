@@ -9,6 +9,8 @@
 
 using namespace glm;
 
+constexpr float kEpsilon = 1e-8;
+
 //Get the square of a number
 inline float square(float value){
     return value*value;
@@ -31,4 +33,6 @@ inline bool solveQuadratic(float &a, float &b, float &c, float &t0, float &t1){
     //printf("potentialHit");
     return true; //found a real solution
 }
+
+
 #endif //ASSIGNMENT4_MATH_H
