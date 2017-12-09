@@ -28,11 +28,19 @@ void RayTracer::cpuRender(ImageData *image, Camera camera, Scene scene) {
     for (int j = 0; j < modelMeshes.size(); ++j) {
         modelSet.push_back(&modelMeshes[j]);
     }
-
+    int totalPixels = width * height;
+    int lastPercent = -1;
+    int currentPercent = -1;
+    cout<<"\n\nBeginning CPU-Based Render:"<<endl;
     for (int x = 0; x < width; ++x) {
         for (int y = 0; y < height; ++y) {
             vec3 pixel = superSample(x,y,modelSet,camera,lights);
             image->storePixel(x, y, pixel);
+        }
+        currentPercent=(int)ceil(((float)(x*height)/(float)totalPixels)*100);
+        if(currentPercent!=lastPercent){
+            cout<<"Percent done: "<<currentPercent<<"%"<<endl;
+            lastPercent = currentPercent;
         }
     }
 }

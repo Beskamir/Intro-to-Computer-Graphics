@@ -20,11 +20,9 @@ Camera::Camera(vec3 pos, vec3 target, vec3 upguide, float fov, float aspectRatio
     //cout<<cameraRight.x<<","<<cameraRight.y<<","<<cameraRight.z<<endl;
     //cout<<cameraForward.x<<","<<cameraForward.y<<","<<cameraForward.z<<endl;
 
-    cameraSize.x = tan((fov*180));
+    auto radianFOV = (float)(fov * acos(-1) / 180.0);
+    cameraSize.x = (tan(radianFOV/2));
     cameraSize.y = cameraSize.x * aspectRatio;
-    //cameraAspectRatio = aspectRatio;
-    //scalar = tan(radians(fov*0.5));
-
 }
 
 Ray Camera::generateRay(vec2 point) {
