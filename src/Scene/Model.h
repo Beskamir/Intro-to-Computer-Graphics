@@ -6,8 +6,8 @@
 #define ASSIGNMENT4_MODEL_H
 
 
-#include "../Raytracer/Intersection.h"
 #include "Shading/Material.h"
+#include "../Raytracer/Ray.h"
 
 class Model {
 private:

@@ -29,9 +29,9 @@ using namespace glm;
 
 class Ray {
 private:
-    vec3 rayOrigin = vec3(0,0,0);
-    vec3 direction;
-    float rayTimeValueMax;
+    vec3 rayOrigin = vec3(0);
+    vec3 direction = vec3(0);
+    float rayTimeValueMax = RAY_T_MAX;
 
 public:
     bool isShadowRay = false;

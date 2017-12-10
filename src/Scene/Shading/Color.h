@@ -11,6 +11,8 @@
 #include <cmath>
 #include <algorithm>
 
+#include "../../myMath.h"
+
 using namespace std;
 
 class Color {
@@ -25,7 +27,7 @@ public:
     Color(float r,float g,float b,float a);
     ~Color() = default;
 
-    void clamp(float minValue = 0.0f, float maxValue = 1.0f);
+    void clampColor(float minValue = 0.0f, float maxValue = 1.0f);
     void applyGammaCorrection(float exposure, float gamma);
 
     Color operator + (Color color);

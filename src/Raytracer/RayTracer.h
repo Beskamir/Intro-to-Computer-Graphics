@@ -39,10 +39,10 @@ public:
     vec3 computeDiffuse(Ray &ray, Model *hitObject, vec3 &tvec3, vec2 &stCoords, vec3 &normal, int &index, vector<Model *> modelSet, vector<Light*> &lights,vec2 uv);
 
     vec3 computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index,
-                           vector<Model *> modelSet, vector<Light *> &lights, vec2 uv,int depth);
+                           vector<Model *> modelSet, vector<Light *> &lights, vec2 uv,int depth, bool isOutside);
 
     vec3 computeRefraction(Ray ray, Model *hitObject, vec3 hitPoint, vec2 stCoords, vec3 normal, int index,
-                               vector<Model *> modelSet, vector<Light *> lights, vec2 uv, int depth);
+                               vector<Model *> modelSet, vector<Light *> lights, vec2 uv, int depth, bool isOutside);
 
     float fresnel(Ray &ray, vec3 &normal, float &indexOfRefraction);
 };

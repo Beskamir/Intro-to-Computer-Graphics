@@ -21,7 +21,7 @@ public:
     ImageData(int width, int height);
     ~ImageData() = default;
 
-    void writeToPPM(string name, float exposure = 1.0f, float gamma = 2.2f);
+    void writeToPPM(string name, float exposure = 1.0f, float gamma = 1.2f);
 
     void storePixel(int x, int y, vec3 color);
 

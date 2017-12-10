@@ -31,7 +31,7 @@ void ImageData::writeToPPM(string name, float exposure, float gamma) {
         for (int x = 0; x < width; ++x){
             Color currentColor = framebuffer[x][y];
             //currentColor.applyGammaCorrection(exposure,gamma);
-            currentColor.clamp();
+            currentColor.clampColor();
             static unsigned char color[3];
             color[0] = (unsigned char) (currentColor.r * 255);
             color[1] = (unsigned char) (currentColor.g * 255);

@@ -61,8 +61,8 @@ void setupUserDefinedVars(int &width, int &height, int &fieldOfView, int &bounce
     cout<<"Enter field of view: \n\t(Integer value greater than 0 and less than 90; \n\tDefault = 55)\n> ";
     getUserInput(fieldOfView,55);
 
-    cout<<"Enter tracing depth: \n\t(Integer value greater than 0; \n\tDefault = 5)\n> ";
-    getUserInput(bounceDepth,5);
+    cout<<"Enter tracing depth: \n\t(Integer value greater than 0; \n\tDefault = 8)\n> ";
+    getUserInput(bounceDepth,8);
 
     cout<<"Enter square root of the number of samples per pixel: \n\t(Integer value greater than 0; \n\tDefault = 2; \n\t'square root' meaning enter 2 if you want 4 sample per pixel, 3 if you want 9, 4 if 16, etc.)\n> ";
     getUserInput(samples,2);

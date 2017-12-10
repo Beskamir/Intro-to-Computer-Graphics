@@ -11,11 +11,11 @@ Color::Color(float red, float green, float blue, float alpha) {
     a=alpha;
 }
 
-void Color::clamp(float minValue, float maxValue) {
-    r = max(minValue, min(maxValue, r));
-    g = max(minValue, min(maxValue, g));
-    b = max(minValue, min(maxValue, b));
-    a = max(minValue, min(maxValue, a));
+void Color::clampColor(float minValue, float maxValue) {
+    r = clampMyMath(minValue, maxValue, r);
+    g = clampMyMath(minValue, maxValue, g);
+    b = clampMyMath(minValue, maxValue, b);
+    a = clampMyMath(minValue, maxValue, a);
 }
 
 void Color::applyGammaCorrection(float exposure, float gamma) {

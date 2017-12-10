@@ -5,8 +5,10 @@
 #ifndef ASSIGNMENT4_MATH_H
 #define ASSIGNMENT4_MATH_H
 
-#include <glm/vec3.hpp>
-
+//Include GLM for all the vector stuffs.
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 using namespace glm;
 
 constexpr float kEpsilon = 1e-8;
@@ -34,5 +36,20 @@ inline bool solveQuadratic(float &a, float &b, float &c, float &t0, float &t1){
     return true; //found a real solution
 }
 
+inline float clampMyMath(float lowerBound, float upperBound, float value) {
+    return std::max(lowerBound, std::min(upperBound, value));
+}
+
+inline vec3 getNewRayOrigin(vec3 rayDirection, vec3 &normal, vec3 &hitPoint, float biasValue, bool isOutside) {
+    if (isOutside) {
+        return (glm::dot(rayDirection, normal) < 0) ?
+               hitPoint + normal * biasValue :
+               hitPoint - normal * biasValue;
+    } else {
+        return (glm::dot(rayDirection, normal) < 0) ?
+               hitPoint - normal * biasValue :
+               hitPoint + normal * biasValue;
+    }
+}
 
 #endif //ASSIGNMENT4_MATH_H
