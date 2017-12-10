@@ -43,8 +43,7 @@ public:
 
     void openOBJ(string filename);
 
-    bool
-    rayTriangleIntersect(Triangle &tempTriangle, Ray &ray, float &tNearTemp, vec2 &uvTemp);
+    bool rayTriangleIntersect(Triangle &tempTriangle, Ray &ray, float &tNearTemp, vec2 &uvTemp);
 };
 
 

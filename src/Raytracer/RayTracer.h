@@ -37,6 +37,12 @@ public:
     bool trace(Ray &ray, vector<Model*> &modelSet, float &tNear, int &index, vec2 &uv, Model **hitObject);
 
     vec3 computeDiffuse(Ray &ray, Model *hitObject, vec3 &tvec3, vec2 &stCoords, vec3 &normal, int &index, vector<Model *> modelSet, vector<Light*> &lights,vec2 uv);
+
+    vec3 computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index,
+                           vector<Model *> modelSet, vector<Light *> &lights, vec2 uv);
+
+    vec3 computeRefraction(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index,
+                           vector<Model *> modelSet, vector<Light *> &lights, vec2 uv);
 };
 
 

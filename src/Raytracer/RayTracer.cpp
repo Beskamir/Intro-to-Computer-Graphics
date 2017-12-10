@@ -85,8 +85,18 @@ vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, vector<Light*> lights,
         hitObject->getSurfaceProperties(hitPoint,ray,index,uv,normal,stCoords);
         //vec3 tempHitPoint = hitPoint;
         switch(hitObject->material.type){
+            case REFLECTION_AND_REFRACTION:
+                //vec3 reflection = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
+                hitColor = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv)
+                           + computeRefraction(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
+                break;
+
+            case REFLECTION:
+                hitColor = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
+                break;
+
             default:
-                hitColor = computeDiffuse(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights, uv);
+                hitColor = computeDiffuse(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
                 break;
         }
     }
@@ -121,9 +131,26 @@ vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 
         specularColor += powf(std::max(0.f, -dot(reflectionDirection,ray.getDirection())),hitObject->material.specularExponent) * lights[i]->getColor();
     }
 
-    vec3 hitColor = (lightAmount * hitObject->evalDiffuseColor(stCoords) * hitObject->material.diffuse + specularColor * hitObject->material.specular);
+    vec3 hitColor = ((lightAmount * hitObject->material.evalDiffuseColor(stCoords))
+                      + (specularColor * hitObject->material.specularColor));
 
     return hitColor;
+}
+
+vec3 RayTracer::computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, vector<Light*> &lights, vec2 uv) {
+    vec3 reflectedColor = vec3(0);
+
+    //Fill in
+
+    return reflectedColor;
+}
+
+vec3 RayTracer::computeRefraction(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, vector<Light*> &lights, vec2 uv) {
+    vec3 refractedColor = vec3(0);
+
+    //Fill in
+
+    return refractedColor;
 }
 
 void RayTracer::gpuRender(Scene scene,Camera camera) {

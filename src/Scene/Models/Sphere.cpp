@@ -4,7 +4,7 @@
 
 #include "Sphere.h"
 
-Sphere::Sphere(vec3 origin, float radius, Color color) {
+Sphere::Sphere(vec3 origin, float radius) {
     this->center=origin;
     this->radius=radius;
     //this->color=color;

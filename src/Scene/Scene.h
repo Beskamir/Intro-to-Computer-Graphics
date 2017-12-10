@@ -41,7 +41,7 @@ public:
 
     void setupScene(string &sceneType);
 
-    void addSphere(vec3 pos=vec3(0,0,0),float radius=1.0f,Color color=Color(0));
+    void addSphere(highp_vec3 pos, int radius, Material material);
 
     //bool isIntersect(Intersect &intersection);
 
@@ -58,6 +58,8 @@ public:
     void genDefaultLights();
 
     void addSquare(Mesh &squareMesh, vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 tvec31);
+
+    void genDefaultSpherers();
 };
 
 

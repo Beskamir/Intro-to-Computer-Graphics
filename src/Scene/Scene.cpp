@@ -32,7 +32,7 @@ void Scene::generateMyScene() {
 }
 
 void Scene::generateDefaultScene() {
-    addSphere(vec3(400, 130, 320),120,Color(0,1,1,1));
+    genDefaultSpherers();
     genDefaultLights();
     genDefaultSquares();
 }
@@ -74,8 +74,9 @@ void Scene::loadConfig(string config) {
     //}
 }
 
-void Scene::addSphere(vec3 pos, float radius,Color color) {
-    Sphere sphere(pos,radius,color);
+void Scene::addSphere(highp_vec3 pos, int radius, Material material) {
+    Sphere sphere(pos,radius);
+    sphere.material = material;
     modelSpheres.push_back(sphere);
     //modelObjects.addModel(sphere);
 }
@@ -92,22 +93,65 @@ vector<Light *> Scene::getLights() {
     return lights;
 }
 
+void Scene::addSquare(Mesh &squareMesh, vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 normal) {
+    //Mesh tempSquare;
+    squareMesh.addTriangle({vert0,vert1,vert3},normal);
+    squareMesh.addTriangle({vert1,vert2,vert3},normal);
+    //modelMeshes.push_back(tempSquare);
+}
+
 void Scene::genDefaultSquares() {
+    Material material;
+    material.setDiffuseColor(vec3(0.2,0.5,0.1));
+    material.setSpecularColor(vec3(0.5));
     //Generate points for the squares
-    vec3 p1 = vec3(0,0,0);
-    vec3 p2 = vec3(550,0,0);
-    vec3 p3 = vec3(0,0,560);
-    vec3 p4 = vec3(550,0,560);
-    vec3 p5 = vec3(560,550,0);
-    vec3 p6 = vec3(560,550,560);
-    vec3 p7 = vec3(0,550,560);
-    vec3 p8 = vec3(0,550,0);
+    vec3 p0 = vec3(0,0,0);
+    vec3 p1 = vec3(550,0,0);
+    vec3 p2 = vec3(0,0,560);
+    vec3 p3 = vec3(550,0,560);
+    vec3 p4 = vec3(560,550,0);
+    vec3 p5 = vec3(560,550,560);
+    vec3 p6 = vec3(0,550,560);
+    vec3 p7 = vec3(0,550,0);
     //Generate all the normals for the squares
-    vec3 n1 = vec3(0.0,-1.0,0.0);
-    vec3 n2 = vec3(0.0,1.0,0.0);
-    vec3 n3 = vec3(1.0,0.0,0.0);
-    vec3 n4 = vec3(-1.0,0.0,0.0);
-    vec3 n5 = vec3(0.0,0.0,-1.0);
+    vec3 n0 = vec3(0.0,-1.0,0.0);
+    vec3 n1 = vec3(0.0,1.0,0.0);
+    vec3 n2 = vec3(1.0,0.0,0.0);
+    vec3 n3 = vec3(-1.0,0.0,0.0);
+    vec3 n4 = vec3(0.0,0.0,-1.0);
+    Mesh bottomWall;
+    bottomWall.material=material;
+    //add all the sides of the smaller square
+    addSquare(bottomWall, p1, p0, p2, p3, n1);
+    modelMeshes.push_back(bottomWall);
+
+    Mesh backWall;
+    material.setDiffuseColor(vec3(0.25));
+    backWall.material=material;
+    //add all the sides of the smaller square
+    addSquare(backWall, p3, p2, p6, p5, n4);
+    modelMeshes.push_back(backWall);
+
+    Mesh leftWall;
+    material.setDiffuseColor(vec3(0.0,0.25,0.25));
+    leftWall.material=material;
+    //add all the sides of the smaller square
+    addSquare(leftWall, p2, p0, p7, p6, n2);
+    modelMeshes.push_back(leftWall);
+
+    Mesh rightWall;
+    material.setDiffuseColor(vec3(0.35,0.45,0.2));
+    rightWall.material=material;
+    //add all the sides of the smaller square
+    addSquare(rightWall, p1, p3, p5, p4, n3);
+    modelMeshes.push_back(rightWall);
+
+    //Mesh top;
+    //top.material=material;
+    ////add all the sides of the smaller square
+    //addSquare(top, p5, p6, p7, p8, n1);
+    //modelMeshes.push_back(top);
+
 
     //smaller square verts
     vec3 vert0 = vec3(52,  0,   225);
@@ -139,6 +183,8 @@ void Scene::genDefaultSquares() {
     //addSphere(vert7,10.0f);
 
     Mesh squareMesh;
+    material.setDiffuseColor(vec3(0.85,0.55,0.1));
+    squareMesh.material=material;
     //add all the sides of the smaller square
     addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0);
     addSquare(squareMesh, vert4, vert5, vert7, vert6, normal4);
@@ -149,15 +195,14 @@ void Scene::genDefaultSquares() {
 }
 
 void Scene::genDefaultLights() {
-    lights.push_back(new PointLight(vec3(185.0,2000.0,169.0),vec3(5)));
-    lights.push_back(new PointLight(vec3(400.0,2000.0,320.0),vec3(5)));
-    //lights.push_back(new PointLight(vec3(400.0,200.0,320.0),vec3(1000)));
-    lights.push_back(new DirectionalLight(vec3(278, 273, -150),vec3(5)));
+    lights.push_back(new PointLight(vec3(185.0,2000.0,169.0),vec3(1)));
+    lights.push_back(new PointLight(vec3(400.0,2000.0,320.0),vec3(1)));
+    //lights.push_back(new DirectionalLight(vec3(278, 273, -150),vec3(1)));
 }
 
-void Scene::addSquare(Mesh &squareMesh, vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 normal) {
-    //Mesh tempSquare;
-    squareMesh.addTriangle({vert0,vert1,vert3},normal);
-    squareMesh.addTriangle({vert1,vert2,vert3},normal);
-    //modelMeshes.push_back(tempSquare);
+void Scene::genDefaultSpherers() {
+    Material sphereMat;
+    sphereMat.setDiffuseColor(vec3(1,0.3,0.15));
+    sphereMat.setSpecularColor(vec3(0.5));
+    addSphere(vec3(400, 130, 320), 120, sphereMat);
 }

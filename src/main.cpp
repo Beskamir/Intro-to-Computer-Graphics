@@ -22,6 +22,8 @@ int main(int argc, char *argv[]) {
     string sceneType = argv[1];
 
     int width, height, fieldOfView, bounceDepth, superSampling;
+    vec3 background = vec3(0);
+    //vec3 background = vec3(0.2,0.4,1);
 
     setupUserDefinedVars(width,height,fieldOfView,bounceDepth,superSampling);
 
@@ -33,7 +35,7 @@ int main(int argc, char *argv[]) {
     Scene scene;
     scene.setupScene(sceneType);
 
-    RayTracer rayTracer(superSampling,width,height,bounceDepth,vec3(0));
+    RayTracer rayTracer(superSampling,width,height,bounceDepth,background);
     rayTracer.cpuRender(&imageData, camera, scene);
     //cout<<sceneType<<endl;
 
@@ -70,7 +72,7 @@ void setupUserDefinedVars(int &width, int &height, int &fieldOfView, int &bounce
 void getUserInput(int &newValue, int defaultValue) {
     string userInput;
     ///temp disabling for my own sanity, reenable it later!!
-    //getline(cin,userInput);
+    getline(cin,userInput);
     if(userInput.empty()){
         newValue=defaultValue;
     }else{

@@ -7,19 +7,26 @@
 
 
 #include "MaterialTypes.h"
+#include <glm/vec3.hpp>
+
+using namespace glm;
 
 class Material {
-private:
-    MaterialType materialType;
-
 public:
+    MaterialType type;
+    float specularExponent, indexOfRefraction;
+    vec3 diffuseColor, specularColor;
+
     Material();
-    Material(MaterialType materialType);
     ~Material() = default;
 
+    void setDiffuseColor(vec3 color);
+    void setSpecularColor(vec3 color);
+    void setIndexOfRefraction(float value);
+    void setSpecularExponet(float value);
+    void setMaterialType(MaterialType type);
 
-    MaterialType getMaterialType();
-
+    vec3 evalDiffuseColor(vec2 &stCoords);
 };
 
 
