@@ -15,13 +15,15 @@ class Material {
 public:
     MaterialType type;
     float specularExponent, indexOfRefraction;
-    vec3 diffuseColor, specularColor;
+    vec3 diffuseColor, specularColor, ambientColor;
 
     Material();
     ~Material() = default;
 
     void setDiffuseColor(vec3 color);
     void setSpecularColor(vec3 color);
+    void setAmbientColor(vec3 color);
+    void setAmbientColor(float factor = 0.05);
     void setIndexOfRefraction(float value);
     void setSpecularExponet(float value);
     void setMaterialType(MaterialType type);

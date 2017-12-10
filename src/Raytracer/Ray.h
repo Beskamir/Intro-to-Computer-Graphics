@@ -22,7 +22,7 @@ using namespace std;
 using namespace glm;
 
 // In order to prevent bouncing rays self-intersecting
-#define RAY_T_MIN 0.0001f
+#define RAY_T_MIN 0.01f
 
 // 'Infinite' distance, used as a default value
 #define RAY_T_MAX 1.0e30f
@@ -34,6 +34,8 @@ private:
     float rayTimeValueMax;
 
 public:
+    bool isShadowRay = false;
+
     Ray() = default;
 
     //Ray(Ray &rayOld);

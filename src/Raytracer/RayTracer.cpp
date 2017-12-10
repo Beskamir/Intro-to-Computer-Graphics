@@ -87,24 +87,36 @@ vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, vector<Light*> lights,
         switch(hitObject->material.type){
             case REFLECTION_AND_REFRACTION:
                 //vec3 reflection = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
-                hitColor = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv)
-                           + computeRefraction(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
+                hitColor = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv,depth)
+                           + computeRefraction(ray, hitObject, hitPoint, stCoords, normal, index, modelSet, lights,
+                                               uv, depth);
                 break;
 
             case REFLECTION:
-                hitColor = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
+                hitColor = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv,depth);
+                break;
+
+            case PHONG:
+                hitColor = computeDiffuse(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
+                hitColor += hitObject->material.ambientColor;
+                break;
+
+            case LIGHT:
+                hitColor = hitObject->material.diffuseColor;
+                break;
+
+            case PBR:
+                hitColor = computeDiffuse(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
                 break;
 
             default:
-                hitColor = computeDiffuse(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
                 break;
         }
     }
     return hitColor;
 }
 
-
-
+//Function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, vector<Light*> &lights, vec2 uv) {
 
     vec3 lightAmount = vec3(0);
@@ -119,12 +131,16 @@ vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 
         float lightDistance = lengthSquared(lightDirection);
         lightDirection = normalize(lightDirection);
 
-        float lightDotNormal = std::max(0.0f,dot(lightDirection,normal));
+        //float lightDotNormal = std::max(0.0f,dot(lightDirection,normal));
+        float lightDotNormal = abs(dot(lightDirection,normal));
         Model *shadowHitObject = nullptr;
         float tNearShadow = ray.getTimeValueMax();
 
         Ray shadowRay(shadowOrigin,lightDirection);
-        bool inShadow = trace(shadowRay,modelSet,tNearShadow,index,uv,&shadowHitObject) && (tNearShadow * tNearShadow < lightDistance);
+        shadowRay.isShadowRay = true;
+        bool inShadow = trace(shadowRay,modelSet,tNearShadow,index,uv,&shadowHitObject)
+                        && (square(tNearShadow) < lightDistance);
+        //return vec3(inShadow);
 
         lightAmount += (float)(1-inShadow) * lights[i]->getColor() * lightDotNormal;
         vec3 reflectionDirection = reflect(-lightDirection,normal);
@@ -137,15 +153,23 @@ vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 
     return hitColor;
 }
 
-vec3 RayTracer::computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, vector<Light*> &lights, vec2 uv) {
+//Function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+vec3 RayTracer::computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, vector<Light*> &lights, vec2 uv, int depth) {
     vec3 reflectedColor = vec3(0);
 
-    //Fill in
-
+    float kr = fresnel(ray,normal,hitObject->material.indexOfRefraction);
+    vec3 reflectionRayDir = reflect(ray.getDirection(),normal);
+    vec3 reflectedRayOrigin = (dot(reflectionRayDir,normal) < 0) ?
+                              hitPoint + normal * biasValue :
+                              hitPoint - normal * biasValue;
+    Ray reflectedRay(reflectedRayOrigin,reflectionRayDir);
+    reflectedColor = kr * castRay(reflectedRay,modelSet,lights,depth+1);
     return reflectedColor;
 }
 
-vec3 RayTracer::computeRefraction(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, vector<Light*> &lights, vec2 uv) {
+//Function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+vec3 RayTracer::computeRefraction(Ray ray, Model *hitObject, vec3 hitPoint, vec2 stCoords, vec3 normal, int index,
+                                  vector<Model *> modelSet, vector<Light *> lights, vec2 uv, int depth) {
     vec3 refractedColor = vec3(0);
 
     //Fill in
@@ -177,4 +201,13 @@ bool RayTracer::trace(Ray &ray, vector<Model*> &modelSet, float &tNear, int &ind
     }
 
     return (*hitObject != nullptr);
+}
+
+//Function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+float RayTracer::fresnel(Ray &ray, vec3 &normal, float &indexOfRefraction) {
+    float kr = 0;
+
+
+
+    return kr;
 }

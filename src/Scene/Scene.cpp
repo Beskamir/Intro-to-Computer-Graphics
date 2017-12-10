@@ -102,54 +102,58 @@ void Scene::addSquare(Mesh &squareMesh, vec3 vert0, vec3 vert1, vec3 vert2, vec3
 
 void Scene::genDefaultSquares() {
     Material material;
-    material.setDiffuseColor(vec3(0.2,0.5,0.1));
-    material.setSpecularColor(vec3(0.5));
-    //Generate points for the squares
-    vec3 p0 = vec3(0,0,0);
-    vec3 p1 = vec3(550,0,0);
-    vec3 p2 = vec3(0,0,560);
-    vec3 p3 = vec3(550,0,560);
-    vec3 p4 = vec3(560,550,0);
-    vec3 p5 = vec3(560,550,560);
-    vec3 p6 = vec3(0,550,560);
-    vec3 p7 = vec3(0,550,0);
-    //Generate all the normals for the squares
+
+    //all the points for the walls
+    vec3 p0 = vec3(0,   0,   0);
+    vec3 p1 = vec3(550, 0,   0);
+    vec3 p2 = vec3(0,   0,   560);
+    vec3 p3 = vec3(550, 0,   560);
+    vec3 p4 = vec3(560, 550, 0);
+    vec3 p5 = vec3(560, 550, 560);
+    vec3 p6 = vec3(0,   550, 560);
+    vec3 p7 = vec3(0,   550, 0);
+
+    //all the normals for the walls
     vec3 n0 = vec3(0.0,-1.0,0.0);
     vec3 n1 = vec3(0.0,1.0,0.0);
     vec3 n2 = vec3(1.0,0.0,0.0);
     vec3 n3 = vec3(-1.0,0.0,0.0);
     vec3 n4 = vec3(0.0,0.0,-1.0);
+
+    //Setup bottom wall
     Mesh bottomWall;
+    material.setDiffuseColor(vec3(0.2,0.05,0.2));
+    material.setSpecularColor(vec3(0.25));
     bottomWall.material=material;
-    //add all the sides of the smaller square
     addSquare(bottomWall, p1, p0, p2, p3, n1);
     modelMeshes.push_back(bottomWall);
 
+    //setup back wall
     Mesh backWall;
     material.setDiffuseColor(vec3(0.25));
     backWall.material=material;
-    //add all the sides of the smaller square
-    addSquare(backWall, p3, p2, p6, p5, n4);
+    //addSquare(backWall, p3, p2, p6, p5, n4);
+    addSquare(backWall, p6, p5, p3, p2, n4);
     modelMeshes.push_back(backWall);
 
+    //setup left wall
     Mesh leftWall;
     material.setDiffuseColor(vec3(0.0,0.25,0.25));
     leftWall.material=material;
-    //add all the sides of the smaller square
     addSquare(leftWall, p2, p0, p7, p6, n2);
     modelMeshes.push_back(leftWall);
 
+    //setup right wall
     Mesh rightWall;
     material.setDiffuseColor(vec3(0.35,0.45,0.2));
     rightWall.material=material;
-    //add all the sides of the smaller square
     addSquare(rightWall, p1, p3, p5, p4, n3);
     modelMeshes.push_back(rightWall);
 
+    //don't include the top to let light in
     //Mesh top;
     //top.material=material;
-    ////add all the sides of the smaller square
-    //addSquare(top, p5, p6, p7, p8, n1);
+    //addSquare(top, p4, p5, p6, p7, n1);
     //modelMeshes.push_back(top);
 
 
@@ -184,18 +188,22 @@ void Scene::genDefaultSquares() {
 
     Mesh squareMesh;
     material.setDiffuseColor(vec3(0.85,0.55,0.1));
+    material.setSpecularColor(vec3(0.5));
     squareMesh.material=material;
     //add all the sides of the smaller square
-    addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0);
-    addSquare(squareMesh, vert4, vert5, vert7, vert6, normal4);
-    addSquare(squareMesh, vert2, vert3, vert7, vert6, normal3);
-    addSquare(squareMesh, vert2, vert3, vert1, vert0, normal1);
-    addSquare(squareMesh, vert0, vert1, vert5, vert4, normal2);
+    addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0); //top
+    //addSquare(squareMesh, vert7, vert5, vert1, vert3, normal0); //top
+    addSquare(squareMesh, vert4, vert5, vert7, vert6, normal4); //right side
+    addSquare(squareMesh, vert2, vert3, vert7, vert6, normal3); //front
+    addSquare(squareMesh, vert2, vert3, vert1, vert0, normal1); //left side
+    //addSquare(squareMesh, vert0, vert1, vert3, vert2, normal1); //left side
+    addSquare(squareMesh, vert0, vert1, vert5, vert4, normal2); //back
     modelMeshes.push_back(squareMesh);
 }
 
 void Scene::genDefaultLights() {
     lights.push_back(new PointLight(vec3(185.0,2000.0,169.0),vec3(1)));
+    //lights.push_back(new PointLight(vec3(250.0,350.0,100.0),vec3(1)));
     lights.push_back(new PointLight(vec3(400.0,2000.0,320.0),vec3(1)));
     //lights.push_back(new DirectionalLight(vec3(278, 273, -150),vec3(1)));
 }

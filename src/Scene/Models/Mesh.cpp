@@ -35,19 +35,22 @@ void Mesh::addTriangle(vector<vec3> point,vec3 normal,vector<vec2> uv) {
 //following function heavily based on:
 // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
-bool Mesh::rayTriangleIntersect(Triangle &tempTriangle, Ray &ray, float &tNearTemp, vec2 &uvTemp) {
-    vec3 v0 = tempTriangle.vertex[0].Position;
-    vec3 v1 = tempTriangle.vertex[1].Position;
-    vec3 v2 = tempTriangle.vertex[2].Position;
+bool Mesh::rayTriangleIntersect(Triangle &triangle, Ray &ray, float &tNearTemp, vec2 &uvTemp) {
+    vec3 v0 = triangle.vertex[0].Position;
+    vec3 v1 = triangle.vertex[1].Position;
+    vec3 v2 = triangle.vertex[2].Position;
 
     vec3 v0v1_edge = v1 - v0;
     vec3 v0v2_edge = v2 - v0;
 
     vec3 pVector = cross(ray.getDirection(),v0v2_edge);
     float determinate = dot(v0v1_edge,pVector);
-    if((determinate)<kEpsilon){
+    //vec3 normalVector = normalize(triangle.vertex[0].Normal);
+    //float determinate = dot(ray.getDirection(),normalVector);
+    if(fabs(determinate)<kEpsilon){
         return false;
     }
+    //cout<<determinate<<endl;
 
     float inverseDet = 1/determinate;
 
@@ -59,26 +62,22 @@ bool Mesh::rayTriangleIntersect(Triangle &tempTriangle, Ray &ray, float &tNearTe
 
     vec3 qVector = cross(tVector,v0v1_edge);
     uvTemp.y = dot(ray.getDirection(),qVector) * inverseDet;
-    if(uvTemp.y < 0 || uvTemp.x + uvTemp.y >1){
+    if(uvTemp.y < 0 || uvTemp.x + uvTemp.y > 1){
         return false;
     }
 
     tNearTemp = dot(v0v2_edge,qVector) * inverseDet;
-    return true;
+    return tNearTemp > RAY_T_MIN;
 }
 
 //following function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 bool Mesh::intersect(Ray &ray, float &tNearI, int &indexI, vec2 &uvI) {
     bool intersect = false;
     for (int i = 0; i < meshData.triangles.size(); ++i) {
-        Triangle tempTriangle = meshData.triangles[i];
-        //cout<<"Drawing triangle: "<<i<<endl;
-        //const vec3 & vert0 = meshData.triangles[i].vertex[0].Position;
-        //const vec3 & vert1 = meshData.triangles[i].vertex[1].Position;
-        //const vec3 & vert2 = meshData.triangles[i].vertex[2].Position;
+        Triangle triangle = meshData.triangles[i];
         float tNearTemp = tNearI;
         vec2 uvTemp;
-        if (rayTriangleIntersect(tempTriangle, ray, tNearTemp, uvTemp) && tNearTemp < tNearI) {
+        if (rayTriangleIntersect(triangle, ray, tNearTemp, uvTemp) && tNearTemp < tNearI) {
             tNearI = tNearTemp;
             uvI = uvTemp;
             indexI = i;
