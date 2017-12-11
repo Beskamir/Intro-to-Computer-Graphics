@@ -28,6 +28,7 @@ private:
     vector<Sphere> modelSpheres;
     vector<Mesh> modelMeshes;
     vector<Light*> lights;
+    vec3 background;
     //ModelSet modelObjects;
 
     //Setup the initial scene
@@ -52,6 +53,7 @@ public:
     //void addCube();
     //void addSquare();
     vector<Light *> getLights();
+    vec3 getBackground();
 
     void genDefaultSquares();
 
@@ -60,6 +62,8 @@ public:
     void addSquare(Mesh &squareMesh, vec3 vert0, vec3 vert1, vec3 vert2, vec3 vert3, vec3 tvec31);
 
     void genDefaultSpherers();
+
+    void genMySpherers();
 };
 
 

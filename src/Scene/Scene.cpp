@@ -23,15 +23,15 @@ void Scene::setupScene(string &sceneType) {
 }
 
 void Scene::generateMyScene() {
-    Mesh mesh;
-    //cout<<"myscene"<<endl;
-    mesh.addModel("data/models/pTest01.obj");
-    modelMeshes.push_back(mesh);
+    background = vec3(0.3,0.5,1);
+    //loadConfig("data/config.txt");
+    genMySpherers();
     //cout<<"addinglights"<<endl;
     genDefaultLights();
 }
 
 void Scene::generateDefaultScene() {
+    background = vec3(0);
     genDefaultSpherers();
     genDefaultLights();
     genDefaultSquares();
@@ -196,11 +196,9 @@ void Scene::genDefaultSquares() {
     squareMesh.material = material;
     //add all the sides of the smaller square
     addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0); //top
-    //addSquare(squareMesh, vert7, vert5, vert1, vert3, normal0); //top
-    addSquare(squareMesh, vert4, vert5, vert7, vert6, normal4); //right side
+    addSquare(squareMesh, vert4, vert5, vert7, vert6, normal1); //right side
     addSquare(squareMesh, vert2, vert3, vert7, vert6, normal3); //front
-    addSquare(squareMesh, vert2, vert3, vert1, vert0, normal1); //left side
-    //addSquare(squareMesh, vert0, vert1, vert3, vert2, normal1); //left side
+    addSquare(squareMesh, vert2, vert3, vert1, vert0, normal4); //left side
     addSquare(squareMesh, vert0, vert1, vert5, vert4, normal2); //back
     modelMeshes.push_back(squareMesh);
 }
@@ -222,11 +220,35 @@ void Scene::genDefaultLights() {
 
 void Scene::genDefaultSpherers() {
     Material material;
-    material.setMaterialType(REFLECTION_AND_REFRACTION);
+    material.setMaterialType(REFLECTION);
     //material.indexOfRefraction = 1.5;
     material.setIndexOfRefraction(1.5);
     material.setDiffuseColor(vec3(1,0.3,0.15));
     //material.setDiffuseColor(vec3(1));
     material.setSpecularColor(vec3(0.5));
     addSphere(vec3(400, 130, 320), 120, material);
+}
+
+vec3 Scene::getBackground() {
+    return background;
+}
+
+void Scene::genMySpherers() {
+    Material material;
+    material.setMaterialType(REFLECTION);
+    material.setIndexOfRefraction(1.5);
+    material.setDiffuseColor(vec3(1,0.3,0.15));
+    material.setSpecularColor(vec3(0.5));
+    addSphere(vec3(200, 130, 320), 150, material);
+
+    material.setMaterialType(PHONG);
+    material.setIndexOfRefraction(1.5);
+    material.setDiffuseColor(vec3(1,0.3,0.15));
+    material.setSpecularColor(vec3(0.5));
+    addSphere(vec3(0,   400, 320), 50, material);
+    addSphere(vec3(400, 400, 320), 50, material);
+    material.setDiffuseColor(vec3(0.5,0.9,0.15));
+    material.setSpecularColor(vec3(0.2));
+    addSphere(vec3(0,   200, 220), 50, material);
+    addSphere(vec3(400, 200, 220), 50, material);
 }

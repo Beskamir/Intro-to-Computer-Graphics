@@ -18,14 +18,15 @@ private:
     int width,height;
     int maxDepth;
     vec3 backgroundColor;
-    float biasValue = 0.00001f;
+    float biasValue = 0.1f;
+    Scene scene;
 
 public:
     RayTracer() = default;
-    RayTracer(int samples,int width,int height,int maxDepth,vec3 backgroundColor);
+    RayTracer(int samples,int width,int height,int maxDepth, Scene scene);
 
 
-    void cpuRender(ImageData *image, Camera camera, Scene scene);
+    void cpuRender(ImageData *image, Camera camera);
     void gpuRender(Scene scene,Camera camera);
 
     vec3 castRay(Ray ray, vector<Model*> modelSet, vector<Light*> lights, int depth);
@@ -39,10 +40,10 @@ public:
     vec3 computeDiffuse(Ray &ray, Model *hitObject, vec3 &tvec3, vec2 &stCoords, vec3 &normal, int &index, vector<Model *> modelSet, vector<Light*> &lights,vec2 uv);
 
     vec3 computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index,
-                           vector<Model *> modelSet, vector<Light *> &lights, vec2 uv,int depth, bool isOutside);
+                           vector<Model *> &modelSet, vector<Light *> &lights, vec2 &uv,int depth, bool isOutside);
 
-    vec3 computeRefraction(Ray ray, Model *hitObject, vec3 hitPoint, vec2 stCoords, vec3 normal, int index,
-                               vector<Model *> modelSet, vector<Light *> lights, vec2 uv, int depth, bool isOutside);
+    vec3 computeRefraction(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index,
+                               vector<Model *> &modelSet, vector<Light *> &lights, vec2 &uv, int depth, bool isOutside);
 
     float fresnel(Ray &ray, vec3 &normal, float &indexOfRefraction);
 };

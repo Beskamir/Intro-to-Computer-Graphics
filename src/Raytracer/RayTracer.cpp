@@ -8,15 +8,17 @@
 //#include "Ray.h"
 //#include "../Scene/Shading/Light.h"
 
-RayTracer::RayTracer(int samples, int width, int height, int maxDepth,vec3 backgroundColor) {
+RayTracer::RayTracer(int samples, int width, int height, int maxDepth, Scene scene) {
     this->samples = samples;
     this->width = width;
     this->height = height;
     this->maxDepth = maxDepth;
-    this->backgroundColor = backgroundColor;
+    this->backgroundColor = scene.getBackground();
+    this->scene = scene;
+
 }
 
-void RayTracer::cpuRender(ImageData *image, Camera camera, Scene scene) {
+void RayTracer::cpuRender(ImageData *image, Camera camera) {
 
     vector<Sphere> modelSpheres = scene.getSpheres();
     vector<Mesh> modelMeshes = scene.getMeshes();
@@ -111,6 +113,7 @@ vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, vector<Light*> lights,
                 break;
 
             default:
+                hitColor = computeDiffuse(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
                 break;
         }
     }
@@ -155,27 +158,33 @@ vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 
 }
 
 //Function heavily based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
-vec3 RayTracer::computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> modelSet, vector<Light*> &lights, vec2 uv, int depth, bool isOutside) {
+vec3 RayTracer::computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> &modelSet, vector<Light*> &lights, vec2 &uv, int depth, bool direction) {
 
-    float kr = fresnel(ray,normal,hitObject->material.indexOfRefraction);
+    //float kr = fresnel(ray,normal,hitObject->material.indexOfRefraction);
+    float kr = 0.85;
     vec3 reflectionRayDir = reflect(ray.getDirection(),normal);
-    vec3 reflectedRayOrigin = getNewRayOrigin(reflectionRayDir, normal, hitPoint, biasValue, isOutside);
+
+    bool isOutside = dot(reflectionRayDir, normal) < 0;
+    vec3 bias = normal * biasValue;
+
+    vec3 reflectedRayOrigin = getNewRayOrigin(isOutside, hitPoint, bias);
     Ray reflectedRay(reflectedRayOrigin,reflectionRayDir);
 
     return kr * castRay(reflectedRay,modelSet,lights,depth+1); //reflected color
 }
 
 //Function heavily based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
-vec3 RayTracer::computeRefraction(Ray ray, Model *hitObject, vec3 hitPoint, vec2 stCoords, vec3 normal, int index,
-                                  vector<Model *> modelSet, vector<Light *> lights, vec2 uv, int depth, bool isOutside) {
+vec3 RayTracer::computeRefraction(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index,vector<Model *> &modelSet, vector<Light *> &lights, vec2 &uv, int depth, bool direction) {
 
-    float kr = fresnel(ray, normal, hitObject->material.indexOfRefraction);
+    //float kr = fresnel(ray, normal, hitObject->material.indexOfRefraction);
+    float kr = 0.85;
     //vec3 reflectionDirection = normalize(reflect(ray.getDirection(), normal));
     vec3 refractionRayDir = normalize(refract(ray.getDirection(), normal, hitObject->material.indexOfRefraction));
-    //vec3 refractionRayOrigin = (dot(refractionRayDir, normal) < 0) ?
-    //                          hitPoint - normal * biasValue :
-    //                          hitPoint + normal * biasValue;
-    vec3 refractionRayOrigin = getNewRayOrigin(refractionRayDir, normal, hitPoint, biasValue, isOutside);
+
+    bool isOutside = dot(refractionRayDir, normal) < 0;
+    vec3 bias = normal * biasValue;
+
+    vec3 refractionRayOrigin = getNewRayOrigin(isOutside, hitPoint, bias);
 
     Ray refractedRay(refractionRayOrigin,refractionRayDir);
 

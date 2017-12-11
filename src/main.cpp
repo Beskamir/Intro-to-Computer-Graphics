@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     string sceneType = argv[1];
 
     int width, height, fieldOfView, bounceDepth, superSampling;
-    vec3 background = vec3(0);
+    //vec3 background = vec3(0);
     //vec3 background = vec3(0.2,0.4,1);
 
     setupUserDefinedVars(width,height,fieldOfView,bounceDepth,superSampling);
@@ -35,8 +35,8 @@ int main(int argc, char *argv[]) {
     Scene scene;
     scene.setupScene(sceneType);
 
-    RayTracer rayTracer(superSampling,width,height,bounceDepth,background);
-    rayTracer.cpuRender(&imageData, camera, scene);
+    RayTracer rayTracer(superSampling,width,height,bounceDepth,scene);
+    rayTracer.cpuRender(&imageData, camera);
     //cout<<sceneType<<endl;
 
     imageData.writeToPPM(sceneType);

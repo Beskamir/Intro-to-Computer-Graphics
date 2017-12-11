@@ -1,14 +1,21 @@
-#### plate
->M: data/models/provided/plate/plate.obj
- D: data/models/provided/plate/plate.colour.png
- A: data/models/provided/plate/plate.ao.png
+#### main pyramid
+>M: data/models/pyramid01.obj
 
-#### chair
->M: data/models/provided/oak_chair/oak_chair.obj
- D: data/models/provided/oak_chair/oak_table.colour.jpg
- A: data/models/provided/oak_chair/oak_chair.ao.png
+#### main pyramid
+>M: data/models/pyramid02.obj
 
-#### donut
->M: data/models/provided/coffee_cup/coffee_cup.obj
- D: data/models/provided/coffee_cup/coffee_cup.colour.png
- A: data/models/provided/coffee_cup/coffee_cup.ao.png
+#### right pyramid
+>M: data/models/pyramid03.obj
+
+#### left pyramid
+>M: data/models/pyramid04.obj
+
+//#### terrain
+//>M: data/models/terrain.obj
+
+#### pond thing (may or may not be an actual body of water)
+>M: data/models/pond.obj
+
+#### test object
+>M: data/models/testObject.obj
+

@@ -40,15 +40,17 @@ inline float clampMyMath(float lowerBound, float upperBound, float value) {
     return std::max(lowerBound, std::min(upperBound, value));
 }
 
-inline vec3 getNewRayOrigin(vec3 rayDirection, vec3 &normal, vec3 &hitPoint, float biasValue, bool isOutside) {
-    if (isOutside) {
-        return (glm::dot(rayDirection, normal) < 0) ?
-               hitPoint + normal * biasValue :
-               hitPoint - normal * biasValue;
-    } else {
-        return (glm::dot(rayDirection, normal) < 0) ?
-               hitPoint - normal * biasValue :
-               hitPoint + normal * biasValue;
+inline vec3 getNewRayOrigin(float isOutside, vec3 &hitPoint, vec3 biasValue) {
+    //if (isOutside) {
+    //    return (glm::dot(rayDirection, normal) < 0) ?
+    //           hitPoint + normal * biasValue :
+    //           hitPoint - normal * biasValue;
+    //} else {
+    if(isOutside){
+        return hitPoint - biasValue;
+    }
+    else{
+        return hitPoint + biasValue;
     }
 }
 
