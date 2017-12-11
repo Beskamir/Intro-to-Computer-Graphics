@@ -20,9 +20,9 @@ void Sphere::move(vec3 deltaMovement) {
 
 //Function based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 bool Sphere::intersect(Ray &ray, float &tNear, int &index, vec2 &uv) {
-    //if(material.type==LIGHT && ray.isShadowRay){
-    //    return false;
-    //}
+    if(material.type==LIGHT && ray.isShadowRay){
+        return false;
+    }
     Ray localRay(ray.getOrigin(),ray.getDirection());
     localRay.moveRay(center);
     //float a = dot(localRay.getDirection(),localRay.getDirection());

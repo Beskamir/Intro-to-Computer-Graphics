@@ -165,9 +165,11 @@ vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 
 //Function heavily based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 vec3 RayTracer::computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> &modelSet, vector<Light*> &lights, vec2 &uv, int depth, bool direction) {
 
-    float kr = fresnel(ray,normal,hitObject->material.ior);
-    //kind of hacky, should be computed from fresnel but this looks better
-    //float kr = hitObject->material.kr;
+    //kind of hacky, should be computed from fresnel but this could sort of work
+    float kr = hitObject->material.kr;
+    if(kr<0){
+        kr = fresnel(ray,normal,hitObject->material.ior);
+    }
 
     //float kr = 0.85;
     //float kr = hitObject->material.indexRefraction;

@@ -66,7 +66,7 @@ void Material::reset() {
     diffuseColor = vec3(0.8);
     ambientColor = vec3(0);
     ior = 1.45;
-    kr = 0.85;
+    kr = -1;
     texture = false;
 }
 

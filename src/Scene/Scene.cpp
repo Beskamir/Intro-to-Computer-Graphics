@@ -199,6 +199,7 @@ void Scene::genDefaultSquares() {
     material.reset();
     material.setMaterialType(REFLECTION);
     material.setIOR(1.25);
+    material.setKR(0.85);
     //material.setDiffuseColor(vec3(0.35,0.45,0.2));
     rightWall.material=material;
     addSquare(rightWall, p1, p3, p5, p4, n3);
@@ -243,11 +244,9 @@ void Scene::genDefaultSquares() {
 
     Mesh squareMesh;
     material.reset();
+    material.setMaterialType(PHONG);
     material.setDiffuseColor(vec3(0.85,0.55,0.1));
-    material.setSpecularColor(vec3(0.5));
-    //material.setIndexOfRefraction(1);
-    material.setMaterialType(TRANSMITTANCE);
-    material.setIOR(0.25);
+    material.setSpecularColor(vec3(0.2));
     squareMesh.material = material;
     //add all the sides of the smaller square
     addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0); //top
@@ -295,25 +294,17 @@ void Scene::genMySpherers() {
     material.setIOR(1.45);
     addSphere(vec3(-53.9518, -544.971, 1887.25), 200, material);
 
-    //material.setMaterialType(REFLECTION);
-    //material.setIOR(1.25);
-    //addSphere(vec3(-573.752, 1049.97, 4142.02), 500, material);
-
     material.setMaterialType(LIGHT);
-    material.setDiffuseColor(vec3(1,0.9,0.75));
-    addSphere(vec3(5321.37, 2253.35, 9959.65), 400, material);
+    material.setDiffuseColor(vec3(1,0.9,0.6));
+    addSphere(vec3(4814.91, 2209.45, 9959.36), 400, material);
 }
 
 void Scene::genMyLights() {
-    //lights.push_back(new PointLight(vec3(469.962,12.3856,5224.41),vec3(0.25,0.25,0.12)));
+    lights.push_back(new PointLight(vec3(384.638,606.858,4905.02),vec3(0.3,0.3,0.17)));
+    lights.push_back(new DirectionalLight(vec3(-53.9518,-32.4919,1887.25)-vec3(-53.9517,-802.23,1887.25),vec3(0.01)));
     //lights.push_back(new PointLight(vec3(635.763,12.3856,4887.96),vec3(0.25,0.25,0.12)));
     //lights.push_back(new PointLight(vec3(299.314,12.3856,4722.16),vec3(0.25,0.25,0.12)));
-    lights.push_back(new PointLight(vec3(133.513,12.3856,5058.61),vec3(0.25,0.25,0.12)));
+    //lights.push_back(new PointLight(vec3(133.513,12.3856,5058.61),vec3(0.25,0.25,0.12)));
 
-    //lights.push_back(new PointLight(vec3(-53.9517,-802.23,1887.25),vec3(0.05,0.1,0.25)));
-
-
-    //lights.push_back(new PointLight(vec3(5321.37, 2253.35, 9959.65),vec3(0.71,0.7,0.65)));
-
-    lights.push_back(new DirectionalLight(vec3(5321.37, 2253.35, 9959.65)-vec3(-53.9517,-802.23,1887.25),vec3(0.75,0.7,0.65)));
+    lights.push_back(new DirectionalLight(vec3(4814.91, 2209.45, 9959.36)-vec3(-53.9517,-802.23,1887.25),vec3(0.75,0.70,0.6)));
 }

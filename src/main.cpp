@@ -72,7 +72,7 @@ void setupUserDefinedVars(int &width, int &height, int &fieldOfView, int &bounce
 void getUserInput(int &newValue, int defaultValue) {
     string userInput;
     ///temp disabling this for my own sanity, reenable it later!!
-    //getline(cin,userInput);
+    getline(cin,userInput);
     if(userInput.empty()){
         newValue=defaultValue;
     }else{
