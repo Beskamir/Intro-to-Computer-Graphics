@@ -8,14 +8,14 @@
 //#include "Ray.h"
 //#include "../Scene/Shading/Light.h"
 
-RayTracer::RayTracer(int samples, int width, int height, int maxDepth, Scene scene) {
+RayTracer::RayTracer(int samples, int width, int height, int maxDepth, Scene scene,bool threading) {
     this->samples = samples;
     this->width = width;
     this->height = height;
     this->maxDepth = maxDepth;
     this->backgroundColor = scene.getBackground();
     this->scene = scene;
-
+    this->threading = threading;
 }
 
 void RayTracer::cpuRender(ImageData *image, Camera camera) {
@@ -35,9 +35,14 @@ void RayTracer::cpuRender(ImageData *image, Camera camera) {
     int currentPercent = -1;
     cout<<"\n\nBeginning CPU-Based Render:"<<endl;
     for (int x = 0; x < width; ++x) {
-        for (int y = 0; y < height; ++y) {
-            vec3 pixel = superSample(x,y,modelSet,camera,lights);
-            image->storePixel(x, y, pixel);
+        if(threading){
+
+        }
+        else{
+            for (int y = 0; y < height; ++y) {
+                vec3 pixel = superSample(x,y,modelSet,camera,lights);
+                image->storePixel(x, y, pixel);
+            }
         }
         currentPercent=(int)ceil(((float)(x*height)/(float)totalPixels)*100);
         if(currentPercent!=lastPercent){
@@ -87,7 +92,7 @@ vec3 RayTracer::castRay(Ray ray, vector<Model*> modelSet, vector<Light*> lights,
         hitObject->getSurfaceProperties(hitPoint,ray,index,uv,normal,stCoords);
         //vec3 tempHitPoint = hitPoint;
         switch(hitObject->material.type){
-            case REFLECTION_AND_REFRACTION:
+            case TRANSMITTANCE:
                 //vec3 reflection = computeReflection(ray,hitObject,hitPoint,stCoords,normal,index,modelSet,lights,uv);
                 hitColor = computeReflection(ray, hitObject, hitPoint, stCoords, normal, index, modelSet, lights,
                                              uv, depth, false)
@@ -160,8 +165,13 @@ vec3 RayTracer::computeDiffuse(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 
 //Function heavily based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 vec3 RayTracer::computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index, vector<Model*> &modelSet, vector<Light*> &lights, vec2 &uv, int depth, bool direction) {
 
-    //float kr = fresnel(ray,normal,hitObject->material.indexOfRefraction);
-    float kr = 0.85;
+    float kr = fresnel(ray,normal,hitObject->material.ior);
+    //kind of hacky, should be computed from fresnel but this looks better
+    //float kr = hitObject->material.kr;
+
+    //float kr = 0.85;
+    //float kr = hitObject->material.indexRefraction;
+
     vec3 reflectionRayDir = reflect(ray.getDirection(),normal);
 
     bool isOutside = dot(reflectionRayDir, normal) < 0;
@@ -176,10 +186,10 @@ vec3 RayTracer::computeReflection(Ray &ray, Model *hitObject, vec3 &hitPoint, ve
 //Function heavily based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 vec3 RayTracer::computeRefraction(Ray &ray, Model *hitObject, vec3 &hitPoint, vec2 &stCoords, vec3 &normal, int &index,vector<Model *> &modelSet, vector<Light *> &lights, vec2 &uv, int depth, bool direction) {
 
-    //float kr = fresnel(ray, normal, hitObject->material.indexOfRefraction);
-    float kr = 0.85;
-    //vec3 reflectionDirection = normalize(reflect(ray.getDirection(), normal));
-    vec3 refractionRayDir = normalize(refract(ray.getDirection(), normal, hitObject->material.indexOfRefraction));
+    float kr = fresnel(ray, normal, hitObject->material.ior);
+    //float kr = hitObject->material.kr;
+
+    vec3 refractionRayDir = normalize(refractRay(ray.getDirection(), normal, hitObject->material.ior));
 
     bool isOutside = dot(refractionRayDir, normal) < 0;
     vec3 bias = normal * biasValue;
@@ -217,7 +227,8 @@ bool RayTracer::trace(Ray &ray, vector<Model*> &modelSet, float &tNear, int &ind
     return (*hitObject != nullptr);
 }
 
-//Function heavily based on: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+//Function heavily based on: (basically copy pasted)
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
 float RayTracer::fresnel(Ray &ray, vec3 &normal, float &indexOfRefraction) {
     float kr = 0;
 
@@ -240,4 +251,25 @@ float RayTracer::fresnel(Ray &ray, vec3 &normal, float &indexOfRefraction) {
         kr = (Rs * Rs + Rp * Rp) / 2;
     }
     return kr;
+}
+
+//Function heavily based on: (basically copy pasted)
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/ray-tracing-rendering-technique-overview
+vec3 RayTracer::refractRay(vec3 rayDirection, vec3 &normal, float &ior){
+    float cosi = clampMyMath(-1, 1, dot(rayDirection, normal));
+    float etai = 1, etat = ior;
+    vec3 tempNormal = normal;
+    if (cosi < 0) {
+        cosi = -cosi;
+    } else {
+        std::swap(etai, etat);
+        tempNormal = -normal;
+    }
+    float eta = etai / etat;
+    float k = 1 - eta * eta * (1 - cosi * cosi);
+    if(k<0){
+        return vec3(0);
+    }else{
+        return eta * rayDirection + (eta * cosi - sqrtf(k)) * tempNormal;
+    }
 }

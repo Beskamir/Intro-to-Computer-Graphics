@@ -64,6 +64,8 @@ public:
     void genDefaultSpherers();
 
     void genMySpherers();
+
+    void genMyLights();
 };
 
 

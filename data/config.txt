@@ -1,21 +1,41 @@
+#### main pyramid light
+>M: data/models/pyramid00.obj
+ T: LIGHT
+ D: 1,1,0.5
+
 #### main pyramid
 >M: data/models/pyramid01.obj
+ T: DIFFUSE
+ D: 0.2,0.8,0.6
+ G: 0.7
+ E: 8
 
-#### main pyramid
+#### main pyramid top
 >M: data/models/pyramid02.obj
+ T: REFRACTION
+ I: 1.35
 
-#### right pyramid
+#### le pyramid
 >M: data/models/pyramid03.obj
+ T: REFRACTION
+ I: 1.35
 
 #### left pyramid
 >M: data/models/pyramid04.obj
+ T: DIFFUSE
+ D: 1,0.5,0.2
+ G: 0.7
+ E: 8
+ X:
 
-//#### terrain
-//>M: data/models/terrain.obj
+#### terrain
+>M: data/models/terrain.obj
+ T: DIFFUSE
+ D: 0.9,0.85,0.1
+ G: 0.1
+ E: 512
 
 #### pond thing (may or may not be an actual body of water)
 >M: data/models/pond.obj
-
-#### test object
->M: data/models/testObject.obj
-
+ T: REFLECTION
+ I: 1.45

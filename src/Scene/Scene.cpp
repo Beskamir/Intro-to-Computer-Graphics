@@ -24,10 +24,12 @@ void Scene::setupScene(string &sceneType) {
 
 void Scene::generateMyScene() {
     background = vec3(0.3,0.5,1);
-    //loadConfig("data/config.txt");
+    loadConfig("data/config.txt");
+    genMyLights();
     genMySpherers();
+    //genMySpherers();
     //cout<<"addinglights"<<endl;
-    genDefaultLights();
+    //genDefaultLights();
 }
 
 void Scene::generateDefaultScene() {
@@ -58,15 +60,60 @@ void Scene::loadConfig(string config) {
         if(line.substr(0,4)==">M: "){
             modelMeshes[counter].addModel(line.substr(4, line.size()-1));
         }
+        //type of material it should use:
+        if(line.substr(0,4)==" T: "){
+            string type = (line.substr(4, line.size()-1));
+            MaterialType materialType;
+            if(type=="LIGHT"){
+                materialType = LIGHT;
+            }
+            else if(type=="PBR"){
+                materialType = PBR;
+            }
+            else if(type=="REFRACTION"){
+                materialType = TRANSMITTANCE;
+            }
+            else if(type=="REFLECTION"){
+                materialType = REFLECTION;
+            }
+            else{
+                materialType = PHONG;
+            }
+            modelMeshes[counter].material.setMaterialType(materialType);
+        }
         //give a model it's texture data:
         if(line.substr(0,4)==" D: "){
-            modelMeshes[counter].addTexture('d',line.substr(4, line.size()-1));
+            vec3 color;
+            sscanf(line.c_str(), " D: %f,%f,%f\n", &color.x, &color.y, &color.z);
+            modelMeshes[counter].material.setDiffuseColor(color);
         }
-        if(line.substr(0,4)==" A: "){
-            modelMeshes[counter].addTexture('a',line.substr(4, line.size()-1));
+        if(line.substr(0,4)==" G: "){
+            float strength;
+            sscanf(line.c_str(), " G: %f\n", &strength);
+            modelMeshes[counter].material.setSpecularColor(vec3(strength));
         }
         if(line.substr(0,4)==" S: "){
-            modelMeshes[counter].addTexture('s',line.substr(4, line.size()-1));
+            vec3 color;
+            sscanf(line.c_str(), " S: %f,%f,%f\n", &color.x, &color.y, &color.z);
+            modelMeshes[counter].material.setSpecularColor(color);
+        }
+        if(line.substr(0,4)==" K: "){
+            float kr;
+            sscanf(line.c_str(), " K: %f\n", &kr);
+            modelMeshes[counter].material.setKR(kr);
+        }
+        if(line.substr(0,4)==" I: "){
+            float ior;
+            sscanf(line.c_str(), " I: %f\n", &ior);
+            modelMeshes[counter].material.setIOR(ior);
+        }
+        if(line.substr(0,4)==" E: "){
+            float exponent;
+            sscanf(line.c_str(), " E: %f\n", &exponent);
+            modelMeshes[counter].material.setSpecularExponet(exponent);
+        }
+        if(line.substr(0,4)==" X: "){
+            modelMeshes[counter].material.texture=true;
         }
     }
     //for (int i = 0; i < modelMeshes.size(); ++i) {
@@ -122,14 +169,17 @@ void Scene::genDefaultSquares() {
 
     //Setup bottom wall
     Mesh bottomWall;
+    material.reset();
     material.setDiffuseColor(vec3(0.25));
     material.setSpecularColor(vec3(0.25));
+    //material.texture = true;
     bottomWall.material=material;
     addSquare(bottomWall, p1, p0, p2, p3, n1);
     modelMeshes.push_back(bottomWall);
 
     //setup back wall
     Mesh backWall;
+    material.reset();
     material.setDiffuseColor(vec3(0.35,0.45,0.2));
     backWall.material=material;
     //addSquare(backWall, p3, p2, p6, p5, n4);
@@ -138,6 +188,7 @@ void Scene::genDefaultSquares() {
 
     //setup left wall
     Mesh leftWall;
+    material.reset();
     material.setDiffuseColor(vec3(0.0,0.25,0.25));
     leftWall.material=material;
     addSquare(leftWall, p2, p0, p7, p6, n2);
@@ -145,7 +196,9 @@ void Scene::genDefaultSquares() {
 
     //setup right wall
     Mesh rightWall;
+    material.reset();
     material.setMaterialType(REFLECTION);
+    material.setIOR(1.25);
     //material.setDiffuseColor(vec3(0.35,0.45,0.2));
     rightWall.material=material;
     addSquare(rightWall, p1, p3, p5, p4, n3);
@@ -189,10 +242,12 @@ void Scene::genDefaultSquares() {
     //addSphere(vert7,10.0f);
 
     Mesh squareMesh;
+    material.reset();
     material.setDiffuseColor(vec3(0.85,0.55,0.1));
     material.setSpecularColor(vec3(0.5));
     //material.setIndexOfRefraction(1);
-    material.setMaterialType(REFLECTION_AND_REFRACTION);
+    material.setMaterialType(TRANSMITTANCE);
+    material.setIOR(0.25);
     squareMesh.material = material;
     //add all the sides of the smaller square
     addSquare(squareMesh, vert3, vert1, vert5, vert7, normal0); //top
@@ -220,9 +275,10 @@ void Scene::genDefaultLights() {
 
 void Scene::genDefaultSpherers() {
     Material material;
-    material.setMaterialType(REFLECTION);
+    material.setMaterialType(TRANSMITTANCE);
     //material.indexOfRefraction = 1.5;
-    material.setIndexOfRefraction(1.5);
+    material.setIOR(1.45);
+    //material.setKR(0.5);
     material.setDiffuseColor(vec3(1,0.3,0.15));
     //material.setDiffuseColor(vec3(1));
     material.setSpecularColor(vec3(0.5));
@@ -235,20 +291,29 @@ vec3 Scene::getBackground() {
 
 void Scene::genMySpherers() {
     Material material;
-    material.setMaterialType(REFLECTION);
-    material.setIndexOfRefraction(1.5);
-    material.setDiffuseColor(vec3(1,0.3,0.15));
-    material.setSpecularColor(vec3(0.5));
-    addSphere(vec3(200, 130, 320), 150, material);
+    material.setMaterialType(TRANSMITTANCE);
+    material.setIOR(1.45);
+    addSphere(vec3(-53.9518, -544.971, 1887.25), 200, material);
 
-    material.setMaterialType(PHONG);
-    material.setIndexOfRefraction(1.5);
-    material.setDiffuseColor(vec3(1,0.3,0.15));
-    material.setSpecularColor(vec3(0.5));
-    addSphere(vec3(0,   400, 320), 50, material);
-    addSphere(vec3(400, 400, 320), 50, material);
-    material.setDiffuseColor(vec3(0.5,0.9,0.15));
-    material.setSpecularColor(vec3(0.2));
-    addSphere(vec3(0,   200, 220), 50, material);
-    addSphere(vec3(400, 200, 220), 50, material);
+    //material.setMaterialType(REFLECTION);
+    //material.setIOR(1.25);
+    //addSphere(vec3(-573.752, 1049.97, 4142.02), 500, material);
+
+    material.setMaterialType(LIGHT);
+    material.setDiffuseColor(vec3(1,0.9,0.75));
+    addSphere(vec3(5321.37, 2253.35, 9959.65), 400, material);
+}
+
+void Scene::genMyLights() {
+    //lights.push_back(new PointLight(vec3(469.962,12.3856,5224.41),vec3(0.25,0.25,0.12)));
+    //lights.push_back(new PointLight(vec3(635.763,12.3856,4887.96),vec3(0.25,0.25,0.12)));
+    //lights.push_back(new PointLight(vec3(299.314,12.3856,4722.16),vec3(0.25,0.25,0.12)));
+    lights.push_back(new PointLight(vec3(133.513,12.3856,5058.61),vec3(0.25,0.25,0.12)));
+
+    //lights.push_back(new PointLight(vec3(-53.9517,-802.23,1887.25),vec3(0.05,0.1,0.25)));
+
+
+    //lights.push_back(new PointLight(vec3(5321.37, 2253.35, 9959.65),vec3(0.71,0.7,0.65)));
+
+    lights.push_back(new DirectionalLight(vec3(5321.37, 2253.35, 9959.65)-vec3(-53.9517,-802.23,1887.25),vec3(0.75,0.7,0.65)));
 }

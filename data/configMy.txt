@@ -1,0 +1,21 @@
+#### main pyramid
+>M: data/models/pyramid01.obj
+
+#### main pyramid
+>M: data/models/pyramid02.obj
+
+#### right pyramid
+>M: data/models/pyramid03.obj
+
+#### left pyramid
+>M: data/models/pyramid04.obj
+
+#### terrain
+>M: data/models/terrain.obj
+
+#### pond thing (may or may not be an actual body of water)
+>M: data/models/pond.obj
+
+#### test object
+>M: data/models/testObject.obj
+

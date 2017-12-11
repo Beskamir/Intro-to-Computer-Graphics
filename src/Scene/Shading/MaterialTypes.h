@@ -7,7 +7,7 @@
 
 enum MaterialType{
     PHONG,
-    REFLECTION_AND_REFRACTION,
+    TRANSMITTANCE,
     REFLECTION,
     LIGHT,
     PBR

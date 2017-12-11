@@ -18,12 +18,13 @@ private:
     int width,height;
     int maxDepth;
     vec3 backgroundColor;
-    float biasValue = 0.1f;
+    float biasValue = 1;
     Scene scene;
+    bool threading;
 
 public:
     RayTracer() = default;
-    RayTracer(int samples,int width,int height,int maxDepth, Scene scene);
+    RayTracer(int samples,int width,int height,int maxDepth, Scene scene,bool threading);
 
 
     void cpuRender(ImageData *image, Camera camera);
@@ -46,6 +47,8 @@ public:
                                vector<Model *> &modelSet, vector<Light *> &lights, vec2 &uv, int depth, bool isOutside);
 
     float fresnel(Ray &ray, vec3 &normal, float &indexOfRefraction);
+
+    vec3 refractRay(vec3 rayDirection, vec3 &normal, float &ior);
 };
 
 
