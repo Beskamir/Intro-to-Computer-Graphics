@@ -11,7 +11,7 @@ For additional images, [click here](https://www.artstation.com/beskamir/albums/1
 
 Multi-colored 7th order Hilbert Curve using thin triangles for the lines:
 <!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/276/469/large/sebastian-kopacz-assignment1-2018-11-26-23-06-56.jpg?1543298910) -->
-<img src="https://cdnb.artstation.com/p/assets/images/images/014/276/469/large/sebastian-kopacz-assignment1-2018-11-26-23-06-56.jpg?1543298910" width="250" />
+<img src="https://cdnb.artstation.com/p/assets/images/images/014/276/469/large/sebastian-kopacz-assignment1-2018-11-26-23-06-56.jpg?1543298910" width="400" />
 
 ### Credits:
 - Regarding the software implementation the following resources were invaluable: 
@@ -28,13 +28,21 @@ Multi-colored 7th order Hilbert Curve using thin triangles for the lines:
 
 
 Multi-colored Catmull-Rom spline drawing and 2-bit image quantization:
-![](https://cdnb.artstation.com/p/assets/images/images/014/257/939/large/sebastian-kopacz-bonusimage.jpg?1543232178)
+<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/257/939/large/sebastian-kopacz-bonusimage.jpg?1543232178) -->
+<img src="https://cdnb.artstation.com/p/assets/images/images/014/257/939/large/sebastian-kopacz-bonusimage.jpg?1543232178" width="400" />
+
 Original image by nexus user realdreadstar (check credits section):
-![](https://cdnb.artstation.com/p/assets/images/images/014/258/571/large/sebastian-kopacz-tower.jpg?1543231507)
+<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/258/571/large/sebastian-kopacz-tower.jpg?1543231507) -->
+<img src="https://cdnb.artstation.com/p/assets/images/images/014/258/571/large/sebastian-kopacz-tower.jpg?1543231507" width="400" />
+
 Grayscale filter uses NTSC conversion weights:
-![](https://cdnb.artstation.com/p/assets/images/images/014/258/845/large/sebastian-kopacz-greyscale.jpg?1543232531)
+<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/258/845/large/sebastian-kopacz-greyscale.jpg?1543232531) -->
+<img src="https://cdnb.artstation.com/p/assets/images/images/014/258/845/large/sebastian-kopacz-greyscale.jpg?1543232531" width="400" />
+
 2-bit image quantization:
-![](https://cdnb.artstation.com/p/assets/images/images/014/276/275/large/sebastian-kopacz-2bit.jpg?1543297907)
+<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/276/275/large/sebastian-kopacz-2bit.jpg?1543297907) -->
+<img src="https://cdnb.artstation.com/p/assets/images/images/014/276/275/large/sebastian-kopacz-2bit.jpg?1543297907" width="400" />
+
 
 ### Credits:
 - Original image is by realdreadstar/Natty Dread and he made it by setting up a custom scene in The Witcher 3 and taking a screenshot of it.
@@ -57,8 +65,11 @@ Grayscale filter uses NTSC conversion weights:
 - Phong lighting using diffuse, specular and ambient occlusion textures.
   
 Scene was built in engine using the model transformation tools I implemented:
-![](https://cdnb.artstation.com/p/assets/images/images/014/257/445/large/sebastian-kopacz-chessboard02.jpg?1543227840)
-![](https://cdna.artstation.com/p/assets/images/images/014/257/446/large/sebastian-kopacz-chessboard.jpg?1543226413)
+<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/257/445/large/sebastian-kopacz-chessboard02.jpg?1543227840) -->
+<img src="https://cdnb.artstation.com/p/assets/images/images/014/257/445/large/sebastian-kopacz-chessboard02.jpg?1543227840" width="400" />
+
+<!-- ![](https://cdna.artstation.com/p/assets/images/images/014/257/446/large/sebastian-kopacz-chessboard.jpg?1543226413) -->
+<img src="https://cdna.artstation.com/p/assets/images/images/014/257/446/large/sebastian-kopacz-chessboard.jpg?1543226413" width="400" />
 
   
 ### Credits:
@@ -80,10 +91,13 @@ Scene was built in engine using the model transformation tools I implemented:
 - Supports basic OBJ features and models can be loaded with a config file.
   
 My custom scene:
-![](https://cdna.artstation.com/p/assets/images/images/014/259/400/large/sebastian-kopacz-custom.jpg?1543234486)
+<!-- ![](https://cdna.artstation.com/p/assets/images/images/014/259/400/large/sebastian-kopacz-custom.jpg?1543234486) -->
+<img src="https://cdna.artstation.com/p/assets/images/images/014/259/400/large/sebastian-kopacz-custom.jpg?1543234486" width="400" />
 
 Default Cornell box:
-![](https://cdnb.artstation.com/p/assets/images/images/014/259/407/large/sebastian-kopacz-default.jpg?1543234451)
+<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/259/407/large/sebastian-kopacz-default.jpg?1543234451) -->
+<img src="https://cdnb.artstation.com/p/assets/images/images/014/259/407/large/sebastian-kopacz-default.jpg?1543234451" width="400" />
+
 ### Credits:
 - All models either made by me or specified in the assignment description.
 - Most of the ray tracer code was based on https://www.scratchapixel.com 
