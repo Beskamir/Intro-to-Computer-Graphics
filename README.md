@@ -9,9 +9,7 @@ For additional images, [click here](https://www.artstation.com/beskamir/albums/1
 ### Features: 
 - Draws first to tenth order Hilbert Curves using OpenGL's lines as well as by using thin triangles.
 
-Multi-colored 7th order Hilbert Curve using thin triangles for the lines:
-<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/276/469/large/sebastian-kopacz-assignment1-2018-11-26-23-06-56.jpg?1543298910) -->
-<img src="https://cdnb.artstation.com/p/assets/images/images/014/276/469/large/sebastian-kopacz-assignment1-2018-11-26-23-06-56.jpg?1543298910" width="400" />
+#### Multi-colored 7th order Hilbert Curve using thin triangles for the lines: <img src="https://cdnb.artstation.com/p/assets/images/images/014/276/469/large/sebastian-kopacz-assignment1-2018-11-26-23-06-56.jpg?1543298910" width="400" />
 
 ### Credits:
 - Regarding the software implementation the following resources were invaluable: 
@@ -27,21 +25,13 @@ Multi-colored 7th order Hilbert Curve using thin triangles for the lines:
 - Move and scale the image.
 
 
-Multi-colored Catmull-Rom spline drawing and 2-bit image quantization:
-<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/257/939/large/sebastian-kopacz-bonusimage.jpg?1543232178) -->
-<img src="https://cdnb.artstation.com/p/assets/images/images/014/257/939/large/sebastian-kopacz-bonusimage.jpg?1543232178" width="400" />
+#### Multi-colored Catmull-Rom spline drawing and 2-bit image quantization: <img src="https://cdnb.artstation.com/p/assets/images/images/014/257/939/large/sebastian-kopacz-bonusimage.jpg?1543232178" width="400" />
 
-Original image by nexus user realdreadstar (check credits section):
-<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/258/571/large/sebastian-kopacz-tower.jpg?1543231507) -->
-<img src="https://cdnb.artstation.com/p/assets/images/images/014/258/571/large/sebastian-kopacz-tower.jpg?1543231507" width="400" />
+#### Original image by nexus user realdreadstar (check credits section): <img src="https://cdnb.artstation.com/p/assets/images/images/014/258/571/large/sebastian-kopacz-tower.jpg?1543231507" width="400" />
 
-Grayscale filter uses NTSC conversion weights:
-<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/258/845/large/sebastian-kopacz-greyscale.jpg?1543232531) -->
-<img src="https://cdnb.artstation.com/p/assets/images/images/014/258/845/large/sebastian-kopacz-greyscale.jpg?1543232531" width="400" />
+#### Grayscale filter uses NTSC conversion weights: <img src="https://cdnb.artstation.com/p/assets/images/images/014/258/845/large/sebastian-kopacz-greyscale.jpg?1543232531" width="400" />
 
-2-bit image quantization:
-<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/276/275/large/sebastian-kopacz-2bit.jpg?1543297907) -->
-<img src="https://cdnb.artstation.com/p/assets/images/images/014/276/275/large/sebastian-kopacz-2bit.jpg?1543297907" width="400" />
+#### 2-bit image quantization: <img src="https://cdnb.artstation.com/p/assets/images/images/014/276/275/large/sebastian-kopacz-2bit.jpg?1543297907" width="400" />
 
 
 ### Credits:
@@ -64,12 +54,7 @@ Grayscale filter uses NTSC conversion weights:
 ### Lighting model:
 - Phong lighting using diffuse, specular and ambient occlusion textures.
   
-Scene was built in engine using the model transformation tools I implemented:
-<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/257/445/large/sebastian-kopacz-chessboard02.jpg?1543227840) -->
-<img src="https://cdnb.artstation.com/p/assets/images/images/014/257/445/large/sebastian-kopacz-chessboard02.jpg?1543227840" width="400" />
-
-<!-- ![](https://cdna.artstation.com/p/assets/images/images/014/257/446/large/sebastian-kopacz-chessboard.jpg?1543226413) -->
-<img src="https://cdna.artstation.com/p/assets/images/images/014/257/446/large/sebastian-kopacz-chessboard.jpg?1543226413" width="400" />
+#### Scene was built in engine using the model transformation tools I implemented:<img src="https://cdnb.artstation.com/p/assets/images/images/014/257/445/large/sebastian-kopacz-chessboard02.jpg?1543227840" width="400" /> <img src="https://cdna.artstation.com/p/assets/images/images/014/257/446/large/sebastian-kopacz-chessboard.jpg?1543226413" width="400" />
 
   
 ### Credits:
@@ -90,13 +75,9 @@ Scene was built in engine using the model transformation tools I implemented:
 - Directional and point lights.
 - Supports basic OBJ features and models can be loaded with a config file.
   
-My custom scene:
-<!-- ![](https://cdna.artstation.com/p/assets/images/images/014/259/400/large/sebastian-kopacz-custom.jpg?1543234486) -->
-<img src="https://cdna.artstation.com/p/assets/images/images/014/259/400/large/sebastian-kopacz-custom.jpg?1543234486" width="400" />
+#### My custom scene: <img src="https://cdna.artstation.com/p/assets/images/images/014/259/400/large/sebastian-kopacz-custom.jpg?1543234486" width="400" />
 
-Default Cornell box:
-<!-- ![](https://cdnb.artstation.com/p/assets/images/images/014/259/407/large/sebastian-kopacz-default.jpg?1543234451) -->
-<img src="https://cdnb.artstation.com/p/assets/images/images/014/259/407/large/sebastian-kopacz-default.jpg?1543234451" width="400" />
+#### Default Cornell box: <img src="https://cdnb.artstation.com/p/assets/images/images/014/259/407/large/sebastian-kopacz-default.jpg?1543234451" width="400" />
 
 ### Credits:
 - All models either made by me or specified in the assignment description.
