@@ -1,5 +1,5 @@
-# _Intro to Computer Graphics Coursework_
-Storage repository for the 4 assignments I completed for the 'Intro to Computer Graphics' course I took in Fall 2017.
+# Intro to Computer Graphics Coursework
+Storage repository for the 4 assignments I completed for the _Intro to Computer Graphics_ course I took in Fall 2017.
 
 For additional images, [click here](https://www.artstation.com/beskamir/albums/1146636) to go to my ArtStation.
 
