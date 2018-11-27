@@ -21,6 +21,8 @@ Assignment2/.idea/*
 
 ##Ignore the exe
 Assignment2/Assignment2
+Assignment2/output/Assignment2
+Assignment2/output/Assignment2.exe
 Assignment2/Assignment2.exe
 
 ##Ignore stuff cmake on linux makes
