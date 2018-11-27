@@ -10,7 +10,7 @@ For additional images, [click here](https://www.artstation.com/beskamir/albums/1
 - Draws first to tenth order Hilbert Curves using OpenGL's lines as well as by using thin triangles.
 
 Multi-colored 7th order Hilbert Curve using thin triangles for the lines:
-![](https://cdnb.artstation.com/p/assets/images/images/014/276/469/large/sebastian-kopacz-assignment1-2018-11-26-23-06-56.jpg?1543298910 | width=200)
+![](https://cdnb.artstation.com/p/assets/images/images/014/276/469/large/sebastian-kopacz-assignment1-2018-11-26-23-06-56.jpg?1543298910|width=200)
 
 
 ### Credits:
