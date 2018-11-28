@@ -7,6 +7,7 @@ For additional images, [click here](https://www.artstation.com/beskamir/albums/1
 ## Assignment 1: Hilbert Curve  
 
 ### Features: 
+- Rendering done with OpenGL.
 - Draws first to tenth order Hilbert Curves using OpenGL's lines as well as by using thin triangles.
 
 #### Multi-colored 7th order Hilbert Curve using thin triangles for the lines: 
@@ -21,6 +22,7 @@ For additional images, [click here](https://www.artstation.com/beskamir/albums/1
 ## Assignment 2: Image Manipulation  
 
 ### Features: 
+- Rendering done with OpenGL.
 - Draw multi-colored Catmull-Rom curves and loops.
 - Apply image filters (grayscale and 2-bit quantization).
 - Move and scale the image.
@@ -53,6 +55,7 @@ For additional images, [click here](https://www.artstation.com/beskamir/albums/1
 
 
 ### Features:
+- Rendering done with OpenGL.
 - Models can be selected by mouse clicking on them.
 - Selected models can be modified by rotating, scaling, translating, duplicating, or turning various textures on or off.
 - Supports basic OBJ features and models/textures can be imported with a config file or command-line arguments.
@@ -74,6 +77,7 @@ For additional images, [click here](https://www.artstation.com/beskamir/albums/1
 ## Assignment 4: Whitted Ray Tracer
   
 ### Features:
+- CPU only and thus does not make use of OpenGL in anyway.
 - Ray intersection test for spheres and triangles.
 - Functional shadow, reflection, refraction, and diffuse bounces.
 - Gamma correction.
