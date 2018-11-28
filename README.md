@@ -77,7 +77,7 @@ For additional images, [click here](https://www.artstation.com/beskamir/albums/1
 ## Assignment 4: Whitted Ray Tracer
   
 ### Features:
-- CPU only and thus does not make use of OpenGL in anyway.
+- CPU only and thus does not make use of OpenGL in any way.
 - Ray intersection test for spheres and triangles.
 - Functional shadow, reflection, refraction, and diffuse bounces.
 - Gamma correction.
